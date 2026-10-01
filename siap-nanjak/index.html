@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Siap Nanjak</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1F4D3A">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<style>
+:root{
+  --bg:#EDF0EB;--surface:#FFFFFF;--ink:#15201A;--muted:#56655C;--line:#D3DBD3;
+  --pine:#1F4D3A;--pine2:#2C6A50;--blaze:#E2642A;
+  --red:#B8352A;--redbg:#FBE8E5;--amber:#A86F07;--amberbg:#FCF1D8;--green:#257A4B;--greenbg:#E3F3E9;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111814;--surface:#1B2520;--ink:#EAF0EB;--muted:#9FB0A5;--line:#2E3C34;
+  --pine:#1B4533;--pine2:#2F7356;--blaze:#F07A42;
+  --red:#F08A7E;--redbg:#3A1E1B;--amber:#F0C35A;--amberbg:#352A12;--green:#6FD39B;--greenbg:#16301F;}}
+:root[data-theme="dark"]{
+  --bg:#111814;--surface:#1B2520;--ink:#EAF0EB;--muted:#9FB0A5;--line:#2E3C34;
+  --pine:#1B4533;--pine2:#2F7356;--blaze:#F07A42;
+  --red:#F08A7E;--redbg:#3A1E1B;--amber:#F0C35A;--amberbg:#352A12;--green:#6FD39B;--greenbg:#16301F;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.45}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;line-height:1.05;margin:0}
+h2{font-size:1.6rem;margin-bottom:10px}
+h3{font-size:1.2rem;margin:18px 0 8px}
+p{margin:0 0 10px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.hidden{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--blaze);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px}
+.stack{display:grid;gap:12px}
+.btn{border:0;border-radius:12px;min-height:50px;padding:10px 18px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.pri{background:var(--pine);color:#fff}
+.btn.pri:active{background:var(--pine2)}
+.btn.sec{background:var(--surface);border:1.5px solid var(--line)}
+.btn.blaze{background:var(--blaze);color:#fff}
+.btn.full{width:100%}
+.btn.sm{min-height:40px;padding:6px 12px;font-size:.9rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.fld{display:grid;gap:4px;font-weight:600;font-size:.95rem}
+.fld input,.fld select,.fld textarea{font:inherit;font-weight:400;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* topo header */
+.top{position:relative;background:var(--pine);color:#fff;overflow:hidden}
+.topo{position:absolute;inset:0;width:100%;height:100%;opacity:.22;pointer-events:none}
+.top .wrap{position:relative;padding-top:20px;padding-bottom:22px}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hdr-sub{font-size:.9rem;opacity:.85;margin:0 0 2px}
+.top h1{font-size:2.3rem;letter-spacing:.01em;word-break:break-word}
+.hdr-meta{margin:6px 0 0;opacity:.9}
+.codechip{background:rgba(255,255,255,.14);border:1.5px dashed rgba(255,255,255,.6);color:#fff;border-radius:10px;padding:8px 10px;font-family:"Barlow Condensed",sans-serif;font-size:1.25rem;letter-spacing:.12em;flex:none}
+
+/* onboarding */
+.ob-hero{position:relative;background:var(--pine);color:#fff;overflow:hidden;min-height:260px;display:flex;align-items:flex-end}
+.ob-in{position:relative;max-width:720px;margin:0 auto;width:100%;padding:28px 16px 26px}
+.ob-in h1{font-size:3.4rem}
+.ob-in p{max-width:30em;opacity:.92;margin-top:8px}
+.opt{display:grid;gap:2px;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}
+.opt b{font-size:1.1rem}
+.opt span{color:var(--muted);font-size:.95rem}
+.opt:active{border-color:var(--pine)}
+
+/* tabs & nav */
+main{padding-bottom:96px}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav.bottom button{background:none;border:0;padding:8px 4px 10px;display:grid;justify-items:center;gap:2px;font-size:.8rem;color:var(--muted);min-height:60px}
+nav.bottom button svg{width:24px;height:24px}
+nav.bottom button[aria-current="true"]{color:var(--pine2);font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) nav.bottom button[aria-current="true"]{color:var(--green)}}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{border:0;background:none;border-radius:9px;min-height:42px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--pine);color:#fff}
+
+/* progress */
+.prog{margin:4px 0 14px}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:6px}
+.prog-t{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:6px}
+
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin:0 -16px 8px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+.chip{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.92rem;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* item rows */
+.grp{margin-top:16px}
+.grp-h{display:flex;justify-content:space-between;align-items:baseline;font-family:"Barlow Condensed",sans-serif;font-size:1.15rem;font-weight:700;margin:0 2px 6px}
+.grp-h small{font-family:Barlow,sans-serif;font-weight:400;font-size:.85rem;color:var(--muted)}
+.rows{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:stretch;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.chk{flex:none;width:56px;background:none;border:0;display:grid;place-items:center}
+.chk span{width:28px;height:28px;border-radius:8px;border:2px solid var(--muted);display:grid;place-items:center}
+.row.packed .chk span{background:var(--green);border-color:var(--green)}
+.chk svg{width:18px;height:18px;opacity:0}
+.row.packed .chk svg{opacity:1}
+.rowmain{flex:1;min-width:0;background:none;border:0;text-align:left;padding:10px 12px 10px 0;display:flex;align-items:center;gap:10px}
+.rowmain img{width:42px;height:42px;border-radius:8px;object-fit:cover;flex:none}
+.rt{min-width:0;flex:1}
+.rn{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row.packed .rn{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
+.rm{display:block;font-size:.88rem;color:var(--muted)}
+.tag{flex:none;font-size:.75rem;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--amberbg);color:var(--amber)}
+.tag.dup{background:var(--redbg);color:var(--red)}
+.ro .row .rowmain{padding-left:14px}
+.empty{text-align:center;padding:28px 16px;color:var(--muted)}
+.fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:6;border-radius:999px;min-height:56px;padding:0 22px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+
+/* team */
+.codebig{font-family:"Barlow Condensed",sans-serif;font-size:2.4rem;letter-spacing:.18em;font-weight:700;color:var(--pine2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .codebig{color:var(--green)}}
+.mem{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.mem:first-of-type{border-top:0}
+.av{width:36px;height:36px;border-radius:50%;background:var(--pine);color:#fff;display:grid;place-items:center;font-weight:600;flex:none}
+.wt{display:grid;gap:10px}
+.wt-row{display:grid;grid-template-columns:minmax(70px,1fr) 3fr auto;gap:10px;align-items:center;font-size:.95rem}
+.wt-row .bar{height:12px}
+.wt-row .bar i{background:var(--blaze)}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);margin-top:12px;padding-top:12px}
+.total b{font-family:"Barlow Condensed",sans-serif;font-size:1.8rem}
+
+/* standards */
+.std{display:flex;gap:12px;align-items:center;padding:11px 14px;border-top:1px solid var(--line)}
+.std:first-child{border-top:0}
+.dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;font-size:.95rem}
+.st-red .dot{background:var(--redbg);color:var(--red)}
+.st-yellow .dot{background:var(--amberbg);color:var(--amber)}
+.st-green .dot{background:var(--greenbg);color:var(--green)}
+.st-gray .dot{background:var(--bg);color:var(--muted)}
+.std .rt small{display:block;color:var(--muted);font-size:.86rem}
+.st-red .rt small{color:var(--red)}
+.st-yellow .rt small{color:var(--amber)}
+.sum3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.sum3 div{border-radius:12px;padding:10px;text-align:center}
+.sum3 b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:1.8rem;line-height:1}
+.note{background:var(--amberbg);color:var(--ink);border-radius:12px;padding:12px 14px;font-size:.92rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:14px}
+details summary{font-weight:600;cursor:pointer}
+details ul{margin:10px 0 0;padding-left:20px}
+details li{margin-bottom:6px}
+
+/* qr */
+.qrbox{background:#fff;border-radius:16px;padding:18px;display:grid;justify-items:center;gap:10px;color:#15201A}
+.qrbox img,.qrbox canvas{max-width:100%;height:auto!important}
+.qrbox .qn{font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;font-weight:700;text-align:center}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+
+/* dialog */
+dialog{border:0;border-radius:18px;padding:0;width:min(560px,calc(100% - 24px));max-height:calc(100% - 40px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,14,.55)}
+.dlg{padding:18px;display:grid;gap:12px}
+.dlg-h{display:flex;justify-content:space-between;align-items:center}
+.x{background:none;border:0;font-size:1.6rem;width:44px;height:44px}
+.check{display:flex;align-items:center;gap:10px;font-weight:500;min-height:44px}
+.check input{width:24px;height:24px;accent-color:var(--pine)}
+.photo-prev{display:flex;align-items:center;gap:10px}
+.photo-prev img{width:64px;height:64px;border-radius:10px;object-fit:cover}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+#toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;font-size:.95rem;z-index:20;max-width:calc(100% - 32px);opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+
+/* home & navigation */
+.backbtn{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:999px;padding:6px 14px 6px 8px;font-weight:600;font-size:.92rem;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px;min-height:40px}
+.backbtn:active{background:rgba(255,255,255,.26)}
+.ob-hero.slim{min-height:0}
+.ob-hero.slim h1{font-size:2.4rem}
+.trip{display:grid;gap:6px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.trip:active{border-color:var(--pine2)}
+.trip-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.trip-top b{font-family:"Barlow Condensed",sans-serif;font-size:1.4rem;line-height:1.1}
+.role{font-size:.78rem;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--greenbg);color:var(--green);flex:none}
+.trip .bar{height:8px}
+.idcard{display:flex;gap:14px;align-items:flex-start}
+.av.lg{width:52px;height:52px;font-size:1.3rem}
+.plan-dur{margin:0;font-weight:600;color:var(--pine2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .plan-dur{color:var(--green)}}
+
+/* v4 additions */
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:54px;height:50px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:1.6rem;font-weight:600;flex:none}
+.stepper button:active{background:var(--bg)}
+#dVal{flex:1;text-align:center;font-weight:600;font-size:1.05rem}
+.plan-dur.err{color:var(--red)}
+.req{color:var(--red);font-weight:700}
+.sec-h{font-size:1.15rem;margin:10px 0 -2px;padding-top:10px;border-top:1px solid var(--line)}
+.dlg-foot{position:sticky;bottom:0;background:var(--surface);padding:10px 0 4px;margin-top:4px}
+.note.warn{background:var(--redbg)}
+.sarcard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--blaze);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:1.3rem}
+.sarcard .rt small{display:block;font-size:.88rem;color:var(--muted)}
+.sarcard .rt b{font-size:1rem}
+.sar-ic{width:40px;height:40px;border-radius:10px;background:var(--blaze);color:#fff;display:grid;place-items:center;flex:none}
+.photo-acts{display:flex;flex-wrap:wrap;gap:8px}
+.photo-prev{align-items:flex-start}
+.outfit{display:flex;gap:14px;align-items:flex-start}
+.outfit img,.outfit .ph-empty{width:110px;height:146px;border-radius:12px;object-fit:cover;flex:none}
+.ph-empty{background:var(--bg);color:var(--muted);display:grid;place-items:center;align-content:center;gap:4px;font-size:.8rem;text-align:center}
+.sar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.sar-tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px;text-align:left;display:grid;gap:4px}
+.sar-tile img,.sar-tile .ph-empty{width:100%;aspect-ratio:1;border-radius:10px;object-fit:cover}
+.sar-tile b{font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sar-tile small{font-size:.82rem;color:var(--muted)}
+.sar-tile small.miss{color:var(--red)}
+.sar-prev{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:14px}
+
+/* v5: alur & tampilan */
+.step-lbl{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blaze);margin:0 0 2px}
+.next-wrap{margin-top:22px}
+.next{gap:6px}
+.badge{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:.78rem;margin-left:4px}
+.seg button[aria-pressed="true"] .badge{background:#fff;color:var(--red)}
+.pills{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+.pills button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.92rem;color:var(--muted)}
+.pills button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.inp{font:inherit;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;width:100%}
+/* nav */
+nav.bottom button{font-size:.76rem}
+.nav-ic{position:relative;display:grid}
+.nav-ok{position:absolute;right:-7px;top:-4px;width:13px;height:13px;border-radius:50%;background:var(--green);border:2px solid var(--surface)}
+/* rencana */
+.seg-sm{display:inline-grid;grid-template-columns:auto auto;width:auto;margin:0;justify-self:start}
+.seg-sm button{min-height:38px;padding:0 16px;font-size:.92rem}
+.dates{display:flex;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.dates:focus-within{border-color:var(--pine2)}
+.dbox{flex:1;display:grid;padding:7px 12px 5px;min-width:0;cursor:pointer}
+.dbox+.dbox{border-left:1.5px solid var(--line)}
+.dbox small{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.dbox input{border:0;padding:2px 0;font:inherit;font-weight:500;background:transparent;color:var(--ink);width:100%;min-width:0;outline:none}
+.dur{display:inline-flex;align-items:center;gap:2px;margin-top:8px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);padding:3px;justify-self:start}
+.dur button{width:34px;height:34px;border-radius:50%;border:0;background:var(--bg);font-size:1.15rem;font-weight:700;display:grid;place-items:center}
+.dur #dVal{flex:none;padding:0 10px;font-weight:600;font-size:.92rem;min-width:0}
+.plan-err{color:var(--red);margin:4px 0 0;font-size:.88rem;font-weight:500}
+.plan-err:empty{display:none}
+.mt-btn{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;min-height:54px}
+.mt-btn b{display:block;font-weight:600}
+.mt-btn small{display:block;color:var(--muted);font-weight:400;font-size:.85rem}
+.mt-dlg{max-height:calc(100vh - 60px);grid-template-rows:auto auto 1fr}
+.mt-search{font:inherit;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.mt-list{overflow-y:auto;max-height:60vh;margin:0 -18px;padding:0 18px}
+.mt-prov{position:sticky;top:0;background:var(--surface);margin:0;padding:12px 0 6px;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mt-item{display:flex;justify-content:space-between;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:12px 2px;font-size:1rem}
+.mt-item.on{color:var(--pine2);font-weight:600}
+.mt-item span{font-size:.8rem;color:var(--green)}
+/* isi barang */
+.tag.sub{background:var(--bg);color:var(--muted)}
+.tag.sub.ok{background:var(--greenbg);color:var(--green)}
+.expand{flex:none;width:44px;background:none;border:0;color:var(--muted);font-size:.75rem}
+.subs{display:grid;padding:2px 12px 8px 56px;border-top:1px dashed var(--line)}
+.subs.ro{padding:0 14px 10px;font-size:.88rem;color:var(--muted);border-top:0;display:block}
+.subrow{display:flex;align-items:center;gap:10px;background:none;border:0;text-align:left;padding:7px 0;font-size:.95rem}
+.subrow.done{color:var(--muted);text-decoration:line-through}
+.sbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);display:grid;place-items:center;flex:none}
+.subrow.done .sbox{background:var(--green);border-color:var(--green)}
+.sbox svg{width:14px;height:14px}
+.sublist{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1.5px dashed var(--line);border-radius:10px;min-height:44px;align-items:center;font-weight:400}
+.subchip{display:inline-flex;align-items:center;gap:2px;background:var(--bg);border-radius:999px;padding:3px 4px 3px 12px;font-size:.92rem}
+.subchip button{border:0;background:none;width:28px;height:28px;border-radius:50%;font-size:1.1rem;color:var(--muted)}
+.subadd{display:flex;gap:8px}
+.subadd input{flex:1;min-width:0}
+/* berangkat */
+.cklist .ck{display:flex;gap:12px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.cklist .ck:first-child{border-top:0}
+.ck .dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;background:var(--amberbg);color:var(--amber)}
+.ck.ok .dot{background:var(--greenbg);color:var(--green)}
+.ck .rt small{display:block;color:var(--muted);font-size:.86rem}
+.kt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.kt-tile{background:var(--bg);border:0;border-radius:12px;padding:6px;text-align:left;display:grid;gap:3px}
+.kt-tile img,.kt-tile .ph-empty{width:100%;aspect-ratio:1;border-radius:8px;object-fit:cover}
+.kt-tile .ph-empty{background:var(--surface)}
+.kt-tile b{font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kt-tile small{font-size:.8rem;color:var(--muted)}
+.kt-tile small.miss{color:var(--red)}
+.kt-prev{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:14px}
+
+/* v6: satuan, check point, pos */
+.uin{display:flex;gap:6px}
+.uin input{flex:1;min-width:0}
+.uin select{width:auto;flex:none;padding-left:8px;padding-right:8px}
+.info-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.info-row .rt small{display:block;color:var(--muted);font-size:.86rem}
+nav.bottom button{font-size:.7rem;padding-left:2px;padding-right:2px}
+.big-btn{min-height:64px;font-size:1.15rem;margin-top:12px}
+.cp-status{display:grid;gap:2px;border-left:6px solid var(--blaze)}
+.cp-status.done{border-left-color:var(--green)}
+.cp-status b{font-family:"Barlow Condensed",sans-serif;font-size:1.6rem;line-height:1.1}
+.cp-status small{color:var(--muted)}
+a.btn{color:inherit}
+a.btn.pri{color:#fff}
+.timeline .tl{display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--line)}
+.timeline .tl:first-child{border-top:0}
+.tl .rt small{display:block;color:var(--muted);font-size:.86rem}
+.tl-dot{width:14px;height:14px;border-radius:50%;flex:none;background:var(--green)}
+.tl-dot.turun{background:var(--amber)}
+.tl .x{width:36px;height:36px;font-size:1.2rem;color:var(--muted)}
+.scanbox{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:1}
+.scanbox video{width:100%;height:100%;object-fit:cover;display:block}
+.scanframe{position:absolute;inset:18%;border:3px solid rgba(255,255,255,.85);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.35)}
+.scanmsg{position:absolute;left:0;right:0;bottom:10px;text-align:center;color:#fff;font-size:.9rem;margin:0;padding:0 12px}
+.pos-card{display:grid;gap:10px}
+.pos-card small{display:block;color:var(--muted);font-size:.88rem}
+
+/* v7: pengenalan & panduan */
+.intro{min-height:100vh;min-height:100dvh;max-width:560px;margin:0 auto;padding:16px 20px 24px;display:grid;grid-template-rows:auto 1fr auto auto auto;gap:14px;box-sizing:border-box}
+.intro-top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.intro-brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.3rem;color:var(--pine2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .intro-brand{color:var(--green)}}
+.intro-skip{background:none;border:0;color:var(--muted);font-weight:600;padding:10px 4px;min-height:44px}
+.intro-ill{display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;min-height:200px}
+.intro-ill svg{width:100%;max-width:300px;height:auto}
+.intro-num{font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blaze);margin:0 0 4px}
+.intro-txt h1{font-size:2.2rem;margin-bottom:8px}
+.intro-txt p:last-child{color:var(--muted);font-size:1.05rem;margin:0}
+.intro-dots{display:flex;justify-content:center;gap:4px}
+.intro-dots button{width:28px;height:28px;border:0;background:none;display:grid;place-items:center;padding:0}
+.intro-dots button::after{content:"";width:8px;height:8px;border-radius:999px;background:var(--line);transition:width .2s}
+.intro-dots button.on::after{width:24px;background:var(--pine2)}
+.intro-nav{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.sos .btn{flex-direction:column;gap:0;min-height:64px;font-size:1.5rem;font-family:"Barlow Condensed",sans-serif}
+.sos .btn small{font-family:Barlow,sans-serif;font-size:.8rem;font-weight:500;opacity:.9}
+.guide details{margin-top:10px}
+.guide summary{display:flex;align-items:center;gap:10px;font-size:1.05rem;list-style:none;min-height:36px}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}
+.guide details[open] summary::after{transform:rotate(180deg)}
+.g-ic{width:36px;height:36px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:1.2rem;flex:none}
+.guide ol{margin:12px 0 4px;padding-left:22px}
+.guide li{margin-bottom:10px;line-height:1.5}
+.guide-cta{display:flex;gap:12px;align-items:flex-start;margin-top:14px}
+.guide-cta .rt small{display:block;color:var(--muted);font-size:.88rem;margin-top:2px}
+.g-big{font-size:1.6rem;line-height:1}
+
+/* v8: privasi */
+.pv{line-height:1.6}
+.pv h2{font-size:1.35rem;margin:26px 0 8px}
+.pv ul{padding-left:20px;margin:0 0 12px}
+.pv li{margin-bottom:6px}
+.pv-meta{color:var(--muted);font-size:.9rem}
+.pv-box{background:var(--greenbg);border-radius:14px;padding:14px 16px;margin:16px 0}
+.pv-box ul{margin:8px 0 0}
+.ph{background:var(--amberbg);color:var(--amber);padding:0 4px;border-radius:4px}
+.consent{align-items:flex-start;font-size:.92rem;line-height:1.45}
+.consent input{margin-top:2px;flex:none}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--pine2);text-decoration:underline;font-weight:600;cursor:pointer}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .linkbtn{color:var(--green)}}
+.pv-ask{border:1.5px solid var(--blaze);margin-bottom:12px}
+
+/* officer */
+.off-banner{background:var(--blaze);color:#fff;font-weight:600;padding:8px 16px;text-align:center}
+@media (max-width:420px){.top h1{font-size:1.9rem}.ob-in h1{font-size:2.8rem}}
+@media print{
+  nav.bottom,.fab,.noprint,#toast{display:none!important}
+  body{background:#fff;color:#000}
+  main{padding:0}
+  .card,.rows{border-color:#bbb}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="topo" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="#fff" stroke-width="1.4">
+      <path d="M-20 230C60 180 110 200 170 150S290 60 420 90"/>
+      <path d="M-20 250C70 205 120 222 180 175S300 90 420 115"/>
+      <path d="M-20 205C50 160 100 175 160 128S280 35 420 62"/>
+      <path d="M-20 180C45 140 95 150 150 105S270 10 420 35"/>
+      <path d="M250 70c20-18 55-22 70-6s-8 40-35 44-52-20-35-38z"/>
+      <path d="M262 72c14-10 36-12 45-2s-6 24-22 26-32-12-23-24z"/>
+      <path d="M-20 270C80 230 130 245 190 200S310 120 420 140"/>
+    </g>
+  </symbol>
+</svg>
+
+<div id="intro" class="hidden"></div>
+<div id="guide" class="hidden"></div>
+<div id="privacy" class="hidden"></div>
+<div id="onboard" class="hidden"></div>
+<div id="home" class="hidden"></div>
+
+<div id="app" class="hidden">
+  <header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap" id="hdr"></div></header>
+  <main>
+    <section id="tab-rencana" class="wrap"></section>
+    <section id="tab-barang" class="wrap hidden"></section>
+    <section id="tab-tim" class="wrap hidden"></section>
+    <section id="tab-berangkat" class="wrap hidden"></section>
+    <section id="tab-jalur" class="wrap hidden"></section>
+  </main>
+  <button class="btn blaze fab" id="fab" data-act="add">+ Tambah barang</button>
+  <nav class="bottom" aria-label="Langkah persiapan"></nav>
+</div>
+
+<div id="officer" class="hidden"></div>
+<div id="postool" class="hidden"></div>
+
+<dialog id="itemDlg"><div class="dlg" id="itemForm"></div></dialog>
+<dialog id="mtDlg"></dialog>
+<dialog id="scanDlg"></dialog>
+<dialog id="posDlg"></dialog>
+<dialog id="idDlg"><div class="dlg" id="idForm"></div></dialog>
+<dialog id="askDlg"><div class="dlg"><p id="askMsg" style="font-size:1.05rem;margin:4px 0"></p><div class="two"><button class="btn sec" id="askNo">Batal</button><button class="btn pri" id="askYes">Ya</button></div></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const CATS=["Pribadi","Kelompok","Makanan","Medis","Navigasi","Lainnya"];
+const KEY="siap-nanjak-v1";
+const CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+const BACK_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+const NEXT_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+const CAM_SVG='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+
+/* ---------- daftar gunung per provinsi ---------- */
+// [kunci, nama lengkap, pengelola (opsional)]
+const PROV=[
+ ["Aceh",[["leuser","Gunung Leuser","Balai Besar TN Gunung Leuser"],["seulawah","Gunung Seulawah Agam"],["burnitelong","Gunung Burni Telong"]]],
+ ["Sumatera Utara",[["sibayak","Gunung Sibayak"],["sinabung","Gunung Sinabung"],["pusukbuhit","Gunung Pusuk Buhit"],["sorikmarapi","Gunung Sorik Marapi"]]],
+ ["Sumatera Barat",[["marapi","Gunung Marapi"],["singgalang","Gunung Singgalang"],["tandikat","Gunung Tandikat"],["talang","Gunung Talang"],["talamau","Gunung Talamau"]]],
+ ["Jambi",[["kerinci","Gunung Kerinci","Balai Besar TN Kerinci Seblat"],["gunungtujuh","Gunung Tujuh","Balai Besar TN Kerinci Seblat"],["masurai","Gunung Masurai"]]],
+ ["Bengkulu",[["kaba","Gunung Kaba"],["bukitdaun","Gunung Bukit Daun"]]],
+ ["Sumatera Selatan",[["dempo","Gunung Dempo"]]],
+ ["Lampung",[["pesagi","Gunung Pesagi"],["tanggamus","Gunung Tanggamus"],["rajabasa","Gunung Rajabasa"]]],
+ ["Kepulauan Bangka Belitung",[["maras","Gunung Maras"]]],
+ ["Banten",[["karang","Gunung Karang"],["pulosari","Gunung Pulosari"]]],
+ ["Jawa Barat",[["gede","Gunung Gede Pangrango","Balai Besar TN Gunung Gede Pangrango"],["salak","Gunung Salak","Balai TN Gunung Halimun Salak"],["ciremai","Gunung Ciremai","Balai TN Gunung Ciremai"],["papandayan","Gunung Papandayan"],["guntur","Gunung Guntur"],["cikuray","Gunung Cikuray"],["burangrang","Gunung Burangrang"],["manglayang","Gunung Manglayang"],["patuha","Gunung Patuha"],["malabar","Gunung Malabar"],["galunggung","Gunung Galunggung"]]],
+ ["Jawa Tengah",[["slamet","Gunung Slamet"],["sindoro","Gunung Sindoro"],["sumbing","Gunung Sumbing"],["merbabu","Gunung Merbabu","Balai TN Gunung Merbabu"],["prau","Gunung Prau"],["andong","Gunung Andong"],["ungaran","Gunung Ungaran"],["telomoyo","Gunung Telomoyo"],["muria","Gunung Muria"],["lawu","Gunung Lawu"]]],
+ ["DI Yogyakarta",[["merapi","Gunung Merapi","Balai TN Gunung Merapi"]]],
+ ["Jawa Timur",[["semeru","Gunung Semeru","Balai Besar TN Bromo Tengger Semeru"],["bromo","Gunung Bromo","Balai Besar TN Bromo Tengger Semeru"],["arjuno","Gunung Arjuno"],["welirang","Gunung Welirang"],["penanggungan","Gunung Penanggungan"],["butak","Gunung Butak"],["kawi","Gunung Kawi"],["panderman","Gunung Panderman"],["raung","Gunung Raung"],["ijen","Gunung Ijen"],["argopuro","Gunung Argopuro"],["wilis","Gunung Wilis"],["kelud","Gunung Kelud"]]],
+ ["Bali",[["agung","Gunung Agung"],["batur","Gunung Batur"],["abang","Gunung Abang"],["batukaru","Gunung Batukaru"]]],
+ ["Nusa Tenggara Barat",[["rinjani","Gunung Rinjani","Balai TN Gunung Rinjani"],["tambora","Gunung Tambora","Balai TN Tambora"]]],
+ ["Nusa Tenggara Timur",[["kelimutu","Gunung Kelimutu","Balai TN Kelimutu"],["inerie","Gunung Inerie"],["mutis","Gunung Mutis"]]],
+ ["Kalimantan Tengah",[["bukitraya","Bukit Raya","Balai TN Bukit Baka Bukit Raya"]]],
+ ["Kalimantan Selatan",[["halauhalau","Gunung Halau-Halau"]]],
+ ["Sulawesi Utara",[["klabat","Gunung Klabat"],["lokon","Gunung Lokon"],["soputan","Gunung Soputan"],["mahawu","Gunung Mahawu"]]],
+ ["Sulawesi Selatan",[["latimojong","Gunung Latimojong"],["bawakaraeng","Gunung Bawakaraeng"],["lompobattang","Gunung Lompobattang"]]],
+ ["Sulawesi Tenggara",[["mekongga","Gunung Mekongga"]]],
+ ["Maluku",[["binaiya","Gunung Binaiya","Balai TN Manusela"]]],
+ ["Maluku Utara",[["gamalama","Gunung Gamalama"]]],
+ ["Papua Tengah",[["carstensz","Puncak Jaya (Carstensz)","Balai TN Lorentz"]]],
+];
+
+
+/* ---------- standar perlengkapan (contoh; cek pengelola resmi) ---------- */
+const SEHAT={k:"sehat",n:"Surat keterangan sehat",kw:["surat sehat","surat keterangan sehat","sks","surat dokter"],per:"orang",cat:"Lainnya",w:10};
+const SARUNG={k:"sarung",n:"Sarung tangan",kw:["sarung tangan","gloves","glove"],per:"orang",cat:"Pribadi",w:80};
+const KUPLUK={k:"kupluk",n:"Kupluk / penutup kepala",kw:["kupluk","beanie","topi kupluk","balaclava"],per:"orang",cat:"Pribadi",w:60};
+// md:true = wajib hanya untuk pendakian menginap
+const BASE=[
+ {k:"tenda",n:"Tenda",kw:["tenda","tent","dome"],per:"n3",cat:"Kelompok",w:2500,hint:"1 tenda untuk 2–3 orang",md:true},
+ {k:"sb",n:"Sleeping bag",kw:["sleeping bag","sleepingbag","kantong tidur","sb"],per:"orang",cat:"Pribadi",w:1000,md:true},
+ {k:"matras",n:"Matras",kw:["matras","sleeping pad"],per:"orang",cat:"Pribadi",w:300,md:true},
+ {k:"jaket",n:"Jaket hangat",kw:["jaket","jacket","polar","fleece"],per:"orang",cat:"Pribadi",w:700},
+ {k:"hujan",n:"Jas hujan / ponco",kw:["jas hujan","ponco","poncho","raincoat","mantel"],per:"orang",cat:"Pribadi",w:400},
+ {k:"senter",n:"Senter / headlamp",kw:["senter","headlamp","head lamp","lampu kepala"],per:"orang",cat:"Navigasi",w:100},
+ {k:"sepatu",n:"Sepatu gunung",kw:["sepatu","boots","boot"],per:"orang",cat:"Pribadi",w:900},
+ {k:"air",n:"Air minum",kw:["air minum","air mineral","botol","water","hydropack","jerigen","air"],per:"orang",cat:"Makanan",w:1500,qu:"botol",au:"L",amt:1.5,hint:"minimal 1 wadah per orang"},
+ {k:"makan",n:"Logistik makanan",kw:["logistik","makanan","beras","mie","roti","nasi","sarden","oat","snack"],per:"tim",cat:"Makanan",w:2000},
+ {k:"kompor",n:"Kompor & gas",qu:"set",kw:["kompor","stove","gas"],per:"tim",cat:"Kelompok",w:400,md:true},
+ {k:"p3k",n:"Kotak P3K",kw:["p3k","first aid","kotak obat","obat"],per:"tim",cat:"Medis",w:300},
+ {k:"sampah",n:"Kantong sampah",kw:["kantong sampah","trash bag","trashbag","sampah"],per:"tim",cat:"Lainnya",w:30,hint:"sampah dibawa turun kembali"},
+ {k:"ktp",n:"KTP / kartu identitas",kw:["ktp","identitas","kartu pelajar","paspor"],per:"orang",cat:"Lainnya",w:10},
+];
+const REK=[
+ {n:"Trekking pole",kw:["trekking pole","trekking","tongkat"]},
+ {n:"Peluit",kw:["peluit","whistle"]},
+ {n:"Powerbank",kw:["powerbank","power bank"]},
+ {n:"Peta / kompas / GPS",kw:["peta","kompas","gps","map"]},
+ {n:"Sunblock",kw:["sunblock","sunscreen","tabir surya"]},
+ {n:"Buff / masker",kw:["buff","masker","slayer"]},
+];
+const EXTRA={semeru:[SEHAT,SARUNG,KUPLUK],rinjani:[SEHAT,SARUNG],kerinci:[SARUNG,KUPLUK],gede:[SEHAT]};
+const MT={},MT_ORDER=[];
+PROV.forEach(([prov,list])=>list.forEach(([k,n,org])=>{MT[k]={n,loc:prov,org:org||"",wajib:EXTRA[k]||[]};MT_ORDER.push(k)}));
+const QUICK=[
+ ...BASE.filter(b=>b.k!=="p3k").map(b=>({n:b.n,cat:b.cat,w:b.w,qu:b.qu,au:b.au,amt:b.amt})),
+ {n:"Kotak P3K",cat:"Medis",w:300,qu:"set",subs:["Plester","Kasa dan perban","Antiseptik","Obat pribadi","Minyak kayu putih"]},
+ {n:"Alat mandi",cat:"Pribadi",w:400,qu:"set",subs:["Odol","Sikat gigi","Sabun mandi","Shampo","Handuk kecil"]},
+ {n:"Pakaian ganti",cat:"Pribadi",w:800,qu:"set",subs:["Kaos","Celana","Kaos kaki","Pakaian dalam"]},
+ {n:"Alat masak",cat:"Kelompok",w:1200,qu:"set",subs:["Nesting","Kompor","Gas","Korek api","Spatula"]},
+ {n:"Carrier / tas gunung",cat:"Pribadi",w:1800},{n:"Trekking pole",cat:"Pribadi",w:500},{n:"Powerbank",cat:"Pribadi",w:250},{n:"Peluit",cat:"Navigasi",w:15}];
+
+/* ---------- data ---------- */
+let DB=null,S=null,tab="rencana",scope="pribadi",bview="daftar",grp="anggota",flt="semua",open=new Set();
+// Urutan ini dipakai di QR dan link anggota; 5 kolom pertama sama dengan versi sebelumnya.
+const ID_FIELDS=["phone","ec","ecp","blood","health","allergy","idType","idNo","job","addrKtp","addrDom","ecRel","plate","sameAddr"];
+const blankId=()=>({phone:"",ec:"",ecp:"",blood:"",health:"",allergy:"",idType:"KTP",idNo:"",job:"",addrKtp:"",addrDom:"",ecRel:"",plate:"",sameAddr:false});
+function load(){try{const r=localStorage.getItem(KEY);if(!r)return null;const d=JSON.parse(r);
+  if(d&&d.v===2&&d.profile&&Array.isArray(d.trips)){d.profile={...blankId(),...d.profile};return d}
+  if(d&&d.team&&Array.isArray(d.members)){ // data dari versi pertama
+    const me=d.members.find(m=>m.id===d.me)||{name:"Saya"};
+    d.team.type=d.team.type||"multi";d.team.start=d.team.start||d.team.date||"";d.team.end=d.team.end||"";
+    const trip={id:uid(),role:d.role,me:d.me,team:d.team,members:d.members,items:d.items||[]};
+    return {v:2,profile:{...blankId(),id:d.me,name:me.name},trips:[trip],cur:trip.id};}
+  return null}catch(e){return null}}
+function save(){if(!DB)return;try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){toast("Penyimpanan HP penuh. Hapus beberapa foto barang.")}}
+function syncMe(){const p=DB.profile;DB.trips.forEach(t=>{const m=t.members.find(x=>x.id===p.id);if(m){m.name=p.name;ID_FIELDS.forEach(f=>m[f]=p[f]??"")}})}
+function code8(){const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
+const fmtW=g=>{g=+g||0;return g>=1000?(g/1000).toLocaleString("id-ID",{maximumFractionDigits:1})+" kg":Math.round(g)+" g"};
+function fmtDate(d,short){try{return new Date(d+"T00:00:00").toLocaleDateString("id-ID",short?{day:"numeric",month:"short"}:{day:"numeric",month:"long",year:"numeric"})}catch(e){return d}}
+const norm=s=>" "+String(s).toLowerCase().replace(/[^a-z0-9]+/g," ").trim()+" ";
+const hitName=(name,kw)=>{const n=norm(name);return kw.some(k=>n.includes(" "+k+" ")||n.includes(" "+k))};
+const hit=(it,kw)=>hitName(it.name,kw)||(it.subs||[]).some(s=>hitName(s.n,kw));
+const memName=id=>(S.members.find(m=>m.id===id)||{}).name||"?";
+const initial=n=>esc((n||"?").trim().charAt(0).toUpperCase());
+const roleLabel=r=>r==="solo"?"Individu":r==="leader"?"Ketua tim":"Anggota tim";
+const mtName=k=>MT[k]?MT[k].n:"Gunung belum dipilih";
+const isPacked=i=>i.subs&&i.subs.length?i.subs.every(s=>s.done):!!i.packed;
+
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2800)}
+function ask(msg,yes="Ya"){return new Promise(res=>{const d=$("#askDlg");$("#askMsg").textContent=msg;$("#askYes").textContent=yes;
+  const done=v=>{d.close();res(v)};$("#askYes").onclick=()=>done(true);$("#askNo").onclick=()=>done(false);d.oncancel=()=>res(false);d.showModal()})}
+
+/* ---------- rencana: tipe & tanggal ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>ymd(new Date());
+const addDays=(s,n)=>{const d=new Date(s+"T00:00:00");d.setDate(d.getDate()+n);return ymd(d)};
+const fullDate=v=>!!v&&+v.slice(0,4)>=1900; // tahun sudah lengkap diketik
+function dayCount(t){if(t.type!=="multi"||!t.start||!t.end)return 1;return Math.round((new Date(t.end+"T00:00:00")-new Date(t.start+"T00:00:00"))/864e5)+1}
+function planTxt(t){
+  const label=t.type==="oneday"?"Tektok 1 hari":"Menginap";
+  if(!t.start)return label+", tanggal belum diatur";
+  if(t.type!=="multi")return label+", "+fmtDate(t.start);
+  if(!t.end)return "Mulai "+fmtDate(t.start)+", tanggal turun belum diatur";
+  const n=dayCount(t);if(n<2)return "Tanggal turun belum sesuai";
+  return `${n} hari ${n-1} malam, ${fmtDate(t.start,true)} sampai ${fmtDate(t.end)}`;
+}
+function planError(p){
+  if(p.start&&fullDate(p.start)&&p.start<today())return `Tanggal ${p.type==="multi"?"naik":"pendakian"} sudah lewat. Pilih hari ini atau setelahnya.`;
+  if(p.type==="multi"&&p.end&&fullDate(p.end)){
+    if(p.end<today())return "Tanggal turun sudah lewat.";
+    if(p.start&&p.end<=p.start)return "Tanggal turun minimal 1 hari setelah tanggal naik.";
+  }
+  return "";
+}
+function planHTML(t){const multi=t.type!=="oneday",n=Math.max(2,dayCount(t));
+  return `<div class="fld">Tipe pendakian<div class="seg seg-sm"><button type="button" data-ptype="oneday" aria-pressed="${!multi}">Tektok (1 hari)</button><button type="button" data-ptype="multi" aria-pressed="${multi}">Menginap</button></div></div>
+  <div class="fld">Tanggal
+    <div class="dates"><label class="dbox"><small id="lblStart">${multi?"Naik":"Tanggal"}</small><input type="date" id="pStart" value="${esc(t.start)}" min="${today()}"></label>
+    <label class="dbox ${multi?"":"hidden"}" id="endWrap"><small>Turun</small><input type="date" id="pEnd" value="${esc(t.end)}" min="${addDays(t.start&&t.start>=today()?t.start:today(),1)}"></label></div>
+    <div class="dur ${multi?"":"hidden"}" id="durRow"><button type="button" data-dstep="-1" aria-label="Kurangi satu hari">−</button><span id="dVal" data-n="${n}">${n} hari ${n-1} malam</span><button type="button" data-dstep="1" aria-label="Tambah satu hari">+</button></div>
+    <p class="plan-err" id="durTxt"></p></div>`}
+function readPlan(){const b=document.querySelector('[data-ptype][aria-pressed="true"]');const type=b?b.dataset.ptype:"multi";
+  return {type,start:$("#pStart")?$("#pStart").value:"",end:type==="multi"&&$("#pEnd")?$("#pEnd").value:""}}
+function updatePlanView(){
+  const pl=readPlan(),err=planError(pl),dv=$("#dVal");if(!$("#durTxt"))return err;
+  const multi=pl.type==="multi";
+  $("#endWrap").classList.toggle("hidden",!multi);$("#durRow").classList.toggle("hidden",!multi);
+  $("#lblStart").textContent=multi?"Naik":"Tanggal";
+  if(dv&&!err&&pl.start&&pl.end&&dayCount(pl)>=2)dv.dataset.n=dayCount(pl);
+  if(dv){const n=+dv.dataset.n||2;dv.textContent=`${n} hari ${n-1} malam`}
+  $("#durTxt").textContent=err;
+  return err;
+}
+function onPlanChange(src){
+  // Jangan ubah apa pun saat tanggal masih setengah diketik (tahun 0002, 0020, ...)
+  if(src&&src.type==="date"&&src.value&&!fullDate(src.value))return;
+  const pl=readPlan(),pe=$("#pEnd");
+  if(pe&&src&&src.id!=="pEnd"&&fullDate(pl.start)){
+    pe.min=addDays(pl.start,1);
+    if(pl.type==="multi"&&(!pe.value||pe.value<=pl.start))pe.value=addDays(pl.start,(+$("#dVal").dataset.n||2)-1);
+  }
+  const err=updatePlanView();
+  if(!err&&S&&!$("#app").classList.contains("hidden")){Object.assign(S.team,readPlan());save();renderHeader();renderNav();renderRencanaInfo()}
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-ptype]");
+  if(b){b.parentElement.querySelectorAll("[data-ptype]").forEach(x=>x.setAttribute("aria-pressed",x===b));onPlanChange(b);return}
+  const s=e.target.closest("[data-dstep]");
+  if(s){const dv=$("#dVal"),n=Math.min(30,Math.max(2,(+dv.dataset.n||2)+(+s.dataset.dstep)));dv.dataset.n=n;
+    const st=$("#pStart").value;if(fullDate(st))$("#pEnd").value=addDays(st,n-1);else toast("Pilih tanggal naik dulu, tanggal turun akan terisi otomatis.");
+    onPlanChange(s)}
+});
+document.addEventListener("change",e=>{if(e.target.id==="pStart"||e.target.id==="pEnd")onPlanChange(e.target)});
+document.addEventListener("focusout",e=>{if(e.target.id==="pStart"||e.target.id==="pEnd"){const err=updatePlanView();if(err)toast(err)}});
+
+/* ---------- pilih gunung ---------- */
+function openMtPicker(){
+  const d=$("#mtDlg");
+  d.innerHTML=`<div class="dlg mt-dlg"><div class="dlg-h"><h2 style="margin:0">Pilih gunung</h2><button class="x" data-mt="close" aria-label="Tutup">×</button></div>
+  <input id="mtSearch" class="mt-search" type="search" placeholder="Cari nama gunung atau provinsi" autocomplete="off">
+  <div id="mtList" class="mt-list"></div></div>`;
+  const draw=q=>{q=norm(q).trim();let h="";
+    PROV.forEach(([prov,list])=>{const provHit=!q||norm(prov).includes(q);
+      const its=list.filter(([k,n])=>provHit||norm(n).includes(q));if(!its.length)return;
+      h+=`<p class="mt-prov">${esc(prov)}</p>${its.map(([k,n])=>`<button class="mt-item ${S.team.mountain===k?"on":""}" data-mt="${k}">${esc(n)}${S.team.mountain===k?"<span>Dipilih</span>":""}</button>`).join("")}`});
+    $("#mtList").innerHTML=h||`<p class="empty">Gunung tidak ditemukan. Coba kata lain.</p>`};
+  draw("");$("#mtSearch").oninput=e=>draw(e.target.value);
+  d.onclick=e=>{const b=e.target.closest("[data-mt]");if(!b)return;if(b.dataset.mt==="close"){d.close();return}
+    S.team.mountain=b.dataset.mt;if(S.team.autoName)S.team.name="Pendakian "+MT[b.dataset.mt].n;save();d.close();renderHeader();renderNav();renderRencana();toast(MT[b.dataset.mt].n+" dipilih.")};
+  d.showModal();
+}
+
+/* ---------- cek standar ---------- */
+function checkStd(items,n,mid,type){
+  const m=MT[mid];if(!m)return null;const one=type==="oneday";
+  const wajib=[...BASE,...m.wajib].filter(s=>!(one&&s.md)).map(s=>{
+    const need=s.per==="orang"?n:s.per==="n3"?Math.max(1,Math.ceil(n/3)):1;
+    const have=items.filter(i=>hit(i,s.kw)).reduce((a,i)=>a+(+i.qty||0),0);
+    return {...s,need,have,st:have===0?"red":have<need?"yellow":"green"}});
+  const rekList=[...(one?BASE.filter(s=>s.md).map(s=>({n:s.n,kw:s.kw,sub:"Tidak wajib untuk tektok"})):[]),...REK];
+  const rek=rekList.map(r=>({...r,st:items.some(i=>hit(i,r.kw))?"green":"gray"}));
+  return {wajib,rek,red:wajib.filter(x=>x.st==="red").length,yellow:wajib.filter(x=>x.st==="yellow").length,green:wajib.filter(x=>x.st==="green").length};
+}
+const perTxt=s=>s.per==="orang"?"per orang":s.per==="n3"?"per 3 orang":"per tim";
+const curStd=()=>checkStd(S.items,S.members.length,S.team.mountain,S.team.type);
+
+/* ---------- baris barang ---------- */
+function rowHTML(i,o={}){
+  const own=o.owner?", "+esc(((o.members||S.members).find(m=>m.id===i.owner)||{}).name||""):"";
+  const subs=i.subs||[],sd=subs.filter(s=>s.done).length,pk=isPacked(i);
+  const meta=`${sizeTxt(i)}${own}${i.scope==="tim"?", barang tim":""}${i.color?", "+esc(i.color):""}`;
+  const tags=(subs.length?`<span class="tag sub ${sd===subs.length?"ok":""}">${sd}/${subs.length} isi</span>`:"")+(i.required?'<span class="tag">Wajib</span>':"")+(o.dup?'<span class="tag dup">Duplikat</span>':"");
+  const inner=`${i.photo?`<img src="${i.photo}" alt="">`:""}<span class="rt"><span class="rn">${esc(i.name)}</span><span class="rm">${meta}${i.note?" — "+esc(i.note):""}</span></span>${tags}`;
+  if(o.ro)return `<div class="row ${pk?"packed":""}"><div class="rowmain">${inner}<span class="tag" style="background:${pk?"var(--greenbg)":"var(--bg)"};color:${pk?"var(--green)":"var(--muted)"}">${pk?"Dikemas":"Belum"}</span></div></div>${subs.length?`<div class="subs ro">${subs.map(s=>esc(s.n)).join(", ")}</div>`:""}`;
+  const isOpen=open.has(i.id);
+  return `<div class="row ${pk?"packed":""}"><button class="chk" data-act="pack" data-id="${i.id}" aria-label="Tandai ${esc(i.name)} dikemas" aria-pressed="${pk}"><span>${CHECK_SVG}</span></button><button class="rowmain" data-act="edit" data-id="${i.id}">${inner}</button>${subs.length?`<button class="expand" data-act="toggleopen" data-id="${i.id}" aria-expanded="${isOpen}" aria-label="Lihat isi">${isOpen?"▲":"▼"}</button>`:""}</div>
+  ${subs.length&&isOpen?`<div class="subs">${subs.map((s,k)=>`<button class="subrow ${s.done?"done":""}" data-act="sub" data-id="${i.id}" data-k="${k}"><span class="sbox">${s.done?CHECK_SVG:""}</span>${esc(s.n)}</button>`).join("")}</div>`:""}`;
+}
+function mergedHTML(members,items,opts){
+  const ro=!!opts.readonly;
+  const byOwner=Object.fromEntries(members.map(m=>[m.id,0]));
+  items.forEach(i=>{byOwner[i.owner]=(byOwner[i.owner]||0)+(+i.qty||0)*(+i.weight||0)});
+  const total=Object.values(byOwner).reduce((a,b)=>a+b,0),max=Math.max(1,...Object.values(byOwner));
+  const groups={};items.filter(i=>i.scope==="tim").forEach(i=>{const k=norm(i.name);(groups[k]=groups[k]||new Set()).add(i.owner)});
+  const dup=new Set(Object.keys(groups).filter(k=>groups[k].size>1));
+  const isDup=i=>i.scope==="tim"&&dup.has(norm(i.name));
+  let list=items;
+  if(opts.filter==="belum")list=items.filter(i=>!isPacked(i));
+  if(opts.filter==="dup")list=items.filter(isDup);
+  if(opts.filter==="wajib")list=items.filter(i=>i.required&&!isPacked(i));
+  let h=`<div class="card"><h3 style="margin-top:0">Beban bawaan</h3><div class="wt">${members.map(m=>`<div class="wt-row"><span>${esc(m.name)}</span><div class="bar"><i style="width:${(byOwner[m.id]||0)/max*100}%"></i></div><b>${fmtW(byOwner[m.id]||0)}</b></div>`).join("")}</div>
+  <div class="total"><span>Total berat${members.length>1?" tim":""}</span><b>${fmtW(total)}</b></div></div>`;
+  if(!ro){
+    const f=[["semua","Semua"],["belum","Belum dikemas"],["dup","Duplikat"+(dup.size?` (${dup.size})`:"")],["wajib","Wajib belum dikemas"]];
+    h+=`<div class="seg" style="margin-top:16px"><button data-grp="anggota" aria-pressed="${opts.group==="anggota"}">Per anggota</button><button data-grp="kategori" aria-pressed="${opts.group==="kategori"}">Per kategori</button></div>
+    <div class="chips">${f.map(([k,l])=>`<button class="chip ${opts.filter===k?"on":""}" data-flt="${k}">${l}</button>`).join("")}</div>`;
+  }
+  const secs=opts.group==="kategori"?CATS.map(c=>({t:c,its:list.filter(i=>i.cat===c)})):members.map(m=>({t:m.name,its:list.filter(i=>i.owner===m.id)}));
+  const body=secs.filter(s=>s.its.length).map(s=>`<div class="grp"><div class="grp-h">${esc(s.t)}<small>${s.its.length} barang, ${fmtW(s.its.reduce((a,i)=>a+i.qty*i.weight,0))}</small></div><div class="rows ${ro?"ro":""}">${s.its.map(i=>rowHTML(i,{ro,owner:opts.group==="kategori",members,dup:isDup(i)})).join("")}</div></div>`).join("");
+  return h+(body||`<div class="empty">Tidak ada barang untuk filter ini.</div>`);
+}
+function stdHTML(c,addable){
+  return `<div class="sum3"><div style="background:var(--redbg);color:var(--red)"><b>${c.red}</b>belum ada</div><div style="background:var(--amberbg);color:var(--amber)"><b>${c.yellow}</b>kurang</div><div style="background:var(--greenbg);color:var(--green)"><b>${c.green}</b>sesuai</div></div>
+  <h3>Wajib dibawa</h3><div class="rows">${c.wajib.map(s=>`<div class="std st-${s.st}"><span class="dot">${s.st==="green"?"✓":s.st==="yellow"?"!":"✕"}</span><span class="rt"><b>${esc(s.n)}</b><small>${s.st==="green"?`Sesuai (${s.have} dari ${s.need})`:s.st==="yellow"?`Kurang: ada ${s.have} dari ${s.need}`:`Belum ada, butuh ${s.need}`}, ${s.hint||perTxt(s)}</small></span>${addable&&s.st!=="green"?`<button class="btn sec sm" data-act="addstd" data-k="${s.k}" data-q="${s.need-s.have}">Tambah</button>`:""}</div>`).join("")}</div>
+  <h3>Direkomendasikan</h3><div class="rows">${c.rek.map(r=>`<div class="std st-${r.st}"><span class="dot">${r.st==="green"?"✓":"–"}</span><span class="rt"><b>${esc(r.n)}</b><small>${r.st==="green"?"Sudah ada":r.sub||"Opsional"}</small></span></div>`).join("")}</div>`;
+}
+
+/* ---------- data diri pendaki ---------- */
+const REL=["Orang tua","Suami / istri","Saudara kandung","Anak","Kerabat","Teman","Lainnya"];
+const ID_TYPES=["KTP","Paspor","SIM"];
+const PHONE_RE=/^\+?[0-9][0-9\s-]{7,16}$/;
+const digits=s=>String(s||"").replace(/\D/g,"");
+const missingId=m=>!m.ec||!m.ecp;
+function idLine(m,short){
+  const ec=m.ec?`Kontak darurat: ${esc(m.ec)}${m.ecRel?" ("+esc(m.ecRel)+")":""}${m.ecp?", "+esc(m.ecp):""}`:"";
+  if(short)return [m.phone&&("HP "+esc(m.phone)),ec].filter(Boolean);
+  return [m.idNo&&(esc(m.idType||"KTP")+" "+esc(m.idNo)),m.phone&&("HP "+esc(m.phone)),ec,
+    m.blood&&("Gol. darah "+esc(m.blood)),m.health&&("Riwayat penyakit: "+esc(m.health)),m.allergy&&("Alergi obat: "+esc(m.allergy)),
+    m.outfitDesc&&("Ciri pakaian: "+esc(m.outfitDesc)),m.plate&&("Kendaraan: "+esc(m.plate)),m.job&&("Pekerjaan: "+esc(m.job)),
+    m.addrKtp&&("Alamat KTP: "+esc(m.addrKtp)),(m.sameAddr&&m.addrKtp)?"Domisili: sama dengan KTP":m.addrDom&&("Domisili: "+esc(m.addrDom))].filter(Boolean);
+}
+let idTarget=null;
+function openIdentity(mid){
+  idTarget=mid;const isMe=mid===DB.profile.id;const m=isMe?DB.profile:S.members.find(x=>x.id===mid);if(!m)return;
+  const sel=(id,opts,val,blank)=>`<select id="${id}">${blank?`<option value="">${blank}</option>`:""}${opts.map(o=>`<option ${o===val?"selected":""}>${o}</option>`).join("")}</select>`;
+  $("#idForm").innerHTML=`<div class="dlg-h"><h2 style="margin:0">${isMe?"Data diri saya":"Data diri "+esc(m.name)}</h2><button class="x" data-i="close" aria-label="Tutup">×</button></div>
+  <p class="small muted" style="margin:0">Kolom bertanda <b class="req">*</b> wajib diisi.</p>
+  <h3 class="sec-h">Identitas</h3>
+  <label class="fld">Nama lengkap <b class="req">*</b><input id="iName" value="${esc(m.name)}" maxlength="60" autocomplete="name"></label>
+  <div class="two"><label class="fld">Jenis identitas${sel("iIdType",ID_TYPES,m.idType||"KTP")}</label><label class="fld">Nomor identitas<input id="iIdNo" value="${esc(m.idNo)}" maxlength="20" inputmode="${(m.idType||"KTP")==="Paspor"?"text":"numeric"}"></label></div>
+  <label class="fld">Pekerjaan<input id="iJob" value="${esc(m.job)}" maxlength="40" placeholder="mis. Karyawan swasta, mahasiswa"></label>
+  <label class="fld">Nomor HP<input id="iPhone" type="tel" inputmode="tel" value="${esc(m.phone)}" maxlength="20" placeholder="08…"></label>
+  <h3 class="sec-h">Alamat</h3>
+  <label class="fld">Alamat sesuai KTP<textarea id="iAddrKtp" rows="2" maxlength="160">${esc(m.addrKtp)}</textarea></label>
+  <label class="check"><input type="checkbox" id="iSame" ${m.sameAddr?"checked":""}> Alamat domisili sama dengan alamat KTP</label>
+  <label class="fld ${m.sameAddr?"hidden":""}" id="domWrap">Alamat domisili<textarea id="iAddrDom" rows="2" maxlength="160">${esc(m.addrDom)}</textarea></label>
+  <h3 class="sec-h">Kontak darurat <b class="req">*</b></h3>
+  <p class="small muted" style="margin:0">Orang yang dihubungi bila terjadi sesuatu. Sebaiknya yang tidak ikut mendaki.</p>
+  <div class="two"><label class="fld">Nama <b class="req">*</b><input id="iEc" value="${esc(m.ec)}" maxlength="40" placeholder="mis. Ibu Sari"></label><label class="fld">Hubungan <b class="req">*</b>${sel("iEcRel",REL,m.ecRel,"Pilih")}</label></div>
+  <label class="fld">Nomor HP kontak darurat <b class="req">*</b><input id="iEcp" type="tel" inputmode="tel" value="${esc(m.ecp)}" maxlength="20" placeholder="08…"></label>
+  <h3 class="sec-h">Kesehatan</h3>
+  <p class="small muted" style="margin:0">Opsional. Data kesehatan termasuk data sensitif. Isi hanya bila kamu setuju data ini dibaca petugas lewat QR, misalnya agar bisa ditangani tepat saat darurat.</p>
+  <label class="fld">Golongan darah${sel("iBlood",["A","B","AB","O"],m.blood,"Tidak tahu")}</label>
+  <label class="fld">Riwayat penyakit<textarea id="iHealth" rows="2" maxlength="120" placeholder="mis. asma, darah tinggi. Kosongkan bila tidak ada.">${esc(m.health)}</textarea></label>
+  <label class="fld">Alergi obat<input id="iAllergy" value="${esc(m.allergy)}" maxlength="80" placeholder="mis. amoxicillin. Kosongkan bila tidak ada."></label>
+  <h3 class="sec-h">Kendaraan</h3>
+  <label class="fld">Plat nomor kendaraan yang diparkir<input id="iPlate" value="${esc(m.plate)}" maxlength="15" placeholder="mis. B 1234 XYZ" style="text-transform:uppercase"></label>
+  <p class="small muted" style="margin:6px 0 0">Data ini disimpan di HP ini dan ikut masuk QR Code untuk petugas registrasi. Bagikan QR hanya kepada pihak yang perlu. <button type="button" class="linkbtn" data-i="priv">Baca kebijakan privasi</button></p>
+  <div class="dlg-foot"><button class="btn pri full" data-i="save">Simpan data diri</button></div>`;
+  $("#idDlg").showModal();
+}
+$("#idForm").addEventListener("change",e=>{
+  if(e.target.id==="iSame")$("#domWrap").classList.toggle("hidden",e.target.checked);
+  if(e.target.id==="iIdType")$("#iIdNo").inputMode=e.target.value==="Paspor"?"text":"numeric";
+});
+function idFail(msg,id){toast(msg);const el=$("#"+id);if(el){el.focus();el.scrollIntoView({block:"center"})}}
+$("#idForm").addEventListener("click",e=>{
+  const a=e.target.closest("[data-i]");if(!a)return;
+  if(a.dataset.i==="close"){$("#idDlg").close();return}
+  if(a.dataset.i==="priv"){$("#idDlg").close();renderPrivacy(S?"app":"home");return}
+  const v=id=>$("#"+id).value.trim();
+  const d={name:v("iName"),idType:v("iIdType"),idNo:v("iIdNo").toUpperCase().replace(/\s+/g,""),job:v("iJob"),phone:v("iPhone"),
+    addrKtp:v("iAddrKtp"),sameAddr:$("#iSame").checked,addrDom:$("#iSame").checked?"":v("iAddrDom"),
+    ec:v("iEc"),ecRel:v("iEcRel"),ecp:v("iEcp"),blood:v("iBlood"),health:v("iHealth"),allergy:v("iAllergy"),plate:v("iPlate").toUpperCase().replace(/\s+/g," ")};
+  if(!d.name)return idFail("Nama lengkap wajib diisi.","iName");
+  if(d.idNo){
+    if(d.idType==="KTP"&&!/^\d{16}$/.test(d.idNo))return idFail("Nomor KTP (NIK) harus 16 angka.","iIdNo");
+    if(d.idType==="SIM"&&!/^\d{10,16}$/.test(d.idNo))return idFail("Nomor SIM harus berupa angka (10 sampai 16 digit).","iIdNo");
+    if(d.idType==="Paspor"&&!/^[A-Z0-9]{6,9}$/.test(d.idNo))return idFail("Nomor paspor terdiri dari 6 sampai 9 huruf atau angka.","iIdNo");
+  }
+  if(d.phone&&!PHONE_RE.test(d.phone))return idFail("Nomor HP belum benar. Contoh: 081234567890.","iPhone");
+  if(!d.ec)return idFail("Nama kontak darurat wajib diisi.","iEc");
+  if(!d.ecRel)return idFail("Pilih hubungan dengan kontak darurat.","iEcRel");
+  if(!d.ecp)return idFail("Nomor HP kontak darurat wajib diisi.","iEcp");
+  if(!PHONE_RE.test(d.ecp))return idFail("Nomor kontak darurat belum benar. Contoh: 081234567890.","iEcp");
+  if(d.phone&&digits(d.phone)===digits(d.ecp))return idFail("Nomor kontak darurat harus berbeda dari nomor HP pendaki.","iEcp");
+  if(idTarget===DB.profile.id){Object.assign(DB.profile,d);syncMe()}
+  else{const m=S&&S.members.find(x=>x.id===idTarget);if(m)Object.assign(m,d)}
+  save();$("#idDlg").close();toast("Data diri disimpan.");
+  if(!$("#home").classList.contains("hidden"))renderHome();else if(S){renderHeader();renderNav();setTab(tab)}
+});
+
+/* ---------- navigasi layar ---------- */
+function show(id){["intro","guide","privacy","onboard","home","app","officer","postool"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
+  if(id!=="onboard")$("#onboard").innerHTML="";if(id!=="app")$("#tab-rencana").innerHTML="";window.scrollTo(0,0)}
+
+/* ---------- onboarding & pendakian baru ---------- */
+function renderOnboard(step){
+  const o=$("#onboard");show("onboard");
+  const hero=`<div class="ob-hero${DB?" slim":""}"><svg class="topo"><use href="#topo"/></svg><div class="ob-in">${DB?`<button class="backbtn" data-ob-home>${BACK_SVG} Menu utama</button>`:""}<h1>${DB?"Pendakian baru":"Siap Nanjak"}</h1><p>${DB?"Pilih cara kamu mendaki kali ini.":"Siapkan perlengkapan bersama tim, cocokkan dengan standar gunung tujuan, lalu tunjukkan satu QR di pos registrasi."}</p></div></div>`;
+  if(!step){o.innerHTML=hero+`<div class="wrap stack">${DB?"":`<label class="fld">Nama kamu<input id="obName" placeholder="mis. Budi" maxlength="60"></label>
+    <label class="check consent"><input type="checkbox" id="obConsent"><span>Saya sudah membaca dan menyetujui <button type="button" class="linkbtn" data-ob-priv>Kebijakan Privasi</button>, termasuk penyimpanan data diri dan data kesehatan di HP ini.</span></label>`}
+    <p class="muted" style="margin:6px 0 0">Kamu mendaki sebagai</p>
+    <button class="opt" data-ob="solo"><b>Pendaki individu</b><span>Daftar perlengkapan untuk dirimu sendiri</span></button>
+    <button class="opt" data-ob="leader"><b>Buat tim baru</b><span>Kamu jadi ketua tim dan mendapat kode tim</span></button>
+    <button class="opt" data-ob="member"><b>Gabung ke tim</b><span>Masukkan kode tim dari ketua</span></button>
+    ${DB?"":`<button class="btn sec full" data-ob-intro style="margin-top:6px">Lihat lagi pengenalan aplikasi</button>`}</div>`;return}
+  const nm=esc(step.name);
+  if(step.role==="member"){o.innerHTML=hero+`<div class="wrap stack"><h2>Gabung ke tim</h2>
+    <label class="fld">Kode tim<input id="obCode" maxlength="8" placeholder="mis. AB123XYZ" style="text-transform:uppercase;letter-spacing:.1em"></label>
+    <label class="fld">Nama tim (opsional)<input id="obTeam" maxlength="40"></label>
+    <button class="btn pri full" data-ob-go="member" data-name="${nm}">Gabung</button><button class="btn sec full" data-ob-back>Kembali</button></div>`;return}
+  o.innerHTML=hero+`<div class="wrap stack"><h2>Buat tim baru</h2>
+    <label class="fld">Nama tim<input id="obTeam" maxlength="40" placeholder="mis. GunungMania"></label>
+    <label class="fld">Deskripsi tim (opsional)<textarea id="obDesc" rows="2" maxlength="160" placeholder="mis. Lewat jalur Sembalun, berangkat dari Mataram"></textarea></label>
+    <p class="small muted" style="margin:0">Gunung dan tanggal diatur di langkah berikutnya.</p>
+    <button class="btn pri full" data-ob-go="leader" data-name="${nm}">Buat tim</button><button class="btn sec full" data-ob-back>Kembali</button></div>`;
+}
+function createTrip(role,name,team){
+  if(!DB)DB={v:2,profile:{...blankId(),id:uid(),name},trips:[],cur:null,consent:{v:PRIVACY_VER,t:new Date().toISOString()}};
+  const p=DB.profile,me={id:p.id,name:p.name};ID_FIELDS.forEach(f=>me[f]=p[f]??"");
+  S={id:uid(),role,me:p.id,team:{desc:"",mountain:"",type:"multi",start:"",end:"",...team},members:[me],items:[]};DB.trips.push(S);
+  scope="pribadi";bview="daftar";flt="semua";qrLink="";kartuWho=null;kartu=null;
+  tab=role==="member"?"barang":"rencana";renderApp();
+}
+$("#onboard").addEventListener("click",e=>{
+  if(e.target.closest("[data-ob-home]")){renderHome();return}
+  if(e.target.closest("[data-ob-back]")){renderOnboard();return}
+  if(e.target.closest("[data-ob-intro]")){introIdx=0;renderIntro();return}
+  if(e.target.closest("[data-ob-priv]")){e.preventDefault();renderPrivacy("onboard");return}
+  const r=e.target.closest("[data-ob]");
+  if(r){const name=DB?DB.profile.name:$("#obName").value.trim();if(!name){toast("Isi nama kamu dulu.");$("#obName").focus();return}
+    if(!DB&&!$("#obConsent").checked){toast("Centang persetujuan Kebijakan Privasi untuk melanjutkan.");$("#obConsent").focus();return}
+    if(r.dataset.ob==="solo"){createTrip("solo",name,{name:"Pendakian saya",code:code8(),autoName:true});toast("Mulai dengan memilih gunung dan tanggal.");return}
+    renderOnboard({role:r.dataset.ob,name});return}
+  const g=e.target.closest("[data-ob-go]");if(!g)return;
+  if(g.dataset.obGo==="member"){const c=$("#obCode").value.trim().toUpperCase();if(c.length<4){toast("Masukkan kode tim dari ketua.");return}
+    createTrip("member",g.dataset.name,{name:$("#obTeam").value.trim()||"Tim "+c,code:c});return}
+  const tn=$("#obTeam").value.trim();if(!tn){toast("Isi nama tim.");return}
+  createTrip("leader",g.dataset.name,{name:tn,code:code8(),desc:$("#obDesc").value.trim()});
+  toast("Tim dibuat. Sekarang pilih gunung dan tanggal.");
+});
+
+/* ---------- menu utama ---------- */
+function renderHome(){
+  S=null;qrLink="";DB.cur=null;save();show("home");
+  const p=DB.profile,lines=idLine(p,true);
+  const trips=DB.trips.slice().sort((a,b)=>(a.team.start||"9999").localeCompare(b.team.start||"9999"));
+  $("#home").innerHTML=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><p class="hdr-sub">Siap Nanjak</p><h1>Halo, ${esc(p.name)}</h1><p class="hdr-meta">${trips.length?`Kamu punya ${trips.length} rencana pendakian.`:"Belum ada rencana pendakian."}</p></div></header>
+  <div class="wrap">${hasConsent()?"":`<div class="card pv-ask"><b>Kebijakan privasi</b><p class="small muted" style="margin:4px 0 10px">Kami menambahkan kebijakan privasi yang menjelaskan cara aplikasi menyimpan dan membagikan datamu. Mohon dibaca dan disetujui.</p><div class="two"><button class="btn sec" data-act="privacy">Baca</button><button class="btn pri" data-act="agreepriv">Saya setuju</button></div></div>`}<div class="card idcard"><span class="av lg">${initial(p.name)}</span><div style="flex:1;min-width:0"><b>${esc(p.name)}</b><p class="small muted" style="margin:2px 0 0">${lines.length?lines.join("<br>"):"Data diri belum diisi."}</p></div></div>
+  ${missingId(p)?`<p class="note warn" style="margin-top:10px">Kontak darurat wajib diisi sebelum membuat QR Code registrasi.</p>`:""}
+  <button class="btn ${missingId(p)?"pri":"sec"} full" data-act="editme" style="margin-top:10px">${missingId(p)?"Lengkapi data diri":"Lihat dan ubah data diri"}</button>
+  <h3 style="margin-top:26px">Pendakian dan tim saya</h3>
+  <div class="stack">${trips.map(t=>{const n=t.items.length,pk=t.items.filter(isPacked).length;
+    return `<button class="trip" data-act="opentrip" data-id="${t.id}"><span class="trip-top"><b>${esc(t.team.name)}</b><span class="role">${roleLabel(t.role)}</span></span>
+    <span class="small">${esc(mtName(t.team.mountain))}. ${esc(planTxt(t.team))}</span>
+    <span class="bar"><i style="width:${n?pk/n*100:0}%"></i></span><span class="small muted">${pk} dari ${n} barang dikemas${t.role!=="solo"?`, ${t.members.length} pendaki, kode ${esc(t.team.code)}`:""}</span></button>`}).join("")||`<div class="empty">Ketuk tombol di bawah untuk membuat rencana pertamamu.</div>`}</div>
+  <button class="btn blaze full" data-act="newtrip" style="margin-top:14px">+ Tambah pendakian atau tim</button>
+  <div class="two" style="margin-top:24px"><button class="btn sec" data-act="guide">⛑️ Panduan keselamatan</button><button class="btn sec" data-act="intro">Tentang aplikasi</button></div>
+  <div class="card" style="margin-top:20px"><b>Petugas pos atau basecamp?</b><p class="small muted" style="margin:4px 0 10px">Buat poster QR check point dan catat pendaki yang lewat, tanpa perlu sinyal.</p><button class="btn sec full" data-act="postool">Buka alat petugas pos</button></div>
+  <div style="margin-top:20px" class="stack"><button class="btn sec full" data-act="privacy">Kebijakan privasi</button><button class="btn sec full" data-act="resetall">Hapus semua data di HP ini</button></div></div>`;
+}
+$("#home").addEventListener("click",async e=>{
+  const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act;
+  if(act==="editme")openIdentity(DB.profile.id);
+  if(act==="newtrip")renderOnboard();
+  if(act==="postool"){activePos=null;renderPosTool()}
+  if(act==="guide")renderGuide("home");
+  if(act==="privacy")renderPrivacy("home");
+  if(act==="agreepriv"){DB.consent={v:PRIVACY_VER,t:new Date().toISOString()};save();renderHome();toast("Terima kasih, persetujuan disimpan.")}
+  if(act==="intro"){introIdx=0;renderIntro("home")}
+  if(act==="opentrip"){S=DB.trips.find(t=>t.id===a.dataset.id);if(!S)return;kartuWho=null;kartu=null;scope="pribadi";bview="daftar";flt="semua";qrLink="";
+    tab=stepDone().rencana||S.role==="member"?"barang":"rencana";renderApp()}
+  if(act==="resetall"&&await ask("Semua pendakian, tim, dan data diri di HP ini akan dihapus. Lanjutkan?","Hapus semua")){try{localStorage.removeItem(KEY)}catch(err){}DB=null;S=null;renderOnboard()}
+});
+
+/* ---------- langkah persiapan ---------- */
+const TABS=[["rencana","Rencana",'<path d="M2 20l7-12 4 6 3-4 6 10H2z"/>'],["barang","Barang",'<path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'],["tim","Tim",'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5.5"/>'],["berangkat","Berangkat",'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v7M14 20h3"/>'],["jalur","Di jalur",'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>']];
+const tabsFor=()=>TABS.filter(t=>t[0]!=="tim"||S.role!=="solo");
+function stepDone(){
+  const t=S.team,c=curStd();
+  return {rencana:!!(t.mountain&&t.start&&(t.type==="oneday"||t.end)&&!planError(t)),
+    barang:S.items.length>0&&(!c||(c.red===0&&c.yellow===0)),
+    tim:S.role==="solo"?true:!S.members.some(missingId),
+    berangkat:false,jalur:!!S.finished};
+}
+function renderNav(){
+  const d=stepDone(),tabs=tabsFor(),nav=$("nav.bottom");
+  nav.style.gridTemplateColumns=`repeat(${tabs.length},1fr)`;
+  nav.innerHTML=tabs.map(([k,l,ic],i)=>`<button data-tab="${k}" aria-current="${tab===k}"><span class="nav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${d[k]?'<i class="nav-ok" aria-label="selesai"></i>':""}</span>${i+1}. ${l}</button>`).join("");
+}
+function nextBtn(){
+  const tabs=tabsFor(),i=tabs.findIndex(t=>t[0]===tab),n=tabs[i+1];
+  return n?`<button class="btn pri full next" data-tab="${n[0]}">Lanjut ke ${n[1]} ${NEXT_SVG}</button>`:"";
+}
+
+/* ---------- aplikasi (satu pendakian) ---------- */
+function renderApp(){DB.cur=S.id;save();show("app");renderHeader();setTab(tab)}
+function setTab(t){if(t==="tim"&&S.role==="solo")t="berangkat";tab=t;
+  ["rencana","barang","tim","berangkat","jalur"].forEach(x=>$("#tab-"+x).classList.toggle("hidden",x!==t));
+  $("#fab").classList.toggle("hidden",!(t==="barang"&&bview==="daftar"));
+  renderNav();({rencana:renderRencana,barang:renderBarang,tim:renderTim,berangkat:renderBerangkat,jalur:renderJalur})[t]();}
+function renderHeader(){const t=S.team;
+  $("#hdr").innerHTML=`<button class="backbtn" data-act="home">${BACK_SVG} Menu utama</button>
+  <div class="hdr-row"><div><p class="hdr-sub">${S.role==="solo"?"Pendakian individu":S.role==="leader"?"Kamu ketua tim":"Kamu anggota tim"}</p><h1>${esc(t.name)}</h1><p class="hdr-meta">${esc(mtName(t.mountain))}<br>${esc(planTxt(t))}</p></div>${S.role!=="solo"?`<button class="codechip" data-act="copycode" aria-label="Salin kode tim">${esc(t.code)}</button>`:""}</div>`;}
+
+/* 1. Rencana */
+function renderRencana(){
+  const t=S.team,m=MT[t.mountain];
+  $("#tab-rencana").innerHTML=`<p class="step-lbl">Langkah 1</p><h2>Rencana pendakian</h2>
+  <div class="card stack">
+    ${S.role!=="member"?`<label class="fld">Nama ${S.role==="leader"?"tim":"pendakian"}<input id="tnSel" value="${esc(t.name)}" maxlength="40"></label>`:""}
+    ${S.role==="leader"?`<label class="fld">Deskripsi tim<textarea id="tdSel" rows="2" maxlength="160" placeholder="mis. lewat jalur Sembalun">${esc(t.desc)}</textarea></label>`:""}
+    <div class="fld">Gunung tujuan<button class="mt-btn" data-act="pickmt"><span>${m?`<b>${esc(m.n)}</b><small>${esc(m.loc)}</small>`:`<b class="muted">Pilih gunung</b><small>${MT_ORDER.length} gunung di ${PROV.length} provinsi</small>`}</span><span aria-hidden="true">▾</span></button></div>
+    ${planHTML(t)}
+  </div>
+  <div id="rencanaInfo"></div>
+  <div class="next-wrap">${nextBtn()}</div>`;
+  updatePlanView();renderRencanaInfo();
+}
+function renderRencanaInfo(){
+  const box=$("#rencanaInfo");if(!box)return;const t=S.team,m=MT[t.mountain];
+  if(!m){box.innerHTML="";return}
+  const c=curStd(),n=dayCount(t);
+  box.innerHTML=`<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Tentang ${esc(m.n)}</h3>
+  <p class="small muted" style="margin:-4px 0 12px">${esc(m.loc)}${m.org?`. Dikelola ${esc(m.org)}.`:""}</p>
+  <div class="info-row"><span class="rt"><b>${c.wajib.length} perlengkapan wajib</b><small>untuk pendakian ${t.type==="oneday"?"tektok":"menginap"}</small></span><button class="btn sec sm" data-act="gostd">Lihat daftar</button></div>
+  ${t.type==="multi"&&n>1?`<div class="info-row"><span class="rt"><b>Logistik ${n} hari</b><small>ditambah cadangan untuk keadaan darurat</small></span></div>`:""}
+  ${m.org?"":`<p class="note" style="margin:12px 0 0">Aturan pendakian di gunung ini biasanya ditentukan oleh basecamp masing-masing jalur. Tanyakan aturan terbaru saat registrasi.</p>`}</div>
+  <label class="fld" style="margin-top:14px">Nomor HP basecamp (opsional)<input id="bcSel" type="tel" inputmode="tel" value="${esc(t.bcPhone||"")}" maxlength="20" placeholder="dipakai untuk SMS laporan check point"></label>
+  <div class="card guide-cta"><span class="g-big" aria-hidden="true">⛑️</span><div class="rt"><b>Panduan keselamatan</b><small>Persiapan, cuaca buruk, hipotermia, jika tersesat, cedera, gunung api, dan etika. Bisa dibaca tanpa sinyal.</small></div></div>
+  <button class="btn sec full" data-act="guide" style="margin-top:8px">Baca panduan keselamatan</button>
+  <p class="small muted" style="margin-top:12px">Standar perlengkapan di aplikasi ini adalah contoh umum. Pastikan cek aturan terbaru ke ${m.org?esc(m.org):"basecamp jalur yang kamu pilih"}.</p>`;
+}
+
+/* 2. Barang */
+function visibleItems(){
+  if(S.role==="solo")return S.items;
+  if(S.role==="leader"&&scope==="tim")return S.items.filter(i=>i.scope==="tim");
+  return S.items.filter(i=>i.owner===S.me&&i.scope===scope);
+}
+function renderBarang(){
+  const c=curStd(),issues=c?c.red+c.yellow:0;
+  let h=`<p class="step-lbl">Langkah 2</p><h2>Barang bawaan</h2>
+  <div class="seg"><button data-bview="daftar" aria-pressed="${bview==="daftar"}">Daftar barang</button><button data-bview="standar" aria-pressed="${bview==="standar"}">Cek standar${issues?` <span class="badge">${issues}</span>`:c?" ✓":""}</button></div>`;
+  $("#fab").classList.toggle("hidden",bview!=="daftar");
+  if(bview==="standar"){
+    if(!c)h+=`<div class="empty"><p>Pilih gunung tujuan dulu di menu Rencana untuk melihat perlengkapan wajibnya.</p><button class="btn sec" data-tab="rencana">Buka Rencana</button></div>`;
+    else{h+=`<p class="muted small">${esc(MT[S.team.mountain].n)}, ${S.team.type==="oneday"?"tektok":"menginap"}, untuk <b>${S.members.length} pendaki</b>. Ketuk "Tambah" untuk memasukkan barang yang kurang.</p>`;
+      if(S.role==="member")h+=`<p class="note">Ini pengecekan daftarmu saja. Pengecekan lengkap dilakukan ketua setelah semua daftar terkumpul.</p>`;
+      h+=stdHTML(c,true);}
+    $("#tab-barang").innerHTML=h+`<div class="next-wrap">${nextBtn()}</div>`;return;
+  }
+  const its=visibleItems(),packed=its.filter(isPacked).length,pct=its.length?packed/its.length*100:0;
+  const have=new Set(its.map(i=>norm(i.name)));
+  const quick=QUICK.filter(q=>!have.has(norm(q.n)));
+  if(S.role!=="solo")h+=`<div class="pills"><button data-scope="pribadi" aria-pressed="${scope==="pribadi"}">Barang pribadi</button><button data-scope="tim" aria-pressed="${scope==="tim"}">${S.role==="leader"?"Barang bersama tim":"Kontribusi ke tim"}</button></div>`;
+  h+=`<div class="prog"><div class="prog-t"><span>Sudah dikemas</span><b>${packed} dari ${its.length}</b></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  if(quick.length)h+=`<p class="small muted" style="margin:0 0 6px">Tambah cepat</p><div class="chips">${quick.map(q=>`<button class="chip" data-quick="${esc(q.n)}">+ ${esc(q.n)}${q.subs?` <small>(${q.subs.length} isi)</small>`:""}</button>`).join("")}</div>`;
+  if(!its.length)h+=`<div class="empty"><p><b>Daftar masih kosong.</b></p><p>Ketuk "Tambah barang" atau pilih dari tambah cepat di atas.</p></div>`;
+  CATS.forEach(cat=>{const g=its.filter(i=>i.cat===cat);if(!g.length)return;
+    h+=`<div class="grp"><div class="grp-h">${cat}<small>${fmtW(g.reduce((a,i)=>a+i.qty*i.weight,0))}</small></div><div class="rows">${g.map(i=>rowHTML(i,{owner:S.role==="leader"&&scope==="tim"})).join("")}</div></div>`});
+  $("#tab-barang").innerHTML=h+`<div class="next-wrap">${nextBtn()}</div>`;
+}
+
+/* 3. Tim */
+function memberRows(){
+  return S.members.map(m=>{const l=idLine(m,true);return `<div class="mem"><span class="av">${initial(m.name)}</span><span style="flex:1;min-width:0">${esc(m.name)}${m.id===S.me?` <span class="muted small">(kamu${S.role==="leader"?", ketua":""})</span>`:""}<span class="small muted" style="display:block">${l.length?l.join(", "):""}${missingId(m)?'<span class="tag dup" style="display:inline-block;margin-top:4px">Kontak darurat belum diisi</span>':""}</span></span>
+  ${S.role==="leader"||m.id===S.me?`<button class="btn sec sm" data-act="editid" data-id="${m.id}">Ubah</button>`:""}${S.role==="leader"&&m.id!==S.me?`<button class="btn sec sm" data-act="rmmem" data-id="${m.id}" aria-label="Hapus ${esc(m.name)}">Hapus</button>`:""}</div>`}).join("");
+}
+const tripFooter=()=>`<div style="margin-top:28px" class="noprint stack"><button class="btn sec full" data-act="home">Kembali ke menu utama</button><button class="btn sec full" data-act="deltrip" style="color:var(--red)">Hapus pendakian ini</button></div>`;
+function renderTim(){
+  const el=$("#tab-tim"),t=S.team;
+  if(S.role==="member"){
+    el.innerHTML=`<p class="step-lbl">Langkah 3</p><h2>Tim ${esc(t.name)}</h2><div class="card"><p class="muted small" style="margin:0">Kode tim</p><div class="codebig">${esc(t.code)}</div>
+    <p class="muted small" style="margin:0">Daftar barang dan data dirimu dikirim ke ketua di langkah Berangkat.</p></div>
+    <h3>Data diri kamu</h3><div class="card">${memberRows()}</div><div class="next-wrap">${nextBtn()}</div>`;return}
+  el.innerHTML=`<p class="step-lbl">Langkah 3</p><h2>Anggota tim</h2><div class="card"><p class="muted small" style="margin:0">Kode tim, bagikan ke anggota</p><div class="codebig">${esc(t.code)}</div>
+    <div class="two"><button class="btn sec" data-act="copycode">Salin kode</button><button class="btn sec" data-act="sharecode">Bagikan</button></div></div>
+    <h3>Anggota (${S.members.length})</h3><div class="card">${memberRows()}
+    <div class="two" style="margin-top:10px;grid-template-columns:1fr auto"><input id="newMem" placeholder="Nama anggota baru" maxlength="40" class="inp"><button class="btn pri" data-act="addmem">Tambah</button></div>
+    <p class="muted small" style="margin:10px 0 0">Anggota bisa mengisi sendiri lewat "Gabung ke tim", lalu mengirim daftarnya ke kamu. Kamu juga bisa menambahkan anggota di sini dan mengisi data serta barangnya.</p></div>
+    <h3>Gabungan daftar tim</h3>`+mergedHTML(S.members,S.items,{group:grp,filter:flt})+`<div class="next-wrap">${nextBtn()}</div>`;
+}
+
+/* 4. Berangkat: cek akhir, QR, kartu pengenal */
+function renderBerangkat(){
+  const el=$("#tab-berangkat"),d=stepDone(),c=curStd(),t=S.team;
+  const its=S.role==="member"?S.items.filter(i=>i.owner===S.me):S.items,pk=its.filter(isPacked).length;
+  const noId=S.members.filter(missingId).map(m=>m.name);
+  const row=(ok,title,sub,btn)=>`<div class="ck ${ok?"ok":""}"><span class="dot">${ok?"✓":"!"}</span><span class="rt"><b>${title}</b><small>${sub}</small></span>${!ok&&btn?btn:""}</div>`;
+  let h=`<p class="step-lbl">Langkah terakhir</p><h2>Siap berangkat</h2>
+  <div class="rows cklist">
+   ${row(d.rencana,"Rencana pendakian",d.rencana?`${esc(mtName(t.mountain))}, ${esc(planTxt(t))}`:(planError(t)||"Gunung atau tanggal belum lengkap"),`<button class="btn sec sm" data-tab="rencana">Atur</button>`)}
+   ${row(!noId.length,"Data diri dan kontak darurat",noId.length?`Belum lengkap: ${noId.map(esc).join(", ")}`:"Semua pendaki sudah lengkap",`<button class="btn sec sm" data-act="${S.role==="leader"?"gotim":"editid"}" data-id="${S.me}">Isi</button>`)}
+   ${row(c&&c.red+c.yellow===0,"Perlengkapan wajib",!c?"Pilih gunung untuk cek standar":c.red+c.yellow?`${c.red} belum ada, ${c.yellow} kurang`:"Sesuai standar",`<button class="btn sec sm" data-act="gostd">Cek</button>`)}
+   ${row(its.length&&pk===its.length,"Barang dikemas",`${pk} dari ${its.length} barang`,`<button class="btn sec sm" data-tab="barang">Lihat</button>`)}
+  </div>`;
+  if(S.role==="member"){
+    h+=`<div class="card" style="margin-top:16px"><h3 style="margin-top:0">Kirim ke ketua tim</h3><p class="small muted">QR Code registrasi dibuat oleh ketua. Kirim daftar barang dan data dirimu agar masuk ke daftar tim.</p><button class="btn pri full" data-act="sendleader">Kirim daftar saya ke ketua</button></div>`;
+  }else{
+    const blocked=!d.rencana||noId.length;
+    h+=`<div class="card" style="margin-top:16px"><h3 style="margin-top:0">QR Code registrasi</h3>
+    <p class="small muted">Tunjukkan QR ini hanya ke petugas di pos registrasi. Isinya rencana, data diri dan kesehatan anggota, daftar barang, dan total berat. Isi QR tidak dienkripsi, jadi jangan unggah ke media sosial. Buat ulang setiap kali data berubah.</p>
+    ${blocked?`<p class="note warn">Lengkapi rencana dan kontak darurat semua pendaki dulu.</p>`:c&&c.red?`<p class="note">Masih ada ${c.red} perlengkapan wajib belum ada. QR tetap bisa dibuat, tapi sebaiknya dilengkapi.</p>`:""}
+    <button class="btn pri full" data-act="genqr" ${blocked?"disabled":""} style="margin-top:8px">${qrLink?"Perbarui QR Code":"Buat QR Code"}</button><div id="qrOut" style="margin-top:14px"></div></div>`;
+    if(blocked)qrLink="";
+  }
+  h+=kartuHTML()+`<div class="next-wrap">${nextBtn()}</div>`+tripFooter();
+  el.innerHTML=h;if(qrLink&&S.role!=="member")drawQR();
+}
+
+/* ---------- kartu pengenal pendaki ---------- */
+let kartuWho=null,kartu=null;
+const KEY_ITEMS=[["carrier","tas","ransel","backpack","daypack"],["jaket","jacket","polar","fleece"],["jas hujan","ponco","poncho","raincoat"],["tenda","tent","dome"],["sepatu","boots"],["sleeping bag","kantong tidur"]];
+const keyRank=i=>{const k=KEY_ITEMS.findIndex(ks=>hitName(i.name,ks));return k<0?99:k};
+function photoBtns(prefix){return `<span class="btn sec sm filebtn">${CAM_SVG} Kamera<input type="file" accept="image/*" capture="environment" data-photo="${prefix}"></span><span class="btn sec sm filebtn">Galeri<input type="file" accept="image/*" data-photo="${prefix}"></span>`}
+function kartuHTML(){
+  if(!kartuWho||!S.members.some(m=>m.id===kartuWho))kartuWho=S.me;
+  const m=S.members.find(x=>x.id===kartuWho),its=S.items.filter(i=>i.owner===kartuWho).sort((a,b)=>keyRank(a)-keyRank(b));
+  const shot=its.filter(i=>i.photo).length,hasBag=its.some(i=>hitName(i.name,KEY_ITEMS[0]));
+  return `<div class="card" style="margin-top:16px" id="kartuSec"><h3 style="margin-top:0">Kartu pengenal pendaki</h3>
+  <p class="small muted">Berisi foto, ciri pakaian, dan warna perlengkapan agar kamu mudah dikenali di jalur. Kirim ke keluarga atau titipkan di basecamp sebelum naik.</p>
+  ${S.role==="leader"&&S.members.length>1?`<label class="fld" style="margin-bottom:10px">Kartu untuk<select id="kartuWhoSel">${S.members.map(x=>`<option value="${x.id}" ${x.id===kartuWho?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label>`:""}
+  <div class="outfit">${m.outfit?`<img src="${m.outfit}" alt="Foto ${esc(m.name)}">`:`<div class="ph-empty">${CAM_SVG}<span>Foto diri</span></div>`}
+    <div class="stack" style="gap:8px;flex:1;min-width:0"><p class="small" style="margin:0"><b>Foto diri dengan pakaian mendaki</b><br><span class="muted">Seluruh badan, memakai jaket, sepatu, dan carrier.</span></p>
+    <div class="photo-acts">${photoBtns("outfit")}${m.outfit?'<button class="btn sec sm" data-act="rmoutfit">Hapus</button>':""}</div></div></div>
+  <label class="fld" style="margin-top:12px">Ciri pakaian<input id="outfitDesc" value="${esc(m.outfitDesc)}" maxlength="120" placeholder="mis. jaket merah, celana hitam, topi kuning"></label>
+  <p class="small" style="margin:14px 0 6px"><b>Foto dan warna barang</b> <span class="muted">(${shot} dari ${its.length} difoto). Ketuk barang untuk menambahkan.</span></p>
+  ${hasBag?"":`<button class="btn sec full sm" data-act="addbag" style="margin-bottom:10px">+ Tambah carrier / tas ke daftar</button>`}
+  <div class="kt-grid">${its.map(i=>`<button class="kt-tile" data-act="edit" data-id="${i.id}">${i.photo?`<img src="${i.photo}" alt="">`:`<span class="ph-empty">${CAM_SVG}</span>`}<b>${esc(i.name)}</b><small class="${i.color?"":"miss"}">${i.color?esc(i.color):"Warna belum diisi"}</small></button>`).join("")||'<p class="muted small">Belum ada barang.</p>'}</div>
+  <button class="btn blaze full" data-act="mkkartu" style="margin-top:14px">Buat kartu pengenal</button><div id="kartuOut"></div></div>`;
+}
+function loadImg(src){return new Promise(r=>{if(!src)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
+function drawCover(x,img,dx,dy,dw,dh){const s=Math.max(dw/img.width,dh/img.height),sw=dw/s,sh=dh/s;x.drawImage(img,(img.width-sw)/2,(img.height-sh)/2,sw,sh,dx,dy,dw,dh)}
+function wrap(x,text,maxW){const words=String(text).split(/\s+/),out=[];let line="";words.forEach(w=>{const t=line?line+" "+w:w;if(x.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t});if(line)out.push(line);return out}
+async function makeKartu(){
+  const m=S.members.find(x=>x.id===kartuWho),t=S.team,mt=MT[t.mountain];
+  const its=S.items.filter(i=>i.owner===kartuWho).sort((a,b)=>keyRank(a)-keyRank(b));
+  const withPh=its.filter(i=>i.photo),rest=its.filter(i=>!i.photo&&i.color);
+  const W=1080,M=48,F="Barlow, Arial, sans-serif",FC="'Barlow Condensed', 'Arial Narrow', Arial, sans-serif";
+  const c=document.createElement("canvas"),x=c.getContext("2d");
+  const info=[["Tim / pendakian",`${t.name}${S.role!=="solo"?" (kode "+t.code+")":""}`],["Gunung",mt?mt.n+", "+mt.loc:"-"],["Rencana",planTxt(t)],["HP pendaki",m.phone||"-"],
+    ["Kontak darurat",m.ec?`${m.ec}${m.ecRel?" ("+m.ecRel+")":""}, ${m.ecp}`:"-"],["Golongan darah",m.blood||"-"],["Riwayat penyakit",m.health||"-"],["Alergi obat",m.allergy||"-"],
+    ["Ciri pakaian",m.outfitDesc||"-"],["Kendaraan",m.plate||"-"]];
+  const tx=M+360+36;x.font=`500 26px ${F}`;
+  const infoLines=info.map(([k,v])=>[k,wrap(x,v,W-tx-M)]);
+  const topH=Math.max(480,infoLines.reduce((a,[,l])=>a+30+l.length*32+10,0));
+  const tile=(W-2*M-2*24)/3,tileH=tile+84,rows=Math.ceil(withPh.length/3);
+  const restLines=rest.flatMap(i=>wrap(x,`• ${i.name}: ${i.color}`,W-2*M));
+  const H=210+topH+40+(withPh.length?60+rows*(tileH+24):0)+(restLines.length?60+restLines.length*34:0)+110;
+  c.width=W;c.height=H;
+  x.fillStyle="#fff";x.fillRect(0,0,W,H);x.fillStyle="#1F4D3A";x.fillRect(0,0,W,180);x.fillStyle="#E2642A";x.fillRect(0,180,W,10);
+  x.fillStyle="#fff";x.font=`600 26px ${F}`;x.fillText("KARTU PENGENAL PENDAKI",M,62);x.font=`700 70px ${FC}`;x.fillText(m.name,M,140);
+  let y=210;const outfit=await loadImg(m.outfit);
+  x.fillStyle="#EDF0EB";x.fillRect(M,y,360,480);
+  if(outfit)drawCover(x,outfit,M,y,360,480);else{x.fillStyle="#56655C";x.font=`500 26px ${F}`;x.textAlign="center";x.fillText("Foto diri",M+180,y+230);x.fillText("belum ada",M+180,y+262);x.textAlign="left"}
+  let iy=y+26;
+  infoLines.forEach(([k,l])=>{x.fillStyle="#56655C";x.font=`600 22px ${F}`;x.fillText(k.toUpperCase(),tx,iy);iy+=32;x.fillStyle="#15201A";x.font=`500 26px ${F}`;l.forEach(s=>{x.fillText(s,tx,iy);iy+=32});iy+=10});
+  y+=topH+40;
+  if(withPh.length){x.fillStyle="#15201A";x.font=`700 40px ${FC}`;x.fillText("Perlengkapan yang dibawa",M,y+36);y+=60;
+    for(let k=0;k<withPh.length;k++){const i=withPh[k],cx=M+(k%3)*(tile+24),cy=y+Math.floor(k/3)*(tileH+24);
+      const im=await loadImg(i.photo);x.fillStyle="#EDF0EB";x.fillRect(cx,cy,tile,tile);if(im)drawCover(x,im,cx,cy,tile,tile);
+      x.fillStyle="#15201A";x.font=`600 26px ${F}`;x.fillText(wrap(x,i.name,tile)[0],cx,cy+tile+34);
+      x.fillStyle="#B8352A";x.font=`500 23px ${F}`;x.fillText(wrap(x,i.color||"warna belum diisi",tile)[0],cx,cy+tile+66)}
+    y+=rows*(tileH+24)}
+  if(restLines.length){x.fillStyle="#15201A";x.font=`700 40px ${FC}`;x.fillText("Ciri barang lain",M,y+36);y+=60;x.font=`500 26px ${F}`;restLines.forEach(s=>{x.fillText(s,M,y+26);y+=34})}
+  x.fillStyle="#EDF0EB";x.fillRect(0,H-90,W,90);x.fillStyle="#56655C";x.font=`500 22px ${F}`;
+  x.fillText(`Dibuat ${fmtDate(today())} dengan Siap Nanjak. Simpan dan bagikan ke keluarga atau petugas basecamp.`,M,H-38);
+  return new Promise(r=>c.toBlob(b=>r({blob:b,url:c.toDataURL("image/jpeg",.85)}),"image/png"));
+}
+
+/* ---------- satuan ---------- */
+const QUNITS=["pcs","pasang","set","botol","bungkus","kaleng","tabung","lembar","buah"];
+const AUNITS=[["g","gram"],["kg","kilogram"],["ml","mililiter"],["L","liter"]];
+const toGrams=(amt,au)=>au==="kg"||au==="L"?amt*1000:amt; // 1 liter dianggap ±1 kg
+const fmtNum=n=>(+n||0).toLocaleString("id-ID",{maximumFractionDigits:2});
+function amtOf(i){if(i.aunit)return {amt:i.amt,au:i.aunit};const w=+i.weight||0;return w>=1000&&w%100===0?{amt:w/1000,au:"kg"}:{amt:w,au:"g"}}
+function sizeTxt(i){const {amt,au}=amtOf(i),vol=au==="ml"||au==="L";
+  return `${i.qty} ${i.qunit||"pcs"} × ${fmtNum(amt)} ${au}${vol?` (±${fmtW(i.qty*i.weight)})`:""}`}
+const unitStr=i=>{const {amt,au}=amtOf(i);return (i.qunit&&i.qunit!=="pcs")||au==="ml"||au==="L"?`${i.qunit||"pcs"}|${amt}|${au}`:""};
+function applyUnitStr(it,s){if(!s)return it;const [qu,amt,au]=String(s).split("|");it.qunit=qu||"pcs";it.amt=+amt||0;it.aunit=au||"g";return it}
+
+/* ---------- pemindai QR ---------- */
+let scanStream=null,scanLoop=null,scanCb=null;
+function stopScan(){if(scanLoop)cancelAnimationFrame(scanLoop);scanLoop=null;if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null}}
+async function decodeFrame(src,w,h){
+  if("BarcodeDetector" in window){try{const d=new BarcodeDetector({formats:["qr_code"]});const r=await d.detect(src);if(r[0])return r[0].rawValue}catch(e){}}
+  if(window.jsQR){const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.drawImage(src,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h);if(r)return r.data}
+  return null;
+}
+function openScanner(title,hint,cb){
+  scanCb=cb;const d=$("#scanDlg");
+  d.innerHTML=`<div class="dlg"><div class="dlg-h"><h2 style="margin:0">${esc(title)}</h2><button class="x" data-sc="close" aria-label="Tutup">×</button></div>
+  <div class="scanbox"><video id="scanVid" playsinline muted></video><div class="scanframe"></div><p id="scanMsg" class="scanmsg">Menyalakan kamera…</p></div>
+  <p class="small muted" style="margin:0">${esc(hint)}</p>
+  <span class="btn sec full filebtn">${CAM_SVG} Kamera tidak jalan? Ambil foto QR<input type="file" accept="image/*" capture="environment" id="scanFile"></span></div>`;
+  const done=async text=>{stopScan();d.close();scanCb&&scanCb(text)};
+  d.onclick=e=>{if(e.target.closest('[data-sc="close"]')){stopScan();d.close()}};
+  d.oncancel=()=>stopScan();
+  $("#scanFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();
+    im.onload=async()=>{const s=Math.min(1,1200/Math.max(im.width,im.height));const t=await decodeFrame(im,Math.round(im.width*s),Math.round(im.height*s));URL.revokeObjectURL(u);
+      t?done(t):toast("QR tidak terbaca. Coba foto lebih dekat dan terang.")};im.src=u};
+  d.showModal();
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("#scanMsg").textContent="Kamera langsung tidak tersedia. Gunakan tombol ambil foto di bawah.";return}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(st=>{
+    scanStream=st;const v=$("#scanVid");v.srcObject=st;v.play();$("#scanMsg").textContent="Arahkan kamera ke QR Code";
+    let busy=false;const tick=async()=>{if(!scanStream)return;
+      if(!busy&&v.readyState>=2){busy=true;const w=v.videoWidth,h=v.videoHeight,s=Math.min(1,640/Math.max(w,h));
+        const t=await decodeFrame(v,Math.round(w*s),Math.round(h*s));busy=false;if(t){done(t);return}}
+      scanLoop=requestAnimationFrame(tick)};tick();
+  }).catch(()=>{$("#scanMsg").textContent="Izin kamera ditolak atau tidak tersedia. Gunakan tombol ambil foto di bawah."});
+}
+function parseScan(text){
+  const s=String(text||"");let i=s.indexOf("#pos=");
+  if(i>=0){try{return {kind:"pos",data:JSON.parse(decodeURIComponent(s.slice(i+5)))}}catch(e){return null}}
+  i=s.indexOf("#cek=");if(i>=0){const p=dec(s.slice(i+5));return p&&Array.isArray(p.m)?{kind:"team",data:p}:null}
+  return null;
+}
+
+/* ---------- check point (pendaki) ---------- */
+const fmtTime=t=>new Date(t).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
+const fmtDT=t=>new Date(t).toLocaleDateString("id-ID",{day:"numeric",month:"short"})+" "+fmtTime(t);
+function ago(t){const m=Math.round((Date.now()-new Date(t))/60000);if(m<1)return "baru saja";if(m<60)return m+" menit lalu";const h=Math.floor(m/60);return h<24?h+" jam "+(m%60)+" menit lalu":Math.floor(h/24)+" hari lalu"}
+function addCheckpoint(trip,pos,src){
+  trip.log=trip.log||[];const dir=trip.dir||"naik",now=new Date().toISOString();
+  const last=trip.log[trip.log.length-1];
+  if(last&&last.id===pos.id&&last.dir===dir&&Date.now()-new Date(last.t)<15*60000)return {entry:last,dup:true};
+  const entry={id:pos.id||uid(),n:pos.n,g:pos.g||trip.team.mountain,j:pos.j||"",hp:pos.hp||"",dir,t:now,src,sent:false};
+  trip.log.push(entry);save();return {entry,dup:false};
+}
+function reportText(trip,e,kind){
+  const who=trip.role==="solo"?DB.profile.name:`Tim ${trip.team.name} (${trip.team.code})`;
+  const n=trip.members.length,mt=mtName(e?e.g:trip.team.mountain);
+  if(kind==="selesai")return `[Siap Nanjak] ${who}, ${n} orang, SUDAH TURUN dengan selamat dari ${mt}. ${fmtDT(new Date())}.`;
+  return `[Siap Nanjak] ${who}, ${n} orang, ${e.dir==="turun"?"TURUN":"NAIK"} di ${e.n}${e.j?" jalur "+e.j:""}, ${mt}. ${fmtDT(e.t)}. Kontak: ${DB.profile.phone||"-"}.`;
+}
+function smsLink(num,body){return `sms:${digits(num)?num.replace(/[^\d+]/g,""):""}?body=${encodeURIComponent(body)}`}
+function renderJalur(){
+  const el=$("#tab-jalur"),t=S.team,log=S.log||[],last=log[log.length-1];
+  const posHp=((S.log||[]).slice().reverse().find(e=>e.hp)||{}).hp||"",bc=S.team.bcPhone||posHp,ec=DB.profile.ecp;
+  let h=`<p class="step-lbl">Saat pendakian</p><h2>Check point</h2>
+  <div class="card cp-status ${S.finished?"done":""}">${S.finished?`<b>Pendakian selesai</b><small>Tercatat turun ${fmtDT(S.finished)}</small>`:last?`<small>Terakhir tercatat</small><b>${esc(last.n)}</b><small>${last.dir==="turun"?"Saat turun":"Saat naik"}, ${fmtTime(last.t)} (${ago(last.t)})</small>`:`<b>Belum ada catatan</b><small>Scan QR di basecamp saat mulai mendaki, lalu di setiap pos yang kamu lewati.</small>`}</div>
+  ${S.finished?"":`<div class="seg" style="margin-top:14px"><button data-dir="naik" aria-pressed="${(S.dir||"naik")==="naik"}">Sedang naik</button><button data-dir="turun" aria-pressed="${S.dir==="turun"}">Sedang turun</button></div>
+  <button class="btn blaze full big-btn" data-act="scanpos">${CAM_SVG} Scan QR pos</button>
+  <button class="btn sec full" data-act="manualcp" style="margin-top:8px">QR pos rusak atau tidak ada? Catat manual</button>`}
+  <div class="card" style="margin-top:16px"><h3 style="margin-top:0">Kirim kabar</h3>
+  <p class="small muted">SMS tetap terkirim walau sinyal lemah. Kalau belum ada sinyal, HP akan mengirimnya begitu sinyal muncul.</p>
+  <div class="stack" style="gap:8px">
+   ${last||S.finished?`<a class="btn pri full" data-act="sentmark" href="${smsLink(bc,S.finished?reportText(S,null,"selesai"):reportText(S,last))}">SMS ke basecamp${bc?"":" (isi nomor dulu)"}</a>
+   ${ec?`<a class="btn sec full" data-act="sentmark" href="${smsLink(ec,S.finished?reportText(S,null,"selesai"):reportText(S,last))}">SMS ke kontak darurat (${esc(DB.profile.ec)})</a>`:""}
+   <button class="btn sec full" data-act="sharecp">Bagikan lewat WhatsApp</button>`:`<p class="small muted" style="margin:0">Tombol kirim muncul setelah ada catatan pertama.</p>`}
+  </div>
+  <label class="fld" style="margin-top:12px">Nomor HP basecamp untuk laporan<input id="bcSel" type="tel" inputmode="tel" value="${esc(S.team.bcPhone||"")}" placeholder="${posHp?"Dari QR pos: "+esc(posHp):"mis. nomor pengelola basecamp"}" maxlength="20"></label></div>
+  <h3>Riwayat perjalanan</h3>
+  ${log.length?`<div class="rows timeline">${log.slice().reverse().map(e=>`<div class="tl"><span class="tl-dot ${e.dir}"></span><span class="rt"><b>${esc(e.n)}</b><small>${e.dir==="turun"?"Turun":"Naik"}, ${fmtDT(e.t)}${e.src==="manual"?", dicatat manual":""}</small></span></div>`).join("")}</div>`:`<p class="muted small">Belum ada.</p>`}
+  ${S.finished?`<button class="btn sec full" data-act="unfinish" style="margin-top:14px">Batalkan status selesai</button>`:log.length?`<button class="btn pri full" data-act="finish" style="margin-top:16px">Saya sudah turun dengan selamat</button>`:""}
+  <button class="btn sec full" data-act="guide" style="margin-top:12px">⛑️ Panduan keselamatan dan jika tersesat</button>
+  <details><summary>Bagaimana cara kerjanya?</summary><ul>
+   <li>Setiap pos punya poster QR. Scan saat tiba, baik saat naik maupun turun. Tidak perlu sinyal, catatan langsung tersimpan di HP.</li>
+   <li>Setelah scan, kirim SMS ke basecamp. Jika sinyal belum ada, SMS menunggu dan terkirim otomatis begitu HP dapat sinyal.</li>
+   <li>Di pos yang dijaga, petugas juga men-scan QR tim kamu, jadi catatan ada di dua tempat.</li>
+   <li>Bila terjadi sesuatu, catatan terakhir menunjukkan di antara pos mana kamu berada.</li></ul></details>`;
+  el.innerHTML=h;
+}
+async function handlePosScan(pos){
+  if(pos.g&&S.team.mountain&&pos.g!==S.team.mountain&&!(await ask(`QR ini untuk ${mtName(pos.g)}, bukan gunung pendakianmu (${mtName(S.team.mountain)}). Tetap catat?`,"Tetap catat")))return;
+  const {entry,dup}=addCheckpoint(S,pos,"scan");
+  setTab("jalur");toast(dup?`${entry.n} sudah tercatat tadi.`:`Tercatat: ${entry.n} (${entry.dir}), ${fmtTime(entry.t)}. Kirim SMS ke basecamp.`);
+}
+function manualCp(){
+  const d=$("#posDlg");
+  d.innerHTML=`<div class="dlg"><div class="dlg-h"><h2 style="margin:0">Catat manual</h2><button class="x" data-m="close" aria-label="Tutup">×</button></div>
+  <label class="fld">Nama pos atau lokasi<input id="mcName" maxlength="40" placeholder="mis. Pos 2, Kalimati, Puncak"></label>
+  <p class="small muted" style="margin:0">Catatan manual ditandai berbeda agar petugas tahu tidak berasal dari scan.</p>
+  <button class="btn pri full" data-m="save">Catat sekarang</button></div>`;
+  d.onclick=e=>{const b=e.target.closest("[data-m]");if(!b)return;if(b.dataset.m==="close"){d.close();return}
+    const n=$("#mcName").value.trim();if(!n){toast("Isi nama pos.");return}d.close();addCheckpoint(S,{id:"m-"+norm(n).trim(),n},"manual");renderJalur();renderNav();toast("Tercatat: "+n)};
+  d.showModal();setTimeout(()=>$("#mcName").focus(),50);
+}
+function pickTripFor(pos){
+  const td=today(),inRange=t=>t.team.start&&t.team.start<=td&&(t.team.end||t.team.start)>=addDays(td,-1);
+  const ts=DB.trips.filter(t=>!t.finished);
+  return ts.find(t=>t.id===DB.cur&&inRange(t))||ts.find(t=>inRange(t)&&t.team.mountain===pos.g)||ts.find(inRange)||ts.find(t=>t.team.mountain===pos.g)||null;
+}
+
+/* ---------- alat petugas pos ---------- */
+let activePos=null,posDir="naik";
+function renderPosTool(){
+  show("postool");DB.posts=DB.posts||[];DB.postLog=DB.postLog||[];
+  const P=DB.posts.find(p=>p.id===activePos);
+  let h=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><button class="backbtn" data-pt="${P?"list":"home"}">${BACK_SVG} ${P?"Semua pos":"Menu utama"}</button><p class="hdr-sub">Alat petugas pos</p><h1>${P?esc(P.n):"Check point pendakian"}</h1>${P?`<p class="hdr-meta">${esc(mtName(P.g))}${P.j?", jalur "+esc(P.j):""}</p>`:""}</div></header><div class="wrap">`;
+  if(!P){
+    h+=`<p class="muted">Untuk petugas atau pengelola basecamp. Buat poster QR untuk setiap pos, lalu catat tim pendaki yang lewat. Semua tersimpan di perangkat ini tanpa perlu sinyal.</p>
+    <div class="stack">${DB.posts.map(p=>{const n=DB.postLog.filter(l=>l.pos===p.id&&l.t.slice(0,10)===today()).length;
+      return `<div class="card pos-card"><div><b>${esc(p.n)}</b><small>${esc(mtName(p.g))}${p.j?", jalur "+esc(p.j):""}. ${n} catatan hari ini</small></div><div class="two"><button class="btn sec sm" data-pt="poster" data-id="${p.id}">Poster QR</button><button class="btn pri sm" data-pt="open" data-id="${p.id}">Catat pendaki</button></div></div>`}).join("")||`<div class="empty">Belum ada pos.</div>`}</div>
+    <button class="btn blaze full" data-pt="new" style="margin-top:14px">+ Buat pos baru</button>`;
+  }else{
+    const logs=DB.postLog.filter(l=>l.pos===P.id).sort((a,b)=>b.t.localeCompare(a.t)),td=logs.filter(l=>l.t.slice(0,10)===today());
+    const up=td.filter(l=>l.dir==="naik").reduce((a,l)=>a+l.cnt,0),down=td.filter(l=>l.dir==="turun").reduce((a,l)=>a+l.cnt,0);
+    h+=`<div class="sum3" style="grid-template-columns:1fr 1fr"><div style="background:var(--greenbg);color:var(--green)"><b>${up}</b>orang naik hari ini</div><div style="background:var(--amberbg);color:var(--amber)"><b>${down}</b>orang turun hari ini</div></div>
+    <div class="seg"><button data-pdir="naik" aria-pressed="${posDir==="naik"}">Pendaki naik</button><button data-pdir="turun" aria-pressed="${posDir==="turun"}">Pendaki turun</button></div>
+    <button class="btn blaze full big-btn" data-pt="scan">${CAM_SVG} Scan QR tim pendaki</button>
+    <button class="btn sec full" data-pt="manual" style="margin-top:8px">Catat manual (tanpa QR)</button>
+    <div class="card" style="margin-top:16px"><h3 style="margin-top:0">Kirim rekap ke basecamp</h3><p class="small muted">Kirim saat ada sinyal. SMS akan menunggu otomatis bila sinyal belum ada. Untuk pos tanpa sinyal, bacakan rekap ini lewat radio.</p>
+    <div class="stack" style="gap:8px"><a class="btn pri full" href="${smsLink(P.hp||"",posRecap(P,td))}">SMS rekap hari ini${P.hp?"":" (nomor basecamp belum diisi)"}</a><button class="btn sec full" data-pt="sharerecap">Bagikan lewat WhatsApp</button><button class="btn sec full" data-pt="csv">Unduh semua catatan (CSV)</button></div></div>
+    <h3>Catatan (${logs.length})</h3>${logs.length?`<div class="rows timeline">${logs.map(l=>`<div class="tl"><span class="tl-dot ${l.dir}"></span><span class="rt"><b>${esc(l.name)}</b><small>${l.dir==="turun"?"Turun":"Naik"}, ${fmtDT(l.t)}, ${l.cnt} orang${l.code?", kode "+esc(l.code):""}${l.src==="manual"?", manual":""}</small></span><button class="x" data-pt="rmlog" data-id="${l.id}" aria-label="Hapus catatan">×</button></div>`).join("")}</div>`:`<p class="muted small">Belum ada pendaki tercatat.</p>`}
+    <div class="two" style="margin-top:20px"><button class="btn sec" data-pt="poster" data-id="${P.id}">Poster QR pos</button><button class="btn sec" data-pt="edit" data-id="${P.id}">Ubah pos</button></div>`;
+  }
+  $("#postool").innerHTML=h+"</div>";
+}
+function posRecap(P,logs){
+  const d=new Date().toLocaleDateString("id-ID",{day:"numeric",month:"short"});
+  return `[Siap Nanjak] Rekap ${P.n}, ${mtName(P.g)}, ${d}: `+(logs.length?logs.slice().sort((a,b)=>a.t.localeCompare(b.t)).map(l=>`${fmtTime(l.t)} ${l.dir==="turun"?"TURUN":"NAIK"} ${l.name}${l.code?" ("+l.code+")":""} ${l.cnt} org`).join("; "):"belum ada pendaki.");
+}
+function posForm(p){
+  const d=$("#posDlg"),x=p||{n:"",g:"",j:"",hp:""};let g=x.g;
+  const draw=()=>{d.innerHTML=`<div class="dlg"><div class="dlg-h"><h2 style="margin:0">${p?"Ubah pos":"Pos baru"}</h2><button class="x" data-m="close" aria-label="Tutup">×</button></div>
+  <label class="fld">Gunung<select id="pfG"><option value="">Pilih gunung</option>${PROV.map(([pv,l])=>`<optgroup label="${esc(pv)}">${l.map(([k,n])=>`<option value="${k}" ${k===g?"selected":""}>${esc(n)}</option>`).join("")}</optgroup>`).join("")}</select></label>
+  <label class="fld">Nama pos<input id="pfN" value="${esc(x.n)}" maxlength="40" placeholder="mis. Pos 2 Watu Rejeng"></label>
+  <label class="fld">Jalur (opsional)<input id="pfJ" value="${esc(x.j)}" maxlength="30" placeholder="mis. Ranu Pani"></label>
+  <label class="fld">Nomor HP basecamp untuk laporan<input id="pfH" type="tel" inputmode="tel" value="${esc(x.hp)}" maxlength="20" placeholder="08…"></label>
+  <p class="small muted" style="margin:0">Nomor ini ikut tercetak di QR, sehingga HP pendaki langsung tahu ke mana harus mengirim SMS laporan.</p>
+  <button class="btn pri full" data-m="save">Simpan pos</button>${p?'<button class="btn sec full" data-m="del" style="color:var(--red)">Hapus pos</button>':""}</div>`};
+  draw();
+  d.onclick=async e=>{const b=e.target.closest("[data-m]");if(!b)return;const k=b.dataset.m;
+    if(k==="close"){d.close();return}
+    if(k==="del"){d.close();if(await ask(`Hapus ${p.n} beserta catatannya?`,"Hapus")){DB.posts=DB.posts.filter(y=>y.id!==p.id);DB.postLog=DB.postLog.filter(l=>l.pos!==p.id);activePos=null;save();renderPosTool()}return}
+    const v={g:$("#pfG").value,n:$("#pfN").value.trim(),j:$("#pfJ").value.trim(),hp:$("#pfH").value.trim()};
+    if(!v.g){toast("Pilih gunung.");return}if(!v.n){toast("Isi nama pos.");return}if(v.hp&&!PHONE_RE.test(v.hp)){toast("Nomor HP belum benar.");return}
+    if(p)Object.assign(p,v);else DB.posts.push({id:uid(),...v});save();d.close();renderPosTool();toast("Pos disimpan.")};
+  d.showModal();
+}
+const posPayload=P=>({id:P.id,n:P.n,g:P.g,j:P.j,hp:P.hp});
+async function showPoster(P){
+  if(!window.QRCode){toast("Pembuat QR belum termuat. Sambungkan internet sekali.");return}
+  const url=baseURL()+"#pos="+encodeURIComponent(JSON.stringify(posPayload(P)));
+  const tmp=document.createElement("div");new QRCode(tmp,{text:url,width:600,height:600,correctLevel:QRCode.CorrectLevel.M});
+  const qc=tmp.querySelector("canvas");const W=1240,H=1754,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const F="Barlow, Arial, sans-serif",FC="'Barlow Condensed','Arial Narrow',Arial,sans-serif";
+  x.fillStyle="#fff";x.fillRect(0,0,W,H);x.fillStyle="#1F4D3A";x.fillRect(0,0,W,300);x.fillStyle="#E2642A";x.fillRect(0,300,W,16);
+  x.fillStyle="#fff";x.textAlign="center";x.font=`600 40px ${F}`;x.fillText("CHECK POINT PENDAKIAN",W/2,100);x.font=`700 120px ${FC}`;x.fillText(P.n,W/2,235);
+  x.fillStyle="#15201A";x.font=`600 46px ${F}`;x.fillText(mtName(P.g)+(P.j?", jalur "+P.j:""),W/2,410);
+  x.imageSmoothingEnabled=false;x.drawImage(qc,220,470,800,800);
+  x.font=`700 52px ${FC}`;x.fillText("Scan QR ini setiap tiba di pos",W/2,1370);
+  x.font=`500 38px ${F}`;x.fillStyle="#56655C";
+  ["saat naik maupun saat turun.","Tidak perlu sinyal. Catatan tersimpan di HP-mu,","lalu kirim SMS laporan ke basecamp."].forEach((l,k)=>x.fillText(l,W/2,1440+k*54));
+  if(P.hp){x.fillStyle="#15201A";x.font=`600 38px ${F}`;x.fillText("Basecamp: "+P.hp,W/2,1640)}
+  const blob=await new Promise(r=>c.toBlob(r,"image/png"));const d=$("#posDlg");
+  d.innerHTML=`<div class="dlg"><div class="dlg-h"><h2 style="margin:0">Poster ${esc(P.n)}</h2><button class="x" data-m="close" aria-label="Tutup">×</button></div>
+  <img src="${c.toDataURL("image/jpeg",.85)}" alt="Poster QR" style="width:100%;border-radius:10px;border:1px solid var(--line)">
+  <p class="small muted" style="margin:0">Cetak ukuran A4, laminasi, lalu pasang di pos. Pendaki bisa scan dengan aplikasi atau kamera HP biasa.</p>
+  <div class="two"><button class="btn sec" data-m="dl">Unduh gambar</button><button class="btn pri" data-m="try">Coba scan sebagai pendaki</button></div></div>`;
+  d.onclick=e=>{const b=e.target.closest("[data-m]");if(!b)return;if(b.dataset.m==="close")d.close();if(b.dataset.m==="dl")saveFile(`Poster-${P.n.replace(/\s+/g,"-")}.png`,blob);
+    if(b.dataset.m==="try"){d.close();openPosLink(posPayload(P))}};
+  d.showModal();
+}
+function logTeam(P,team,src){
+  DB.postLog=DB.postLog||[];const now=new Date().toISOString();
+  const dup=DB.postLog.find(l=>l.pos===P.id&&l.code&&l.code===team.code&&l.dir===posDir&&Date.now()-new Date(l.t)<30*60000);
+  if(dup){toast(`${team.name} sudah tercatat ${fmtTime(dup.t)}.`);return}
+  DB.postLog.push({id:uid(),pos:P.id,code:team.code||"",name:team.name,cnt:team.cnt||1,dir:posDir,t:now,src});save();renderPosTool();
+  toast(`Tercatat: ${team.name}, ${team.cnt} orang ${posDir}.`);
+}
+$("#postool").addEventListener("click",async e=>{
+  const pd=e.target.closest("[data-pdir]");if(pd){posDir=pd.dataset.pdir;renderPosTool();return}
+  const b=e.target.closest("[data-pt]");if(!b)return;const k=b.dataset.pt,P=DB.posts.find(p=>p.id===(b.dataset.id||activePos));
+  if(k==="home"){activePos=null;renderHome()}
+  if(k==="list"){activePos=null;renderPosTool()}
+  if(k==="new")posForm(null);
+  if(k==="edit"&&P)posForm(P);
+  if(k==="open"&&P){activePos=P.id;renderPosTool()}
+  if(k==="poster"&&P)showPoster(P);
+  if(k==="scan"&&P)openScanner("Scan QR tim","Minta pendaki membuka menu Berangkat dan menunjukkan QR Code registrasi.",text=>{
+    const r=parseScan(text);if(!r||r.kind!=="team"){toast("Ini bukan QR tim Siap Nanjak.");return}
+    const p=r.data;logTeam(P,{code:p.c,name:p.t,cnt:p.m.length},"scan")});
+  if(k==="manual"&&P){const d=$("#posDlg");d.innerHTML=`<div class="dlg"><div class="dlg-h"><h2 style="margin:0">Catat manual</h2><button class="x" data-m="close" aria-label="Tutup">×</button></div>
+    <label class="fld">Nama tim atau pendaki<input id="mtN" maxlength="40"></label><div class="two"><label class="fld">Jumlah orang<input id="mtC" type="number" min="1" value="1" inputmode="numeric"></label><label class="fld">Kode tim (opsional)<input id="mtK" maxlength="8" style="text-transform:uppercase"></label></div>
+    <button class="btn pri full" data-m="save">Catat ${posDir}</button></div>`;
+    d.onclick=ev=>{const x=ev.target.closest("[data-m]");if(!x)return;if(x.dataset.m==="close"){d.close();return}const n=$("#mtN").value.trim();if(!n){toast("Isi nama.");return}
+      d.close();logTeam(P,{name:n,cnt:Math.max(1,parseInt($("#mtC").value)||1),code:$("#mtK").value.trim().toUpperCase()},"manual")};d.showModal()}
+  if(k==="rmlog"&&await ask("Hapus catatan ini?","Hapus")){DB.postLog=DB.postLog.filter(l=>l.id!==b.dataset.id);save();renderPosTool()}
+  if(k==="sharerecap"&&P)shareLink(posRecap(P,DB.postLog.filter(l=>l.pos===P.id&&l.t.slice(0,10)===today())),"");
+  if(k==="csv"&&P){const rows=[["waktu","arah","nama","kode","jumlah","sumber"],...DB.postLog.filter(l=>l.pos===P.id).map(l=>[l.t,l.dir,l.name,l.code,l.cnt,l.src])];
+    saveFile(`Catatan-${P.n.replace(/\s+/g,"-")}.csv`,new Blob([rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n")],{type:"text/csv"}))}
+});
+async function openPosLink(pos){
+  if(!DB){renderOnboard();setTimeout(()=>toast("Buat pendakian dulu, lalu scan QR pos ini lagi."),300);return}
+  const trip=pickTripFor(pos);
+  if(!trip){renderHome();setTimeout(()=>toast(`Tidak ada pendakian aktif untuk hari ini. Buat atau buka pendakian ${mtName(pos.g)} dulu.`),300);return}
+  S=trip;kartuWho=null;kartu=null;tab="jalur";renderApp();handlePosScan(pos);
+}
+
+/* ---------- halaman pengenalan ---------- */
+const INTRO_KEY="siap-nanjak-intro";
+const ILL={
+ a:`<svg viewBox="0 0 240 160" aria-hidden="true"><path d="M10 140 L80 50 L115 95 L145 62 L230 140Z" fill="var(--pine2)"/><path d="M80 50 L95 70 L86 66 L80 74 L73 66 L66 70Z" fill="#fff"/><circle cx="190" cy="38" r="16" fill="var(--blaze)"/><path d="M40 140c30-18 60-6 80-24s50-10 70 6" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>`,
+ b:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="60" y="16" width="120" height="132" rx="14" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>${[0,1,2,3].map(k=>`<rect x="78" y="${38+k*26}" width="18" height="18" rx="5" fill="${k<3?"var(--green)":"none"}" stroke="${k<3?"var(--green)":"var(--muted)"}" stroke-width="3"/>${k<3?`<path d="M82 ${47+k*26}l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`:""}<rect x="106" y="${43+k*26}" width="${[56,44,52,36][k]}" height="8" rx="4" fill="var(--line)"/>`).join("")}<circle cx="182" cy="128" r="22" fill="var(--blaze)"/><path d="M172 128l7 7 13-14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ c:`<svg viewBox="0 0 240 160" aria-hidden="true">${[[70,"var(--pine2)"],[120,"var(--blaze)"],[170,"var(--pine2)"]].map(([x,c],k)=>`<circle cx="${x}" cy="${k===1?58:68}" r="${k===1?22:18}" fill="${c}"/><path d="M${x-30} ${k===1?132:136}c0-22 14-36 30-36s30 14 30 36z" fill="${c}"/>`).join("")}<rect x="84" y="138" width="72" height="16" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/><text x="120" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)" font-family="Barlow,sans-serif" letter-spacing="2">AB12XYZ</text></svg>`,
+ d:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="70" y="14" width="100" height="132" rx="16" fill="var(--ink)"/><rect x="80" y="30" width="80" height="80" rx="6" fill="#fff"/>${[[86,36],[134,36],[86,84]].map(([x,y])=>`<rect x="${x}" y="${y}" width="20" height="20" fill="none" stroke="#15201A" stroke-width="5"/>`).join("")}${[[112,40],[120,52],[112,64],[128,70],[140,64],[112,86],[124,94],[140,86],[148,98]].map(([x,y])=>`<rect x="${x}" y="${y}" width="8" height="8" fill="#15201A"/>`).join("")}<rect x="96" y="122" width="48" height="10" rx="5" fill="var(--blaze)"/></svg>`,
+ e:`<svg viewBox="0 0 240 160" aria-hidden="true"><path d="M30 140c40-10 50-50 90-60s60-40 90-60" fill="none" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>${[[30,140,"var(--green)"],[92,92,"var(--green)"],[150,62,"var(--blaze)"],[210,20,"var(--line)"]].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="12" fill="${c}" stroke="var(--surface)" stroke-width="4"/>`).join("")}<path d="M150 30c-10 0-17 7-17 16 0 12 17 26 17 26s17-14 17-26c0-9-7-16-17-16z" fill="var(--blaze)"/><circle cx="150" cy="46" r="6" fill="#fff"/></svg>`};
+const SLIDES=[
+ ["a","Selamat datang di Siap Nanjak","Teman persiapan mendaki dari awal sampai turun dengan selamat. Semua langkah tersusun rapi, jadi kamu tinggal mengikuti urutannya."],
+ ["b","Tidak ada barang yang terlewat","Buat daftar barang lengkap dengan isinya, centang saat dikemas, dan cocokkan otomatis dengan perlengkapan wajib gunung tujuan."],
+ ["c","Satu tim, satu daftar","Ketua membuat tim dan membagikan kode. Daftar semua anggota tergabung, termasuk berat bawaan tiap orang, jadi pembagian beban lebih adil."],
+ ["d","Registrasi cukup sekali scan","Satu QR Code berisi rencana, data diri, kontak darurat, dan perlengkapan seluruh tim. Petugas di pos registrasi bisa memeriksanya dengan cepat."],
+ ["e","Lebih tenang di jalur","Catat setiap pos yang kamu lewati, kabari basecamp dan keluarga lewat SMS, dan baca panduan keselamatan kapan saja, bahkan tanpa sinyal."]];
+let introIdx=0,introBack=null;
+function renderIntro(back){
+  introBack=back||null;show("intro");
+  const [ic,t,p]=SLIDES[introIdx],last=introIdx===SLIDES.length-1;
+  $("#intro").innerHTML=`<div class="intro"><div class="intro-top"><span class="intro-brand">Siap Nanjak</span>${last?"":`<button class="intro-skip" data-in="skip">Lewati</button>`}</div>
+  <div class="intro-ill">${ILL[ic]}</div>
+  <div class="intro-txt"><p class="intro-num">${introIdx+1} dari ${SLIDES.length}</p><h1>${t}</h1><p>${p}</p></div>
+  <div class="intro-dots">${SLIDES.map((_,k)=>`<button data-in="go" data-k="${k}" class="${k===introIdx?"on":""}" aria-label="Halaman ${k+1}"></button>`).join("")}</div>
+  <div class="intro-nav">${introIdx?`<button class="btn sec" data-in="prev">Kembali</button>`:"<span></span>"}<button class="btn ${last?"blaze":"pri"}" data-in="next">${last?(introBack?"Selesai":"Mulai sekarang"):"Lanjut"}</button></div></div>`;
+}
+function endIntro(){try{localStorage.setItem(INTRO_KEY,"1")}catch(e){}introIdx=0;if(introBack==="home")renderHome();else renderOnboard()}
+$("#intro").addEventListener("click",e=>{const b=e.target.closest("[data-in]");if(!b)return;const k=b.dataset.in;
+  if(k==="skip")return endIntro();
+  if(k==="next"){if(introIdx===SLIDES.length-1)return endIntro();introIdx++}
+  if(k==="prev")introIdx=Math.max(0,introIdx-1);
+  if(k==="go")introIdx=+b.dataset.k;
+  renderIntro(introBack)});
+let tx0=null;
+$("#intro").addEventListener("touchstart",e=>{tx0=e.touches[0].clientX},{passive:true});
+$("#intro").addEventListener("touchend",e=>{if(tx0==null)return;const dx=e.changedTouches[0].clientX-tx0;tx0=null;
+  if(Math.abs(dx)<50)return;if(dx<0&&introIdx<SLIDES.length-1)introIdx++;else if(dx>0&&introIdx>0)introIdx--;else return;renderIntro(introBack)});
+const introSeen=()=>{try{return localStorage.getItem(INTRO_KEY)==="1"}catch(e){return false}};
+
+/* ---------- panduan keselamatan ---------- */
+const GUIDE=[
+ ["Sebelum berangkat","📋",[
+  "Siapkan fisik 2 sampai 4 minggu sebelumnya dengan jalan cepat, lari ringan, atau naik turun tangga. Tidur cukup di malam sebelum mendaki.",
+  "Cek status jalur ke pengelola atau basecamp: apakah dibuka, ada kuota, atau ada aturan khusus. Jangan memakai jalur ilegal.",
+  "Untuk gunung api, cek status aktivitasnya di MAGMA Indonesia dan patuhi radius aman yang ditetapkan.",
+  "Lihat prakiraan cuaca BMKG. Di musim hujan, siapkan perlindungan tambahan atau pertimbangkan menunda.",
+  "Tinggalkan rencana perjalanan ke keluarga: gunung, jalur, tanggal turun, dan nomor anggota tim. Sepakati batas waktu: kalau belum ada kabar sampai jam tertentu, keluarga menghubungi basecamp.",
+  "Beri tahu tim tentang riwayat penyakit dan obat yang kamu bawa. Isi penuh baterai HP dan powerbank, lalu unduh peta jalur untuk dipakai offline."]],
+ ["Saat mendaki","🥾",[
+  "Berjalan mengikuti kecepatan anggota paling lambat. Taruh anggota yang lebih lemah di depan atau tengah, dan yang paling berpengalaman di paling belakang.",
+  "Jangan berpisah dari rombongan dan jangan berjalan sendirian, terutama saat turun ketika orang cenderung terburu-buru.",
+  "Istirahat singkat secara teratur. Minum sedikit tapi sering, dan makan camilan sebelum terasa lapar.",
+  "Tetap di jalur resmi dan perhatikan penanda jalur. Jalan pintas sering menjadi awal tersesat.",
+  "Tentukan jam balik sebelum berangkat. Kalau jam itu tiba dan puncak belum tercapai, kembali turun. Puncak bisa dicoba lagi lain waktu.",
+  "Scan QR di setiap pos dan kirim kabar ke basecamp, agar posisi terakhirmu selalu diketahui."]],
+ ["Cuaca buruk dan hipotermia","🌧️",[
+  "Hipotermia bisa terjadi walau suhu tidak terlalu dingin, terutama saat badan basah dan berangin. Kenali tandanya: menggigil hebat, jari kaku, bicara cadel, bingung, dan mengantuk.",
+  "Kalau menggigil justru berhenti padahal badan masih dingin, kondisinya memburuk dan perlu pertolongan segera.",
+  "Penanganan: hentikan perjalanan, cari tempat terlindung dari angin, ganti pakaian basah dengan yang kering, masukkan ke sleeping bag, dan beri minuman hangat yang manis bila penderita sadar penuh.",
+  "Jangan beri alkohol dan jangan menggosok kulit dengan keras. Kehangatan dari tubuh teman di dalam sleeping bag bisa membantu.",
+  "Saat badai petir, segera turun dari puncak atau punggungan. Jauhi pohon tinggi yang berdiri sendiri, simpan trekking pole, dan jaga jarak antaranggota tim.",
+  "Kalau kabut tebal sampai jalur tidak terlihat, berhenti dan tunggu daripada menebak arah."]],
+ ["Jika tersesat: ingat S.T.O.P.","🧭",[
+  "Stop: berhenti dan tenangkan diri. Panik membuat keputusan jadi buruk dan menguras tenaga.",
+  "Think: ingat kembali tanda jalur atau pos terakhir yang kamu lewati.",
+  "Observe: perhatikan sekitar, cari penanda jalur, cek peta offline atau GPS, dan cek apakah ada sinyal.",
+  "Plan: kalau yakin, kembali ke titik terakhir yang dikenal. Kalau tidak yakin, tetap di tempat yang terbuka dan mudah terlihat dari jauh.",
+  "Jangan mengikuti aliran air atau sungai ke bawah. Aliran air di gunung sering berujung di tebing atau air terjun.",
+  "Tiup peluit tiga kali berturut-turut lalu ulangi berkala, ini tanda minta tolong. Pakai pakaian berwarna terang agar mudah terlihat.",
+  "Hemat baterai: nyalakan mode pesawat, lalu matikan sebentar secara berkala untuk mencari sinyal dan mengirim SMS posisi."]],
+ ["Cedera dan sakit di jalur","⛑️",[
+  "Saat ada yang cedera, amankan lokasi lebih dulu, lalu periksa kesadaran dan napas penderita.",
+  "Terkilir: istirahatkan, kompres dengan air dingin, balut dengan perban elastis, dan angkat bagian yang cedera lebih tinggi.",
+  "Di ketinggian sekitar 2.500 meter ke atas, waspadai penyakit ketinggian: sakit kepala, mual, pusing, dan lemas. Istirahat dan jangan naik lebih tinggi sampai gejala reda.",
+  "Kalau gejala memburuk, misalnya sesak napas saat istirahat, bingung, atau jalan sempoyongan, segera bawa turun. Turun adalah pengobatan paling penting.",
+  "Tanda dehidrasi: urine pekat, pusing, dan bibir kering. Minum air dan oralit sedikit demi sedikit.",
+  "Pendaki yang sakit jangan pernah dibiarkan turun sendirian. Minimal satu orang menemani, dan kabari basecamp."]],
+ ["Gunung api","🌋",[
+  "Patuhi larangan dan radius aman dari petugas. Jangan mendekati bibir kawah atau masuk ke area yang ditutup.",
+  "Kalau tercium bau belerang yang sangat menyengat, mata perih, atau mulai pusing, segera menjauh. Gas berbahaya cenderung berkumpul di tempat rendah, jadi pindah ke tempat yang lebih tinggi dan melawan arah angin.",
+  "Di jalur berpasir dan berbatu, waspadai batu jatuh. Jaga jarak dengan pendaki di depan, jangan menendang batu, dan teriakkan peringatan bila ada batu meluncur.",
+  "Gunakan masker atau buff untuk melindungi pernapasan dari debu."]],
+ ["Etika dan menjaga alam","🌱",[
+  "Bawa turun semua sampahmu, termasuk puntung rokok dan sisa makanan.",
+  "Jangan memetik bunga edelweis atau tanaman lain, dan jangan mencoret batu atau pohon.",
+  "Buang air jauh dari sumber air dan jalur, lalu timbun bekasnya.",
+  "Matikan api kompor dan rokok sampai benar-benar padam. Kebakaran hutan sering bermula dari api kecil.",
+  "Hormati adat dan aturan setempat, serta sapa sesama pendaki. Saling menjaga adalah bagian dari keselamatan."]]];
+let guideBack=null;
+function renderGuide(back){
+  guideBack=back||guideBack||"home";show("guide");
+  $("#guide").innerHTML=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><button class="backbtn" data-g="back">${BACK_SVG} Kembali</button><p class="hdr-sub">Bisa dibaca tanpa sinyal</p><h1>Panduan keselamatan</h1></div></header>
+  <div class="wrap"><div class="card sos"><b>Nomor darurat</b><p class="small muted" style="margin:2px 0 10px">Hubungi bila ada keadaan darurat dan HP mendapat sinyal.</p>
+  <div class="two"><a class="btn blaze" href="tel:112">112<small>Darurat umum</small></a><a class="btn pri" href="tel:115">115<small>Basarnas (SAR)</small></a></div>
+  ${S&&(S.team.bcPhone)?`<a class="btn sec full" href="tel:${esc(S.team.bcPhone)}" style="margin-top:8px">Basecamp: ${esc(S.team.bcPhone)}</a>`:""}</div>
+  <div class="guide">${GUIDE.map(([t,ic,list],k)=>`<details ${k===0?"open":""}><summary><span class="g-ic" aria-hidden="true">${ic}</span>${esc(t)}</summary><ol>${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></details>`).join("")}</div>
+  <p class="small muted" style="margin-top:16px">Panduan ini adalah pengetahuan umum untuk pendaki, bukan pengganti pelatihan pertolongan pertama atau navigasi. Selalu ikuti arahan petugas basecamp dan tim SAR.</p></div>`;
+}
+$("#guide").addEventListener("click",e=>{if(!e.target.closest('[data-g="back"]'))return;if(guideBack==="app"&&S)renderApp();else renderHome()});
+
+/* ---------- kebijakan privasi ---------- */
+const PRIVACY_VER="1.0";
+const PRIVACY_HTML="<p class=\"pv-meta\">Berlaku sejak 1 Oktober 2026. Versi 1.0.</p>\n\n<p>Kebijakan ini menjelaskan data apa yang dikumpulkan aplikasi Siap Nanjak, di mana data itu disimpan, kapan data itu dibagikan, dan bagaimana kamu bisa menghapusnya. Siap Nanjak dibuat dan dikelola oleh <b class=\"ph\">[NAMA PENGEMBANG]</b>.</p>\n\n<div class=\"pv-box\"><b>Ringkasnya</b>\n<ul>\n<li>Semua data kamu disimpan <b>hanya di HP kamu sendiri</b>. Kami tidak punya server yang menyimpan data pribadi pengguna.</li>\n<li>Data baru keluar dari HP kamu kalau <b>kamu sendiri</b> yang membagikannya, misalnya lewat QR Code, link, SMS, atau gambar kartu pengenal.</li>\n<li>Tidak ada iklan, tidak ada pelacakan, dan data kamu tidak pernah dijual.</li>\n<li>Kamu bisa menghapus semua data kapan saja dari dalam aplikasi.</li>\n</ul></div>\n\n<h2>1. Data yang dikumpulkan</h2>\n<p>Aplikasi hanya menyimpan data yang kamu isi sendiri:</p>\n<ul>\n<li><b>Data diri:</b> nama lengkap, jenis dan nomor identitas (KTP, paspor, atau SIM), pekerjaan, nomor HP, alamat sesuai KTP, dan alamat domisili.</li>\n<li><b>Kontak darurat:</b> nama, hubungan dengan kamu, dan nomor HP orang yang kamu tunjuk.</li>\n<li><b>Data kesehatan:</b> golongan darah, riwayat penyakit, dan alergi obat. Semuanya opsional.</li>\n<li><b>Data kendaraan:</b> plat nomor kendaraan yang kamu parkir di basecamp. Opsional.</li>\n<li><b>Rencana pendakian:</b> gunung tujuan, tanggal, nama tim, kode tim, anggota tim, dan nomor basecamp.</li>\n<li><b>Daftar barang:</b> nama barang, jumlah, berat, warna, catatan, dan isi barang.</li>\n<li><b>Foto:</b> foto barang dan foto diri dengan pakaian mendaki yang kamu ambil untuk kartu pengenal. Opsional.</li>\n<li><b>Catatan check point:</b> nama pos, arah (naik atau turun), dan waktu saat kamu men-scan QR pos.</li>\n<li><b>Khusus alat petugas pos:</b> nama tim, kode tim, jumlah orang, arah, dan waktu tim yang lewat, serta data pos yang dibuat petugas.</li>\n</ul>\n<p>Aplikasi tidak mengambil lokasi GPS, daftar kontak, atau data lain dari HP kamu.</p>\n\n<h2>2. Data tentang orang lain</h2>\n<p>Ketua tim dapat mengisi data anggota, dan setiap pengguna mengisi data kontak daruratnya. Sebelum mengisi data orang lain, pastikan orang tersebut <b>sudah tahu dan setuju</b> datanya dicatat dan dibagikan kepada petugas pendakian.</p>\n\n<h2>3. Tempat data disimpan</h2>\n<p>Semua data di atas disimpan di penyimpanan browser atau aplikasi di HP kamu. Data tidak dikirim ke server kami, karena kami tidak mengoperasikan server untuk menyimpan data pengguna.</p>\n<p>Ada beberapa layanan pihak ketiga yang digunakan untuk menjalankan aplikasi. Layanan ini tidak menerima data pribadi yang kamu isi, tetapi seperti situs web pada umumnya, mereka dapat menerima informasi teknis seperti alamat IP dan jenis perangkat saat aplikasi dimuat:</p>\n<ul>\n<li><b>Netlify:</b> layanan hosting yang menayangkan file aplikasi.</li>\n<li><b>Google Fonts:</b> penyedia huruf tampilan aplikasi.</li>\n<li><b>cdnjs (Cloudflare) dan jsDelivr:</b> penyedia pustaka untuk membuat dan membaca QR Code.</li>\n</ul>\n\n<h2>4. Kapan data dibagikan</h2>\n<p>Data hanya keluar dari HP kamu ketika kamu melakukan salah satu tindakan berikut:</p>\n<ul>\n<li><b>Menunjukkan atau membagikan QR Code registrasi.</b> QR berisi rencana pendakian, data diri, kontak darurat, data kesehatan, dan daftar barang seluruh anggota tim. Isi QR <b>tidak dienkripsi</b>, sehingga siapa pun yang memindainya dapat membacanya.</li>\n<li><b>Mengirim link daftar ke ketua tim</b> melalui WhatsApp atau aplikasi lain.</li>\n<li><b>Mengirim SMS laporan check point</b> ke nomor basecamp atau kontak darurat.</li>\n<li><b>Mengunduh atau mengirim kartu pengenal,</b> poster QR pos, atau rekap catatan pos (CSV).</li>\n</ul>\n<p>Setelah dibagikan, data tersebut berada di luar kendali aplikasi dan tunduk pada kebijakan aplikasi yang kamu pakai untuk mengirimnya, seperti WhatsApp atau aplikasi SMS.</p>\n\n<h2>5. Penggunaan kamera</h2>\n<p>Kamera hanya digunakan saat kamu menekan tombol untuk memindai QR Code atau mengambil foto. Gambar diproses langsung di HP kamu dan tidak diunggah ke mana pun. Kamu bisa mencabut izin kamera kapan saja di pengaturan HP.</p>\n\n<h2>6. Menjaga keamanan data</h2>\n<ul>\n<li>Kunci HP kamu dengan PIN, pola, atau sidik jari, karena data tersimpan di HP.</li>\n<li>Tunjukkan QR Code hanya kepada petugas registrasi atau pos resmi.</li>\n<li>Jangan mengunggah QR Code atau kartu pengenal ke media sosial.</li>\n<li>Kirim kartu pengenal hanya kepada keluarga atau petugas yang kamu percaya.</li>\n</ul>\n\n<h2>7. Berapa lama data disimpan dan cara menghapusnya</h2>\n<p>Data tersimpan di HP kamu sampai kamu menghapusnya. Kamu bisa:</p>\n<ul>\n<li>menghapus satu pendakian lewat tombol <b>Hapus pendakian ini</b>;</li>\n<li>menghapus seluruh data lewat tombol <b>Hapus semua data di HP ini</b> di menu utama;</li>\n<li>menghapus data aplikasi atau browser di pengaturan HP, atau menghapus aplikasinya.</li>\n</ul>\n<p>Karena tidak ada salinan di server, data yang sudah dihapus <b>tidak bisa dipulihkan</b>. Data yang sudah kamu bagikan kepada orang lain juga tidak ikut terhapus.</p>\n\n<h2>8. Hak kamu</h2>\n<p>Sesuai Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, kamu berhak mengetahui, melihat, memperbarui, dan menghapus data pribadimu, serta menarik persetujuan yang sudah diberikan. Karena seluruh data ada di HP kamu, semua hak ini bisa kamu jalankan langsung dari dalam aplikasi: lihat dan ubah lewat menu <b>Data diri</b>, dan hapus lewat tombol hapus yang dijelaskan di atas.</p>\n\n<h2>9. Pengguna di bawah 18 tahun</h2>\n<p>Siap Nanjak ditujukan untuk pengguna berusia 18 tahun ke atas. Pengguna di bawah 18 tahun hanya boleh menggunakan aplikasi ini dengan persetujuan dan pendampingan orang tua atau wali.</p>\n\n<h2>10. Batasan informasi di aplikasi</h2>\n<p>Standar perlengkapan, daftar gunung, dan panduan keselamatan di aplikasi ini adalah informasi umum. Aturan resmi dapat berbeda dan berubah sewaktu-waktu. Selalu ikuti aturan pengelola gunung dan arahan petugas basecamp atau tim SAR.</p>\n\n<h2>11. Perubahan kebijakan</h2>\n<p>Kebijakan ini dapat diperbarui, misalnya jika nanti aplikasi menambahkan fitur penyimpanan cadangan di server. Jika ada perubahan penting, kami akan memberi tahu di dalam aplikasi dan meminta persetujuanmu kembali sebelum perubahan berlaku.</p>\n\n<h2>12. Hubungi kami</h2>\n<p>Untuk pertanyaan tentang kebijakan ini atau data pribadimu, hubungi <b class=\"ph\">[NAMA PENGEMBANG]</b> melalui email <b class=\"ph\">[EMAIL KONTAK]</b>.</p>\n";
+const hasConsent=()=>!!(DB&&DB.consent&&DB.consent.v===PRIVACY_VER);
+let privBack=null;
+function renderPrivacy(back){
+  privBack=back||privBack||"home";show("privacy");
+  const need=DB&&!hasConsent();
+  $("#privacy").innerHTML=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><button class="backbtn" data-pv="back">${BACK_SVG} Kembali</button><p class="hdr-sub">Siap Nanjak</p><h1>Kebijakan privasi</h1></div></header>
+  <div class="wrap pv">${PRIVACY_HTML}
+  ${need?`<div class="card" style="margin-top:20px"><p style="margin:0 0 10px">Dengan menekan tombol di bawah, kamu menyetujui pengumpulan dan pembagian data sesuai kebijakan ini, termasuk data kesehatan yang kamu isi.</p><button class="btn pri full" data-pv="agree">Saya setuju</button></div>`:DB&&DB.consent?`<p class="small muted" style="margin-top:20px">Kamu menyetujui kebijakan ini pada ${fmtDT(DB.consent.t)}.</p>`:""}</div>`;
+}
+$("#privacy").addEventListener("click",e=>{const b=e.target.closest("[data-pv]");if(!b)return;
+  if(b.dataset.pv==="agree"){DB.consent={v:PRIVACY_VER,t:new Date().toISOString()};save();toast("Terima kasih, persetujuan disimpan.")}
+  if(privBack==="app"&&S)renderApp();else if(privBack==="onboard")renderOnboard();else if(DB)renderHome();else renderOnboard()});
+
+/* ---------- QR ---------- */
+// Kolom anggota di QR: [nama, ...ID_FIELDS, ciri pakaian]. lite=true membuang alamat, pekerjaan & isi barang bila QR penuh.
+const idVals=(m,lite)=>ID_FIELDS.map(f=>f==="sameAddr"?(m.sameAddr?1:0):(lite&&(f==="addrKtp"||f==="addrDom"||f==="job"))?"":(m[f]||""));
+const subStr=i=>(i.subs||[]).map(s=>s.n).join(", ");
+function packTeam(lite){syncMe();const idx=Object.fromEntries(S.members.map((m,i)=>[m.id,i]));const t=S.team;
+  return {v:3,t:t.name,c:t.code,g:t.mountain,ty:t.type,d:t.start,e:t.end,ds:t.desc,
+    m:S.members.map(m=>[m.name,...idVals(m,lite),m.outfitDesc||""]),
+    i:S.items.map(i=>[i.name,CATS.indexOf(i.cat),+i.qty||1,Math.round(+i.weight||0),idx[i.owner]??0,i.scope==="tim"?1:0,isPacked(i)?1:0,i.required?1:0,i.color||"",lite?"":subStr(i),unitStr(i)])}}
+function unpackTeam(p){const members=p.m.map((x,k)=>{if(!Array.isArray(x))return {id:"m"+k,name:x};
+    const m={id:"m"+k,name:x[0]};ID_FIELDS.forEach((f,j)=>m[f]=f==="sameAddr"?!!x[j+1]:(x[j+1]||""));m.outfitDesc=x[ID_FIELDS.length+1]||"";return m});
+  return {team:{name:p.t,code:p.c,mountain:p.g,type:p.ty||"multi",start:p.d||"",end:p.e||"",desc:p.ds},members,
+    items:p.i.map((a,k)=>applyUnitStr({id:"i"+k,name:a[0],cat:CATS[a[1]]||"Lainnya",qty:a[2],weight:a[3],owner:"m"+a[4],scope:a[5]?"tim":"pribadi",packed:!!a[6],required:!!a[7],color:a[8]||"",
+      subs:a[9]?String(a[9]).split(", ").map(n=>({n,done:!!a[6]})):[]},a[10]))}}
+const enc=o=>window.LZString?LZString.compressToEncodedURIComponent(JSON.stringify(o)):null;
+const dec=s=>{try{return JSON.parse(LZString.decompressFromEncodedURIComponent(s))}catch(e){return null}};
+const baseURL=()=>location.href.split("#")[0];
+let qrLink="",qrLite="";
+function drawQR(){
+  const out=$("#qrOut");if(!out)return;
+  if(!window.QRCode||!window.LZString){out.innerHTML=`<p class="note">Pembuat QR belum termuat. Pastikan HP tersambung internet saat pertama membuka aplikasi.</p>`;return}
+  out.innerHTML=`<div class="qrbox"><div class="qn">${esc(S.team.name)}</div><div id="qrc"></div><div class="small" style="text-align:center">Kode tim ${esc(S.team.code)}, ${S.members.length} pendaki<br>${esc(planTxt(S.team))}</div></div>
+  <div class="acts noprint"><button class="btn sec" data-act="dlqr">Unduh PNG</button><button class="btn sec" data-act="shareqr">Bagikan link</button><button class="btn sec" data-act="print">Cetak / PDF</button><button class="btn sec" data-act="preview">Tampilan petugas</button></div>`;
+  const mk=t=>{$("#qrc").innerHTML="";new QRCode($("#qrc"),{text:t,width:300,height:300,correctLevel:QRCode.CorrectLevel.L})};
+  try{mk(qrLink)}catch(e){
+    try{mk(qrLite);qrLink=qrLite;out.insertAdjacentHTML("afterbegin",`<p class="note" style="margin-bottom:10px">Data terlalu banyak untuk satu QR, jadi alamat, pekerjaan, dan isi barang tidak dimasukkan. Data penting lain tetap ada.</p>`)}
+    catch(e2){out.innerHTML=`<p class="note">Daftar terlalu panjang untuk satu QR. Coba gabungkan barang serupa lalu buat ulang.</p>`;qrLink=""}}
+}
+async function saveFile(name,blob){
+  try{if(window.claude&&typeof window.claude.use==="function"){const d=await window.claude.use("downloads");if(d){await d.save({filename:name,data:blob});return}}}
+  catch(e){if(e&&e.code==="declined")return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+}
+async function shareLink(text,url){
+  if(navigator.share){try{await navigator.share({title:"Siap Nanjak",text,url});return}catch(e){if(e&&e.name==="AbortError")return}}
+  window.open("https://wa.me/?text="+encodeURIComponent(text+"\n"+url),"_blank","noopener");
+}
+async function copy(t,msg){try{await navigator.clipboard.writeText(t);toast(msg)}catch(e){toast("Kode tim: "+t)}}
+
+/* ---------- form barang ---------- */
+let editing=null,formPhoto=null,formSubs=[];
+function subsHTML(){return formSubs.length?formSubs.map((s,k)=>`<span class="subchip">${esc(s.n)}<button type="button" data-f="rmsub" data-k="${k}" aria-label="Hapus ${esc(s.n)}">×</button></span>`).join(""):'<span class="small muted">Belum ada isi.</span>'}
+function openForm(item,preset){
+  editing=item||null;formPhoto=item?item.photo||null:null;
+  const i=item||Object.assign({name:"",cat:"Pribadi",qty:1,weight:0,qunit:"pcs",note:"",color:"",required:false,scope:S.role==="solo"?"pribadi":scope,owner:S.me,subs:[]},preset||{});
+  formSubs=(i.subs||[]).map(s=>({...s}));
+  const ia=amtOf(i);
+  $("#itemForm").innerHTML=`<div class="dlg-h"><h2 style="margin:0">${item?"Ubah barang":"Tambah barang"}</h2><button class="x" data-f="close" aria-label="Tutup">×</button></div>
+  <label class="fld">Nama barang<input id="fName" value="${esc(i.name)}" maxlength="50" placeholder="mis. Alat mandi"></label>
+  <label class="fld">Kategori<select id="fCat">${CATS.map(c=>`<option ${c===i.cat?"selected":""}>${c}</option>`).join("")}</select></label>
+  <div class="two"><label class="fld">Jumlah<span class="uin"><input id="fQty" type="number" min="1" inputmode="numeric" value="${i.qty}"><select id="fQU" aria-label="Satuan jumlah">${QUNITS.map(u=>`<option ${u===(i.qunit||"pcs")?"selected":""}>${u}</option>`).join("")}</select></span></label>
+  <label class="fld"><span id="fWl">${["ml","L"].includes(ia.au)?"Isi":"Berat"} per ${esc(i.qunit||"pcs")}</span><span class="uin"><input id="fW" type="number" min="0" step="any" inputmode="decimal" value="${ia.amt}"><select id="fU" aria-label="Satuan berat atau isi">${AUNITS.map(([u,l])=>`<option value="${u}" ${u===ia.au?"selected":""}>${u}</option>`).join("")}</select></span></label></div>
+  <p class="small muted" id="fWhint" style="margin:-4px 0 0">${["ml","L"].includes(ia.au)?"Berat dihitung perkiraan: 1 liter ± 1 kg.":""}</p>
+  <div class="fld">Isi atau rincian <span class="small muted" style="font-weight:400">opsional, mis. isi alat mandi</span>
+    <div class="sublist" id="subList">${subsHTML()}</div>
+    <div class="subadd"><input id="subIn" placeholder="Ketik isi, lalu tekan Enter" maxlength="40" enterkeyhint="done"><button type="button" class="btn sec sm" data-f="addsub">Tambah</button></div>
+    <span class="small muted" style="font-weight:400">Bisa juga ketik beberapa sekaligus dipisah koma: odol, sikat gigi, sabun</span></div>
+  ${S.role!=="solo"?`<label class="fld">Jenis<select id="fScope"><option value="pribadi" ${i.scope==="pribadi"?"selected":""}>Barang pribadi</option><option value="tim" ${i.scope==="tim"?"selected":""}>Barang bersama tim</option></select></label>`:""}
+  ${S.role==="leader"?`<label class="fld">Dibawa oleh<select id="fOwner">${S.members.map(m=>`<option value="${m.id}" ${m.id===i.owner?"selected":""}>${esc(m.name)}</option>`).join("")}</select></label>`:""}
+  <label class="fld">Warna / ciri khusus<input id="fColor" value="${esc(i.color)}" maxlength="60" placeholder="mis. oranye, ada gantungan biru"></label>
+  <div class="fld">Foto barang <span class="small muted" style="font-weight:400">opsional, dipakai di kartu pengenal</span>
+  <div class="photo-prev" id="fPhotoBox">${formPhoto?`<img src="${formPhoto}" alt="">`:""}<div class="photo-acts">${photoBtns("item")}${formPhoto?'<button class="btn sec sm" data-f="nophoto">Hapus foto</button>':""}</div></div></div>
+  <label class="fld">Catatan (opsional)<input id="fNote" value="${esc(i.note)}" maxlength="80"></label>
+  <label class="check"><input type="checkbox" id="fReq" ${i.required?"checked":""}> Tandai wajib dibawa</label>
+  <div class="dlg-foot"><button class="btn pri full" data-f="save">Simpan</button>${item?'<button class="btn sec full" data-f="del" style="color:var(--red);margin-top:8px">Hapus barang</button>':""}</div>`;
+  $("#subIn").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();addSub()}};
+  const unitLbl=()=>{const v=["ml","L"].includes($("#fU").value);$("#fWl").textContent=(v?"Isi":"Berat")+" per "+$("#fQU").value;$("#fWhint").textContent=v?"Berat dihitung perkiraan: 1 liter ± 1 kg.":""};
+  $("#fU").onchange=unitLbl;$("#fQU").onchange=unitLbl;
+  $("#itemDlg").showModal();if(!item)setTimeout(()=>$("#fName").focus(),50);
+}
+function addSub(){const inp=$("#subIn");const parts=inp.value.split(/[,\n;]/).map(s=>s.trim()).filter(Boolean);if(!parts.length)return;
+  parts.forEach(n=>{if(!formSubs.some(s=>s.n.toLowerCase()===n.toLowerCase()))formSubs.push({n,done:false})});inp.value="";$("#subList").innerHTML=subsHTML();inp.focus()}
+document.addEventListener("change",async e=>{const inp=e.target.closest("[data-photo]");if(!inp||!inp.files[0])return;
+  const kind=inp.dataset.photo,src=await resize(inp.files[0],kind==="outfit"?640:480);inp.value="";if(!src){toast("Foto tidak bisa dibaca.");return}
+  if(kind==="item"){formPhoto=src;const b=$("#fPhotoBox");b.querySelector("img")?b.querySelector("img").src=src:b.insertAdjacentHTML("afterbegin",`<img src="${src}" alt="">`)}
+  if(kind==="outfit"){const m=S.members.find(x=>x.id===kartuWho);m.outfit=src;save();renderBerangkat();$("#kartuSec").scrollIntoView({block:"start"});toast("Foto disimpan.")}
+});
+function resize(file,max=480){return new Promise(res=>{const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.72))};
+  im.onerror=()=>{URL.revokeObjectURL(u);res(null)};im.src=u})}
+$("#itemForm").addEventListener("click",async e=>{
+  const a=e.target.closest("[data-f]");if(!a)return;const f=a.dataset.f;
+  if(f==="close"){$("#itemDlg").close();return}
+  if(f==="addsub"){addSub();return}
+  if(f==="rmsub"){formSubs.splice(+a.dataset.k,1);$("#subList").innerHTML=subsHTML();return}
+  if(f==="nophoto"){formPhoto=null;const b=$("#fPhotoBox");b.querySelector("img")?.remove();a.remove();return}
+  if(f==="del"){$("#itemDlg").close();if(await ask(`Hapus "${editing.name}" dari daftar?`,"Hapus")){S.items=S.items.filter(x=>x.id!==editing.id);save();setTab(tab)}return}
+  if(f==="save"){const name=$("#fName").value.trim();if(!name){toast("Isi nama barang.");return}
+    if($("#subIn").value.trim())addSub();
+    const amt=+$("#fW").value||0,au=$("#fU").value;
+    const d={name,color:$("#fColor").value.trim(),cat:$("#fCat").value,qty:Math.max(1,parseInt($("#fQty").value)||1),qunit:$("#fQU").value,amt,aunit:au,weight:Math.round(toGrams(amt,au)),note:$("#fNote").value.trim(),required:$("#fReq").checked,photo:formPhoto,subs:formSubs,
+      scope:$("#fScope")?$("#fScope").value:"pribadi",owner:$("#fOwner")?$("#fOwner").value:(editing?editing.owner:S.me)};
+    const wasEdit=!!editing;
+    if(editing){Object.assign(editing,d);if(d.subs.length)editing.packed=isPacked(editing)}else{S.items.push({id:uid(),packed:false,...d})}
+    save();$("#itemDlg").close();setTab(tab);toast(wasEdit?"Perubahan disimpan.":"Barang ditambahkan.");}
+});
+
+/* ---------- aksi di dalam pendakian ---------- */
+$("nav.bottom").addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(b){setTab(b.dataset.tab);window.scrollTo(0,0)}});
+$("#app").addEventListener("change",e=>{
+  if(e.target.id==="tnSel"){const v=e.target.value.trim();if(v){S.team.name=v;S.team.autoName=false;save();renderHeader()}else e.target.value=S.team.name}
+  if(e.target.id==="tdSel"){S.team.desc=e.target.value.trim();save()}
+  if(e.target.id==="bcSel"){const v=e.target.value.trim();if(v&&!PHONE_RE.test(v)){toast("Nomor HP basecamp belum benar.");return}S.team.bcPhone=v;save();if(tab==="jalur")renderJalur()}
+  if(e.target.id==="outfitDesc"){const m=S.members.find(x=>x.id===kartuWho);if(m){m.outfitDesc=e.target.value.trim();save()}}
+  if(e.target.id==="kartuWhoSel"){kartuWho=e.target.value;kartu=null;renderBerangkat();$("#kartuSec").scrollIntoView({block:"start"})}
+});
+$("#app").addEventListener("click",async e=>{
+  const tb=e.target.closest("main [data-tab]");if(tb){setTab(tb.dataset.tab);window.scrollTo(0,0);return}
+  const bv=e.target.closest("[data-bview]");if(bv){bview=bv.dataset.bview;renderBarang();return}
+  const sc=e.target.closest("[data-scope]");if(sc){scope=sc.dataset.scope;renderBarang();return}
+  const q=e.target.closest("[data-quick]");if(q){const d=QUICK.find(x=>x.n===q.dataset.quick);
+    const it={id:uid(),name:d.n,cat:d.cat,qty:1,weight:d.w,qunit:d.qu||"pcs",...(d.au?{aunit:d.au,amt:d.amt}:{}),note:"",color:"",required:false,photo:null,packed:false,subs:(d.subs||[]).map(n=>({n,done:false})),scope:S.role==="solo"?"pribadi":scope,owner:S.me};
+    S.items.push(it);if(it.subs.length)open.add(it.id);save();renderBarang();renderNav();toast(d.n+" ditambahkan. Ketuk barangnya untuk mengubah detail.");return}
+  const g=e.target.closest("[data-grp]");if(g){grp=g.dataset.grp;renderTim();return}
+  const fl=e.target.closest("[data-flt]");if(fl){flt=fl.dataset.flt;renderTim();return}
+  const dr=e.target.closest("[data-dir]");if(dr){S.dir=dr.dataset.dir;save();renderJalur();return}
+  const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act,it=S.items.find(x=>x.id===a.dataset.id);
+  if(act==="home"){renderHome();return}
+  if(act==="scanpos"){openScanner("Scan QR pos","Arahkan kamera ke poster QR yang terpasang di pos.",text=>{const r=parseScan(text);if(!r||r.kind!=="pos"){toast("Ini bukan QR pos check point.");return}handlePosScan(r.data)});return}
+  if(act==="manualcp"){manualCp();return}
+  if(act==="sentmark"){const last=(S.log||[])[S.log.length-1];if(last){last.sent=true;save()}if(!a.getAttribute("href").match(/^sms:[\d+]/)){e.preventDefault();toast("Isi nomor HP basecamp di bawah dulu.");$("#bcSel").focus()}return}
+  if(act==="sharecp"){const last=(S.log||[])[S.log.length-1];shareLink(S.finished?reportText(S,null,"selesai"):reportText(S,last),"");return}
+  if(act==="finish"&&await ask("Tandai pendakian ini selesai dan kamu sudah turun dengan selamat?","Ya, sudah turun")){S.finished=new Date().toISOString();save();renderJalur();renderNav();toast("Jangan lupa kabari basecamp dan keluarga.");return}
+  if(act==="unfinish"){delete S.finished;save();renderJalur();renderNav();return}
+  if(act==="pickmt"){openMtPicker();return}
+  if(act==="guide"){renderGuide("app");return}
+  if(act==="gostd"){bview="standar";setTab("barang");window.scrollTo(0,0);return}
+  if(act==="gotim"){setTab("tim");window.scrollTo(0,0);return}
+  if(act==="add")openForm();
+  if(act==="edit"&&it)openForm(it);
+  if(act==="toggleopen"&&it){open.has(it.id)?open.delete(it.id):open.add(it.id);setTab(tab);return}
+  if(act==="pack"&&it){const v=!isPacked(it);it.packed=v;(it.subs||[]).forEach(s=>s.done=v);save();setTab(tab)}
+  if(act==="sub"&&it){const s=it.subs[+a.dataset.k];s.done=!s.done;it.packed=isPacked(it);save();setTab(tab)}
+  if(act==="editid")openIdentity(a.dataset.id);
+  if(act==="addstd"){const s=[...BASE,SEHAT,SARUNG,KUPLUK].find(x=>x.k===a.dataset.k);openForm(null,{name:s.n,cat:s.cat,qty:Math.max(1,+a.dataset.q||1),weight:s.w,qunit:s.qu||"pcs",...(s.au?{aunit:s.au,amt:s.amt}:{}),required:true,scope:S.role==="leader"&&s.per!=="orang"?"tim":"pribadi"})}
+  if(act==="copycode")copy(S.team.code,"Kode tim disalin.");
+  if(act==="sharecode")shareLink(`Gabung ke tim pendakian "${S.team.name}" di Siap Nanjak. Kode tim: ${S.team.code}`,baseURL());
+  if(act==="addmem"){const n=$("#newMem").value.trim();if(!n)return;S.members.push({id:uid(),name:n,...blankId()});save();renderTim();renderNav();toast(n+" ditambahkan. Ketuk Ubah untuk mengisi data dirinya.")}
+  if(act==="rmmem"){const m=S.members.find(x=>x.id===a.dataset.id);const c=S.items.filter(i=>i.owner===m.id).length;
+    if(await ask(`Hapus ${m.name} dari tim?${c?` ${c} barang miliknya ikut terhapus.`:""}`,"Hapus")){S.members=S.members.filter(x=>x.id!==m.id);S.items=S.items.filter(i=>i.owner!==m.id);save();renderTim();renderNav()}}
+  if(act==="deltrip"&&await ask(`Hapus "${S.team.name}" beserta semua daftar barangnya dari HP ini?`,"Hapus")){DB.trips=DB.trips.filter(t=>t.id!==S.id);renderHome();toast("Pendakian dihapus.")}
+  if(act==="sendleader"){syncMe();const p=DB.profile;
+    if(missingId(p)){toast("Isi kontak darurat dulu sebelum mengirim ke ketua.");openIdentity(p.id);return}
+    const mm=S.members.find(x=>x.id===S.me)||{};
+    const payload=enc({v:3,c:S.team.code,n:p.name,id:idVals(p),od:mm.outfitDesc||"",i:S.items.map(i=>[i.name,CATS.indexOf(i.cat),i.qty,i.weight,i.scope==="tim"?1:0,isPacked(i)?1:0,i.required?1:0,i.color||"",subStr(i),unitStr(i)])});
+    if(!payload){toast("Perlu koneksi internet untuk membuat link.");return}
+    shareLink(`Daftar perlengkapan ${p.name} untuk tim ${S.team.code}. Ketua, buka link ini di HP-mu:`,baseURL()+"#gabung="+payload)}
+  if(act==="genqr"){const p=enc(packTeam());if(!p){toast("Perlu koneksi internet untuk membuat QR.");return}qrLink=baseURL()+"#cek="+p;qrLite=baseURL()+"#cek="+enc(packTeam(true));drawQR();if(qrLink){a.textContent="Perbarui QR Code";toast("QR Code dibuat.")}}
+  if(act==="dlqr"){const src=$("#qrc canvas");if(!src)return;const W=720,c=document.createElement("canvas");c.width=W;c.height=W+200;const x=c.getContext("2d");
+    x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.imageSmoothingEnabled=false;x.drawImage(src,60,110,W-120,W-120);
+    x.fillStyle="#15201A";x.textAlign="center";x.font="700 44px 'Barlow Condensed', Arial";x.fillText(S.team.name,W/2,70);
+    x.font="500 26px Barlow, Arial";x.fillText(`Kode tim ${S.team.code}, ${S.members.length} pendaki, ${mtName(S.team.mountain)}`,W/2,W+50);
+    x.fillText(planTxt(S.team),W/2,W+90);
+    c.toBlob(b=>saveFile(`QR-${S.team.code}.png`,b),"image/png")}
+  if(act==="shareqr")shareLink(`Data registrasi tim "${S.team.name}" (${S.team.code})`,qrLink);
+  if(act==="print")window.print();
+  if(act==="preview")renderOfficer(packTeam(),true);
+  if(act==="rmoutfit"){const m=S.members.find(x=>x.id===kartuWho);delete m.outfit;save();renderBerangkat();$("#kartuSec").scrollIntoView({block:"start"});return}
+  if(act==="addbag"){openForm(null,{name:"Carrier / tas gunung",cat:"Pribadi",weight:1800,owner:kartuWho,scope:"pribadi"});return}
+  if(act==="mkkartu"){const od=$("#outfitDesc");if(od){const m=S.members.find(x=>x.id===kartuWho);m.outfitDesc=od.value.trim();save()}
+    a.disabled=true;a.textContent="Membuat kartu…";try{kartu=await makeKartu()}catch(err){toast("Kartu gagal dibuat.")}a.disabled=false;a.textContent="Buat ulang kartu pengenal";
+    if(kartu)$("#kartuOut").innerHTML=`<img class="kt-prev" src="${kartu.url}" alt="Pratinjau kartu pengenal"><div class="acts"><button class="btn sec" data-act="dlkartu">Unduh gambar</button><button class="btn pri" data-act="sharekartu">Kirim ke keluarga</button></div>`;return}
+  const fname=()=>`Kartu-Pengenal-${memName(kartuWho).replace(/\s+/g,"-")}.png`;
+  if(act==="dlkartu"&&kartu){saveFile(fname(),kartu.blob);return}
+  if(act==="sharekartu"&&kartu){const f=new File([kartu.blob],fname(),{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Kartu pengenal pendaki",text:`Kartu pengenal ${memName(kartuWho)}, ${mtName(S.team.mountain)}, ${planTxt(S.team)}.`})}catch(err){}}
+    else{toast("HP ini belum mendukung kirim langsung. Gambar diunduh, silakan kirim manual lewat WhatsApp.");saveFile(f.name,kartu.blob)}return}
+});
+
+/* ---------- tampilan petugas ---------- */
+function renderOfficer(p,fromApp){
+  const d=unpackTeam(p),m=MT[d.team.mountain],c=checkStd(d.items,d.members.length,d.team.mountain,d.team.type),o=$("#officer");
+  const packed=d.items.filter(isPacked).length;
+  o.innerHTML=`<div class="off-banner">Tampilan petugas registrasi</div><header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><p class="hdr-sub">Tim pendakian, kode ${esc(d.team.code)}</p><h1>${esc(d.team.name)}</h1><p class="hdr-meta">${esc(m?m.n+", "+m.loc:"Gunung belum dipilih")}<br>${esc(planTxt(d.team))}</p>${d.team.desc?`<p class="hdr-meta">${esc(d.team.desc)}</p>`:""}</div></header>
+  <div class="wrap"><div class="card"><h3 style="margin-top:0">Anggota (${d.members.length})</h3>${d.members.map(x=>{const l=idLine(x);return `<div class="mem" style="align-items:flex-start"><span class="av">${initial(x.name)}</span><span style="flex:1;min-width:0"><b>${esc(x.name)}</b><span class="small muted" style="display:block">${l.length?l.join("<br>"):"Data diri belum diisi"}</span></span><span class="muted small">${d.items.filter(i=>i.owner===x.id).length} barang</span></div>`}).join("")}
+  <p class="muted small" style="margin:10px 0 0">${packed} dari ${d.items.length} barang sudah ditandai dikemas.</p></div>
+  ${c?`<h3>Kesesuaian standar ${esc(m.n)}</h3>`+stdHTML(c,false):""}
+  <h3>Perlengkapan per anggota</h3>${mergedHTML(d.members,d.items,{group:"anggota",filter:"semua",readonly:true})}
+  <div class="noprint" style="margin-top:24px">${fromApp?'<button class="btn pri full" id="offBack">Kembali ke aplikasi</button>':'<button class="btn sec full" id="offBack">Buka aplikasi Siap Nanjak</button>'}</div></div>`;
+  show("officer");
+  $("#offBack").onclick=()=>{if(fromApp&&S){renderApp();return}history.replaceState(null,"",baseURL());DB=DB||load();if(!DB)renderOnboard();else renderHome()};
+}
+
+/* ---------- terima daftar anggota ---------- */
+async function importMember(p){
+  if(!DB){renderOnboard();setTimeout(()=>toast("Link ini untuk ketua tim. Buka di HP ketua yang membuat tim."),300);return}
+  const trip=DB.trips.find(t=>t.role==="leader"&&t.team.code===p.c);
+  if(!trip){renderHome();setTimeout(()=>toast(`Tidak ada tim berkode ${p.c} yang kamu pimpin di HP ini.`),300);return}
+  S=trip;tab="tim";renderApp();
+  if(!(await ask(`Tambahkan daftar ${p.n} (${p.i.length} barang) ke tim ${trip.team.name}?`,"Tambahkan")))return;
+  let m=S.members.find(x=>x.name.trim().toLowerCase()===String(p.n).trim().toLowerCase());
+  if(!m){m={id:uid(),name:p.n,...blankId()};S.members.push(m)}
+  if(Array.isArray(p.id))ID_FIELDS.forEach((f,k)=>{if(p.id[k])m[f]=f==="sameAddr"?!!p.id[k]:p.id[k]});
+  if(p.od)m.outfitDesc=p.od;
+  S.items=S.items.filter(i=>i.owner!==m.id).concat(p.i.map(a=>applyUnitStr({id:uid(),name:a[0],cat:CATS[a[1]]||"Lainnya",qty:a[2],weight:a[3],scope:a[4]?"tim":"pribadi",packed:!!a[5],required:!!a[6],color:a[7]||"",
+    subs:a[8]?String(a[8]).split(", ").map(n=>({n,done:!!a[5]})):[],owner:m.id,note:"",photo:null},a[9])));
+  save();renderTim();renderNav();toast(`Daftar ${p.n} masuk ke tim.`);
+}
+
+/* ---------- mulai ---------- */
+function init(){
+  DB=load();
+  const h=location.hash;
+  if(h.startsWith("#pos=")){let pos=null;try{pos=JSON.parse(decodeURIComponent(h.slice(5)))}catch(e){}
+    history.replaceState(null,"",baseURL());if(pos&&pos.n){openPosLink(pos);return}toast("QR pos tidak bisa dibaca.")}
+  if(h.startsWith("#cek=")||h.startsWith("#gabung=")){
+    if(!window.LZString){document.body.insertAdjacentHTML("afterbegin",'<p class="note" style="margin:16px">Butuh koneksi internet untuk membuka data ini. Muat ulang halaman setelah tersambung.</p>');return}
+    const p=dec(h.slice(h.indexOf("=")+1));
+    if(p&&h.startsWith("#cek=")&&Array.isArray(p.m)){renderOfficer(p,false);return}
+    if(p&&h.startsWith("#gabung=")&&Array.isArray(p.i)){history.replaceState(null,"",baseURL());importMember(p);return}
+    toast("Link tidak bisa dibaca. Minta dikirim ulang.");
+  }
+  if(!DB){introSeen()?renderOnboard():renderIntro();return}
+  S=DB.trips.find(t=>t.id===DB.cur)||null;
+  if(S)tab=stepDone().rencana||S.role==="member"?"barang":"rencana";
+  S?renderApp():renderHome();
+}
+init();
+// Link QR pos bisa dibuka saat aplikasi sudah terbuka (hanya bagian # yang berubah)
+window.addEventListener("hashchange",()=>{if(location.hash.startsWith("#pos=")||location.hash.startsWith("#cek=")||location.hash.startsWith("#gabung=")){DB=load();init()}});
+})();
+</script>
+<script>
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
