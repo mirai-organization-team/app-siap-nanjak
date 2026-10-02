@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.miraiteam.siapnanjak",
+        "sha256_cert_fingerprints": ["B1:8F:35:1D:F9:50:5C:DB:7D:A8:D7:9B:70:7C:CA:82:8A:03:B4:DB:D4:B1:02:2B:52:FE:DD:FD:D0:CD:31:A0"]
+      }
+    }]
