@@ -458,6 +458,19 @@ details{border:0;box-shadow:var(--shadow);border-radius:18px}
 .pick[aria-pressed="true"]{border-color:var(--pine2);background:var(--greenbg)}
 #backBox{display:grid;gap:10px}
 #backBox input[type=time]{font:inherit;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.dbox{position:relative}
+.dbox input[type=date]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;padding:0}
+.dval{font-weight:500;padding:2px 0;font-size:1.02rem}
+.dval.ph{color:var(--muted);font-weight:400}
+.dbox::after{content:"";position:absolute;right:12px;top:50%;width:20px;height:20px;margin-top:-10px;pointer-events:none;opacity:.55;background:no-repeat center/20px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2356655C' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='3'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E")}
+/* kolom selalu menyesuaikan lebar layar, tidak melebar keluar kotak */
+.stack{grid-template-columns:minmax(0,1fr)}
+.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.fld>*,.two>*,.stack>*{min-width:0}
+.fld input,.fld select,.fld textarea{min-width:0;max-width:100%}
+details.more{min-width:0}
+input,select,textarea,button{box-sizing:border-box}
+details>*{box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -605,7 +618,9 @@ function save(){if(!DB)return;try{localStorage.setItem(KEY,JSON.stringify(DB))}c
 function syncMe(){const p=DB.profile;DB.trips.forEach(t=>{const m=t.members.find(x=>x.id===p.id);if(m){m.name=p.name;ID_FIELDS.forEach(f=>m[f]=p[f]??"")}})}
 function code8(){const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s}
 const fmtW=g=>{g=+g||0;return g>=1000?(g/1000).toLocaleString("id-ID",{maximumFractionDigits:1})+" kg":Math.round(g)+" g"};
-function fmtDate(d,short){try{return new Date(d+"T00:00:00").toLocaleDateString("id-ID",short?{day:"numeric",month:"short"}:{day:"numeric",month:"long",year:"numeric"})}catch(e){return d}}
+// Format tanggal aplikasi: DD/MM/YYYY
+const dmy=x=>String(x.getDate()).padStart(2,"0")+"/"+String(x.getMonth()+1).padStart(2,"0")+"/"+x.getFullYear();
+function fmtDate(d){const x=new Date(d+"T00:00:00");return isNaN(x)?String(d||""):dmy(x)}
 const norm=s=>" "+String(s).toLowerCase().replace(/[^a-z0-9]+/g," ").trim()+" ";
 const hitName=(name,kw)=>{const n=norm(name);return kw.some(k=>n.includes(" "+k+" ")||n.includes(" "+k))};
 const hit=(it,kw)=>hitName(it.name,kw)||(it.subs||[]).some(s=>hitName(s.n,kw));
@@ -632,7 +647,7 @@ function planTxt(t){
   if(t.type!=="multi")return label+", "+fmtDate(t.start);
   if(!t.end)return "Mulai "+fmtDate(t.start)+", tanggal turun belum diatur";
   const n=dayCount(t);if(n<2)return "Tanggal turun belum sesuai";
-  return `${n} hari ${n-1} malam, ${fmtDate(t.start,true)} sampai ${fmtDate(t.end)}`;
+  return `${n} hari ${n-1} malam, ${fmtDate(t.start)} sampai ${fmtDate(t.end)}`;
 }
 function planError(p){
   if(p.start&&fullDate(p.start)&&p.start<today())return `Tanggal ${p.type==="multi"?"naik":"pendakian"} sudah lewat. Pilih hari ini atau setelahnya.`;
@@ -645,14 +660,15 @@ function planError(p){
 function planHTML(t){const multi=t.type!=="oneday",n=Math.max(2,dayCount(t));
   return `<div class="fld">Tipe pendakian<div class="seg seg-sm"><button type="button" data-ptype="oneday" aria-pressed="${!multi}">Tektok (1 hari)</button><button type="button" data-ptype="multi" aria-pressed="${multi}">Menginap</button></div></div>
   <div class="fld">Tanggal
-    <div class="dates"><label class="dbox"><small id="lblStart">${multi?"Naik":"Tanggal"}</small><input type="date" id="pStart" value="${esc(t.start)}" min="${today()}"></label>
-    <label class="dbox ${multi?"":"hidden"}" id="endWrap"><small>Turun</small><input type="date" id="pEnd" value="${esc(t.end)}" min="${addDays(t.start&&t.start>=today()?t.start:today(),1)}"></label></div>
+    <div class="dates"><label class="dbox"><small id="lblStart">${multi?"Naik":"Tanggal"}</small><span class="dval ${t.start?"":"ph"}" id="pStartTxt">${t.start?fmtDate(t.start):"DD/MM/YYYY"}</span><input type="date" id="pStart" value="${esc(t.start)}" min="${today()}" aria-label="Tanggal naik"></label>
+    <label class="dbox ${multi?"":"hidden"}" id="endWrap"><small>Turun</small><span class="dval ${t.end?"":"ph"}" id="pEndTxt">${t.end?fmtDate(t.end):"DD/MM/YYYY"}</span><input type="date" id="pEnd" value="${esc(t.end)}" min="${addDays(t.start&&t.start>=today()?t.start:today(),1)}" aria-label="Tanggal turun"></label></div>
     <div class="dur ${multi?"":"hidden"}" id="durRow"><button type="button" data-dstep="-1" aria-label="Kurangi satu hari">−</button><span id="dVal" data-n="${n}">${n} hari ${n-1} malam</span><button type="button" data-dstep="1" aria-label="Tambah satu hari">+</button></div>
     <p class="plan-err" id="durTxt"></p></div>`}
 function readPlan(){const b=document.querySelector('[data-ptype][aria-pressed="true"]');const type=b?b.dataset.ptype:"multi";
   return {type,start:$("#pStart")?$("#pStart").value:"",end:type==="multi"&&$("#pEnd")?$("#pEnd").value:""}}
 function updatePlanView(){
   const pl=readPlan(),err=planError(pl),dv=$("#dVal");if(!$("#durTxt"))return err;
+  [["pStart","pStartTxt"],["pEnd","pEndTxt"]].forEach(([i,o])=>{const v=$("#"+i)&&$("#"+i).value,el=$("#"+o);if(el){el.textContent=v?fmtDate(v):"DD/MM/YYYY";el.classList.toggle("ph",!v)}});
   const multi=pl.type==="multi";
   $("#endWrap").classList.toggle("hidden",!multi);$("#durRow").classList.toggle("hidden",!multi);
   $("#lblStart").textContent=multi?"Naik":"Tanggal";
@@ -681,6 +697,7 @@ document.addEventListener("click",e=>{
     onPlanChange(s)}
 });
 document.addEventListener("change",e=>{if(e.target.id==="pStart"||e.target.id==="pEnd")onPlanChange(e.target)});
+document.addEventListener("click",e=>{const inp=e.target.closest(".dbox input[type=date]");if(inp&&inp.showPicker){try{inp.showPicker()}catch(err){}}});
 document.addEventListener("focusout",e=>{if(e.target.id==="pStart"||e.target.id==="pEnd"){const err=updatePlanView();if(err)toast(err)}});
 
 /* ---------- pilih gunung ---------- */
@@ -949,7 +966,7 @@ function renderHeader(){const t=S.team;
 /* 1. Rencana */
 function renderRencana(){
   const t=S.team,m=MT[t.mountain];
-  $("#tab-rencana").innerHTML=`${stepHead("rencana","Rencana pendakian","Untuk pendakian pertama, pilih gunung dengan jalur yang ramai dan rencanakan tiba kembali sebelum gelap.")}
+  $("#tab-rencana").innerHTML=`${stepHead("rencana","Rencana pendakian","Pilih gunung, tipe pendakian, dan tanggal. Daftar barang wajib akan langsung disiapkan. Kalau ini pendakian pertamamu, pilih jalur yang ramai dan rencanakan turun sebelum gelap.")}
   <div class="card stack">
     ${S.role!=="member"?`<label class="fld">Nama ${S.role==="leader"?"tim":"pendakian"}<input id="tnSel" value="${esc(t.name)}" maxlength="40"></label>`:""}
     ${S.role==="leader"?`<label class="fld">Deskripsi tim<textarea id="tdSel" rows="2" maxlength="160" placeholder="mis. lewat jalur Sembalun">${esc(t.desc)}</textarea></label>`:""}
@@ -1134,8 +1151,8 @@ function applyUnitStr(it,s){if(!s)return it;const [qu,amt,au]=String(s).split("|
 /* ---------- keselamatan: jam turun, kabar keluarga, mode mendaki, darurat ---------- */
 const pad2=n=>String(n).padStart(2,"0");
 const fmtClock=d=>pad2(d.getHours())+"."+pad2(d.getMinutes());
-const fmtDay=d=>d.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long"});
-const fmtDT=t=>{const d=new Date(t);return d.toLocaleDateString("id-ID",{day:"numeric",month:"short"})+" "+fmtClock(d)};
+const fmtDay=d=>d.toLocaleDateString("id-ID",{weekday:"long"})+", "+dmy(d);
+const fmtDT=t=>{const d=new Date(t);return dmy(d)+" "+fmtClock(d)};
 const DEADLINE_H=3; // jam tambahan sebelum keluarga perlu bertindak
 const DEADLINE_HOUR=21; // batas waktu kabar: malam hari terakhir pendakian
 function deadlineAt(t){const d=t.type==="multi"&&t.end?t.end:t.start;if(!d)return null;const x=new Date(d+"T00:00:00");x.setHours(DEADLINE_HOUR,0,0,0);return x}
@@ -1275,7 +1292,7 @@ const introSeen=()=>{try{return localStorage.getItem(INTRO_KEY)==="1"}catch(e){r
 
 /* ---------- panduan keselamatan ---------- */
 const GUIDE=[
- ["Untuk pendaki pemula","👣",[
+ ["Kalau baru mulai mendaki","👣",[
   "Untuk pendakian pertama, pilih gunung dengan jalur yang jelas dan ramai. Tanyakan ke basecamp jalur mana yang cocok untuk pemula.",
   "Jangan mendaki sendirian. Pergilah bersama teman yang berpengalaman, atau gunakan jasa pemandu resmi.",
   "Ikuti briefing di basecamp dan simpan nomor telepon basecamp.",
