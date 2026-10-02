@@ -28,7 +28,7 @@
   --bg:#111814;--surface:#1B2520;--ink:#EAF0EB;--muted:#9FB0A5;--line:#2E3C34;
   --pine:#1B4533;--pine2:#2F7356;--blaze:#F07A42;
   --red:#F08A7E;--redbg:#3A1E1B;--amber:#F0C35A;--amberbg:#352A12;--green:#6FD39B;--greenbg:#16301F;}
-*,*::before,*::after{box-sizing:inherit}
+*,*::before,*::after{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Barlow,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.45}
 h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;line-height:1.05;margin:0}
@@ -525,6 +525,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const uid=()=>Math.random().toString(36).slice(2,10);
 const CATS=["Pribadi","Kelompok","Makanan","Medis","Navigasi","Lainnya"];
 const KEY="siap-nanjak-v1";
+const APP_VER="1.0.17"; // samakan angka terakhir dengan versi di sw.js
 const CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
 const BACK_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
 const NEXT_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
@@ -917,7 +918,8 @@ function renderHome(){
     <span class="bar"><i style="width:${n?pk/n*100:0}%"></i></span><span class="small muted">${pk} dari ${n} barang dikemas${t.role!=="solo"?`, ${t.members.length} pendaki, kode ${esc(t.team.code)}`:""}</span></button>`}).join("")||`<div class="empty">Ketuk tombol di bawah untuk membuat rencana pertamamu.</div>`}</div>
   <button class="btn blaze full" data-act="newtrip" style="margin-top:14px">+ Tambah pendakian atau tim</button>
   <div class="two" style="margin-top:24px"><button class="btn sec" data-act="guide">⛑️ Panduan keselamatan</button><button class="btn sec" data-act="intro">Tentang aplikasi</button></div>
-  <div style="margin-top:20px" class="stack"><button class="btn sec full" data-act="privacy">Kebijakan privasi</button><button class="btn sec full" data-act="resetall">Hapus semua data di HP ini</button></div></div>`;
+  <div style="margin-top:20px" class="stack"><button class="btn sec full" data-act="privacy">Kebijakan privasi</button><button class="btn sec full" data-act="resetall">Hapus semua data di HP ini</button></div>
+  <p class="small muted" style="text-align:center;margin:20px 0 0">Siap Nanjak versi ${APP_VER}</p></div>`;
 }
 $("#home").addEventListener("click",async e=>{
   const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act;
