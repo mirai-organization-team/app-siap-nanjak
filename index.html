@@ -471,6 +471,12 @@ details{border:0;box-shadow:var(--shadow);border-radius:18px}
 details.more{min-width:0}
 input,select,textarea,button{box-sizing:border-box}
 details>*{box-sizing:border-box}
+.howto{display:grid;gap:12px}
+.ht{display:flex;gap:14px;background:var(--surface);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.ht-n{width:36px;height:36px;border-radius:50%;background:var(--pine);color:#fff;display:grid;place-items:center;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.25rem;flex:none}
+.ht-b{min-width:0;flex:1}.ht-b h3{margin:4px 0 2px}.ht-b ul{margin:0;padding-left:18px}.ht-b li{margin-bottom:6px;line-height:1.45}
+.card.reg{border-left:5px solid var(--pine2)}
+.hdr-bar .iconbtn[data-act="howto"]{font-weight:700;font-size:1.1rem}
 </style>
 </head>
 <body>
@@ -492,6 +498,7 @@ details>*{box-sizing:border-box}
 <div id="intro" class="hidden"></div>
 <div id="guide" class="hidden"></div>
 <div id="privacy" class="hidden"></div>
+<div id="howto" class="hidden"></div>
 <div id="onboard" class="hidden"></div>
 <div id="home" class="hidden"></div>
 
@@ -525,7 +532,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const uid=()=>Math.random().toString(36).slice(2,10);
 const CATS=["Pribadi","Kelompok","Makanan","Medis","Navigasi","Lainnya"];
 const KEY="siap-nanjak-v1";
-const APP_VER="1.0.17"; // samakan angka terakhir dengan versi di sw.js
+const APP_VER="1.0.18"; // samakan angka terakhir dengan versi di sw.js
 const CHECK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
 const BACK_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
 const NEXT_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
@@ -809,14 +816,14 @@ function openIdentity(mid){
   <label class="check"><input type="checkbox" id="iSame" ${m.sameAddr?"checked":""}> Alamat domisili sama dengan alamat KTP</label>
   <label class="fld ${m.sameAddr?"hidden":""}" id="domWrap">Alamat domisili<textarea id="iAddrDom" rows="2" maxlength="160">${esc(m.addrDom)}</textarea></label>
   <h3 class="sec-h">Kesehatan</h3>
-  <p class="small muted" style="margin:0">Opsional. Data kesehatan termasuk data sensitif. Isi hanya bila kamu setuju data ini dibaca petugas lewat QR, misalnya agar bisa ditangani tepat saat darurat.</p>
+  <p class="small muted" style="margin:0">Opsional. Data kesehatan termasuk data sensitif. Isi hanya bila kamu setuju data ini ikut dibagikan saat kamu menunjukkan data tim ke petugas, misalnya agar bisa ditangani tepat saat darurat.</p>
   <label class="fld">Golongan darah${sel("iBlood",["A","B","AB","O"],m.blood,"Tidak tahu")}</label>
   <label class="fld">Riwayat penyakit<textarea id="iHealth" rows="2" maxlength="120" placeholder="mis. asma, darah tinggi. Kosongkan bila tidak ada.">${esc(m.health)}</textarea></label>
   <label class="fld">Alergi obat<input id="iAllergy" value="${esc(m.allergy)}" maxlength="80" placeholder="mis. amoxicillin. Kosongkan bila tidak ada."></label>
   <h3 class="sec-h">Kendaraan</h3>
   <label class="fld">Plat nomor kendaraan yang diparkir<input id="iPlate" value="${esc(m.plate)}" maxlength="15" placeholder="mis. B 1234 XYZ" style="text-transform:uppercase"></label>
   </div></details>
-  <p class="small muted" style="margin:6px 0 0">Data ini disimpan di HP ini dan ikut masuk QR Code untuk petugas registrasi. Bagikan QR hanya kepada pihak yang perlu. <button type="button" class="linkbtn" data-i="priv">Baca kebijakan privasi</button></p>
+  <p class="small muted" style="margin:6px 0 0">Data ini disimpan di HP ini. Data hanya dibagikan kalau kamu sendiri menunjukkan atau mengirim Data tim untuk basecamp. <button type="button" class="linkbtn" data-i="priv">Baca kebijakan privasi</button></p>
   <div class="dlg-foot"><button class="btn pri full" data-i="save">Simpan data diri</button></div>`;
   $("#idDlg").showModal();
 }
@@ -852,7 +859,7 @@ $("#idForm").addEventListener("click",e=>{
 });
 
 /* ---------- navigasi layar ---------- */
-function show(id){["intro","guide","privacy","onboard","home","app","officer"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
+function show(id){["intro","guide","privacy","howto","onboard","home","app","officer"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
   if(id!=="onboard")$("#onboard").innerHTML="";if(id!=="app")$("#tab-rencana").innerHTML="";window.scrollTo(0,0)}
 
 /* ---------- onboarding & pendakian baru ---------- */
@@ -865,7 +872,7 @@ function renderOnboard(step){
     <button class="opt" data-ob="solo"><b>Pendaki individu</b><span>Daftar perlengkapan untuk dirimu sendiri</span></button>
     <button class="opt" data-ob="leader"><b>Buat tim baru</b><span>Kamu jadi ketua tim dan mendapat kode tim</span></button>
     <button class="opt" data-ob="member"><b>Gabung ke tim</b><span>Masukkan kode tim dari ketua</span></button>
-    ${DB?"":`<button class="btn sec full" data-ob-intro style="margin-top:6px">Lihat lagi pengenalan aplikasi</button>`}</div>`;return}
+    <button class="btn sec full" data-ob-howto style="margin-top:6px">Lihat cara pakai aplikasi</button></div>`;return}
   const nm=esc(step.name);
   if(step.role==="member"){o.innerHTML=hero+`<div class="wrap stack"><h2>Gabung ke tim</h2>
     <label class="fld">Kode tim<input id="obCode" maxlength="8" placeholder="mis. AB123XYZ" style="text-transform:uppercase;letter-spacing:.1em"></label>
@@ -888,6 +895,7 @@ $("#onboard").addEventListener("click",e=>{
   if(e.target.closest("[data-ob-home]")){renderHome();return}
   if(e.target.closest("[data-ob-back]")){renderOnboard();return}
   if(e.target.closest("[data-ob-intro]")){introIdx=0;renderIntro();return}
+  if(e.target.closest("[data-ob-howto]")){renderHowto(DB?"home":"onboard");return}
   if(e.target.closest("[data-ob-priv]")){e.preventDefault();renderPrivacy("onboard");return}
   const r=e.target.closest("[data-ob]");
   if(r){const name=DB?DB.profile.name:$("#obName").value.trim();if(!name){toast("Isi nama kamu dulu.");$("#obName").focus();return}
@@ -909,7 +917,7 @@ function renderHome(){
   const trips=DB.trips.slice().sort((a,b)=>(a.team.start||"9999").localeCompare(b.team.start||"9999"));
   $("#home").innerHTML=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><p class="hdr-sub">Siap Nanjak</p><h1>Halo, ${esc(p.name)}</h1><p class="hdr-meta">${trips.length?`Kamu punya ${trips.length} rencana pendakian.`:"Belum ada rencana pendakian."}</p></div></header>
   <div class="wrap">${trips.filter(isOverdue).map(t=>`<button class="od-card" data-act="opentrip" data-id="${t.id}" data-go="mendaki"><b>${esc(t.team.name)} sudah lewat batas waktu turun</b><span>Sudah turun dengan selamat? Ketuk untuk melapor dan mengabari keluarga.</span></button>`).join("")}${hasConsent()?"":`<div class="card pv-ask"><b>Kebijakan privasi diperbarui</b><p class="small muted" style="margin:4px 0 10px">Ada perubahan cara aplikasi menyimpan dan membagikan datamu, termasuk lokasi GPS untuk tombol darurat. Mohon dibaca dan disetujui.</p><div class="two"><button class="btn sec" data-act="privacy">Baca</button><button class="btn pri" data-act="agreepriv">Saya setuju</button></div></div>`}<div class="card idcard"><span class="av lg">${initial(p.name)}</span><div style="flex:1;min-width:0"><b>${esc(p.name)}</b><p class="small muted" style="margin:2px 0 0">${lines.length?lines.join("<br>"):"Data diri belum diisi."}</p></div></div>
-  ${missingId(p)?`<p class="note warn" style="margin-top:10px">Kontak darurat wajib diisi sebelum membuat QR Code registrasi.</p>`:""}
+  ${missingId(p)?`<p class="note warn" style="margin-top:10px">Kontak darurat dipakai untuk pesan ke keluarga dan tombol darurat. Isi dulu sebelum mendaki.</p>`:""}
   <button class="btn ${missingId(p)?"pri":"sec"} full" data-act="editme" style="margin-top:10px">${missingId(p)?"Lengkapi data diri":"Lihat dan ubah data diri"}</button>
   <h3 style="margin-top:26px">Pendakian dan tim saya</h3>
   <div class="stack">${trips.map(t=>{const n=t.items.length,pk=t.items.filter(isPacked).length;
@@ -917,7 +925,8 @@ function renderHome(){
     <span class="small">${esc(mtName(t.team.mountain))}. ${esc(planTxt(t.team))}</span>
     <span class="bar"><i style="width:${n?pk/n*100:0}%"></i></span><span class="small muted">${pk} dari ${n} barang dikemas${t.role!=="solo"?`, ${t.members.length} pendaki, kode ${esc(t.team.code)}`:""}</span></button>`}).join("")||`<div class="empty">Ketuk tombol di bawah untuk membuat rencana pertamamu.</div>`}</div>
   <button class="btn blaze full" data-act="newtrip" style="margin-top:14px">+ Tambah pendakian atau tim</button>
-  <div class="two" style="margin-top:24px"><button class="btn sec" data-act="guide">⛑️ Panduan keselamatan</button><button class="btn sec" data-act="intro">Tentang aplikasi</button></div>
+  <button class="btn sec full" data-act="howto" style="margin-top:24px">Cara pakai aplikasi</button>
+  <div class="two" style="margin-top:10px"><button class="btn sec" data-act="guide">⛑️ Panduan keselamatan</button><button class="btn sec" data-act="intro">Tentang aplikasi</button></div>
   <div style="margin-top:20px" class="stack"><button class="btn sec full" data-act="privacy">Kebijakan privasi</button><button class="btn sec full" data-act="resetall">Hapus semua data di HP ini</button></div>
   <p class="small muted" style="text-align:center;margin:20px 0 0">Siap Nanjak versi ${APP_VER}</p></div>`;
 }
@@ -926,6 +935,7 @@ $("#home").addEventListener("click",async e=>{
   if(act==="editme")openIdentity(DB.profile.id);
   if(act==="newtrip")renderOnboard();
   if(act==="guide")renderGuide("home");
+  if(act==="howto")renderHowto("home");
   if(act==="privacy")renderPrivacy("home");
   if(act==="agreepriv"){DB.consent={v:PRIVACY_VER,t:new Date().toISOString()};save();renderHome();toast("Terima kasih, persetujuan disimpan.")}
   if(act==="intro"){introIdx=0;renderIntro("home")}
@@ -961,7 +971,7 @@ function setTab(t){if(t==="tim"&&S.role==="solo")t="berangkat";tab=t;
   $("#fab").classList.toggle("hidden",!(t==="barang"&&bview==="daftar"));
   renderNav();({rencana:renderRencana,barang:renderBarang,tim:renderTim,berangkat:renderBerangkat,mendaki:renderMendaki})[t]();}
 function renderHeader(){const t=S.team;
-  $("#hdr").innerHTML=`<div class="hdr-bar"><button class="iconbtn" data-act="home" aria-label="Kembali ke menu utama">${BACK_SVG}</button><p class="hdr-sub">${S.role==="solo"?"Pendakian individu":S.role==="leader"?"Kamu ketua tim":"Kamu anggota tim"}</p>${S.role!=="solo"?`<button class="codechip" data-act="copycode" aria-label="Salin kode tim">${esc(t.code)}</button>`:""}</div>
+  $("#hdr").innerHTML=`<div class="hdr-bar"><button class="iconbtn" data-act="home" aria-label="Kembali ke menu utama">${BACK_SVG}</button><p class="hdr-sub">${S.role==="solo"?"Pendakian individu":S.role==="leader"?"Kamu ketua tim":"Kamu anggota tim"}</p>${S.role!=="solo"?`<button class="codechip" data-act="copycode" aria-label="Salin kode tim">${esc(t.code)}</button>`:""}<button class="iconbtn" data-act="howto" aria-label="Cara pakai">?</button></div>
   <h1>${esc(t.name)}</h1><p class="hdr-meta">${esc(mtName(t.mountain))} · ${esc(planTxt(t))}</p>
   ${isOverdue(S)&&S.started?`<button class="od-banner" data-act="gomendaki">Sudah lewat batas waktu turun. Sudah turun dengan selamat? Ketuk di sini.</button>`:""}`;}
 
@@ -1051,7 +1061,7 @@ function renderBerangkat(){
   const its=S.role==="member"?S.items.filter(i=>i.owner===S.me):S.items,pk=its.filter(isPacked).length;
   const noId=S.members.filter(missingId).map(m=>m.name);
   const row=(ok,title,sub,btn)=>`<div class="ck ${ok?"ok":""}"><span class="dot">${ok?"✓":"!"}</span><span class="rt"><b>${title}</b><small>${sub}</small></span>${!ok&&btn?btn:""}</div>`;
-  let h=`${stepHead("berangkat","Siap berangkat","Periksa sekali lagi, kabari keluarga, lalu tunjukkan QR di pos registrasi.")}
+  let h=`${stepHead("berangkat","Siap berangkat","Periksa sekali lagi dan kabari keluarga. Registrasi tetap dilakukan di basecamp seperti biasa.")}
   <div class="rows cklist">
    ${row(d.rencana,"Rencana pendakian",d.rencana?`${esc(mtName(t.mountain))}, ${esc(planTxt(t))}`:(planError(t)||"Gunung atau tanggal belum lengkap"),`<button class="btn sec sm" data-tab="rencana">Atur</button>`)}
    ${row(!noId.length,"Data diri dan kontak darurat",noId.length?`Belum lengkap: ${noId.map(esc).join(", ")}`:"Semua pendaki sudah lengkap",`<button class="btn sec sm" data-act="${S.role==="leader"?"gotim":"editid"}" data-id="${S.me}">Isi</button>`)}
@@ -1066,15 +1076,19 @@ function renderBerangkat(){
   <pre class="msg">${esc(fm)}</pre>
   ${p.ecp?`<div class="two"><a class="btn pri" data-act="famsent" href="${waLink(p.ecp,fm)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn sec" data-act="famsent" href="${smsLink(p.ecp,fm)}">SMS</a></div>`:`<p class="note warn">Isi kontak darurat di data diri dulu.</p>`}</div>`;
   if(S.role==="member"){
-    h+=`<div class="card" style="margin-top:16px"><h3 style="margin-top:0">Kirim ke ketua tim</h3><p class="small muted">QR Code registrasi dibuat oleh ketua. Kirim daftar barang dan data dirimu agar masuk ke daftar tim.</p><button class="btn pri full" data-act="sendleader">Kirim daftar saya ke ketua</button></div>`;
+    h+=`<div class="card" style="margin-top:16px"><h3 style="margin-top:0">Kirim daftarmu ke ketua tim</h3><p class="small muted">Supaya daftar barang dan data dirimu masuk ke daftar tim yang dipegang ketua.</p><button class="btn pri full" data-act="sendleader">Kirim daftar saya ke ketua</button></div>`;
   }else{
     const blocked=!d.rencana||noId.length;
-    h+=`<div class="card" style="margin-top:16px"><h3 style="margin-top:0">QR Code registrasi</h3>
-    <p class="small muted">Tunjukkan QR ini hanya ke petugas di pos registrasi. Isinya rencana, data diri dan kesehatan anggota, daftar barang, dan total berat. Isi QR tidak dienkripsi, jadi jangan unggah ke media sosial. Buat ulang setiap kali data berubah.</p>
-    ${blocked?`<p class="note warn">Lengkapi rencana dan kontak darurat semua pendaki dulu.</p>`:c&&c.red?`<p class="note">Masih ada ${c.red} perlengkapan wajib belum ada. QR tetap bisa dibuat, tapi sebaiknya dilengkapi.</p>`:""}
-    <button class="btn pri full" data-act="genqr" ${blocked?"disabled":""} style="margin-top:8px">${qrLink?"Perbarui QR Code":"Buat QR Code"}</button><div id="qrOut" style="margin-top:14px"></div></div>`;
     if(blocked)qrLink="";
   }
+  h+=`<div class="card reg" style="margin-top:16px"><h3 style="margin-top:0">Registrasi di basecamp</h3>
+  <p class="small" style="margin:0 0 8px">Daftar seperti biasa ke petugas basecamp, atau lewat booking online resmi pengelola gunung. Siap Nanjak <b>tidak menggantikan</b> registrasi resmi.</p>
+  <p class="small muted" style="margin:0">Siapkan KTP dan dokumen yang diminta, misalnya surat keterangan sehat.</p>
+  ${S.role!=="member"?`<details class="more qr-more"${qrLink?" open":""} style="margin-top:12px"><summary>Data tim untuk basecamp <span>opsional</span></summary>
+    <p class="small muted" style="margin:10px 0 8px">Kalau petugas ingin melihat data timmu, tunjukkan QR ini atau kirim link-nya. Isinya rencana, data diri, kontak darurat, dan daftar barang. Isi QR tidak dienkripsi, jadi jangan diunggah ke media sosial.</p>
+    ${!d.rencana||noId.length?`<p class="note warn">Lengkapi rencana dan kontak darurat semua pendaki dulu.</p>`:""}
+    <button class="btn sec full" data-act="genqr" ${!d.rencana||noId.length?"disabled":""}>${qrLink?"Perbarui QR":"Tampilkan QR data tim"}</button><div id="qrOut" style="margin-top:14px"></div></details>`:""}
+  <button class="linkbtn" data-act="howto" style="margin-top:12px">Lihat cara pakai aplikasi</button></div>`;
   h+=kartuHTML()+`<div class="next-wrap">${nextBtn()}</div>`+tripFooter();
   el.innerHTML=h;if(qrLink&&S.role!=="member")drawQR();
 }
@@ -1261,14 +1275,14 @@ const ILL={
  a:`<svg viewBox="0 0 240 160" aria-hidden="true"><path d="M10 140 L80 50 L115 95 L145 62 L230 140Z" fill="var(--pine2)"/><path d="M80 50 L95 70 L86 66 L80 74 L73 66 L66 70Z" fill="#fff"/><circle cx="190" cy="38" r="16" fill="var(--blaze)"/><path d="M40 140c30-18 60-6 80-24s50-10 70 6" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>`,
  b:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="60" y="16" width="120" height="132" rx="14" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>${[0,1,2,3].map(k=>`<rect x="78" y="${38+k*26}" width="18" height="18" rx="5" fill="${k<3?"var(--green)":"none"}" stroke="${k<3?"var(--green)":"var(--muted)"}" stroke-width="3"/>${k<3?`<path d="M82 ${47+k*26}l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`:""}<rect x="106" y="${43+k*26}" width="${[56,44,52,36][k]}" height="8" rx="4" fill="var(--line)"/>`).join("")}<circle cx="182" cy="128" r="22" fill="var(--blaze)"/><path d="M172 128l7 7 13-14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
  c:`<svg viewBox="0 0 240 160" aria-hidden="true">${[[70,"var(--pine2)"],[120,"var(--blaze)"],[170,"var(--pine2)"]].map(([x,c],k)=>`<circle cx="${x}" cy="${k===1?58:68}" r="${k===1?22:18}" fill="${c}"/><path d="M${x-30} ${k===1?132:136}c0-22 14-36 30-36s30 14 30 36z" fill="${c}"/>`).join("")}<rect x="84" y="138" width="72" height="16" rx="8" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/><text x="120" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)" font-family="Barlow,sans-serif" letter-spacing="2">AB12XYZ</text></svg>`,
- d:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="70" y="14" width="100" height="132" rx="16" fill="var(--ink)"/><rect x="80" y="30" width="80" height="80" rx="6" fill="#fff"/>${[[86,36],[134,36],[86,84]].map(([x,y])=>`<rect x="${x}" y="${y}" width="20" height="20" fill="none" stroke="#15201A" stroke-width="5"/>`).join("")}${[[112,40],[120,52],[112,64],[128,70],[140,64],[112,86],[124,94],[140,86],[148,98]].map(([x,y])=>`<rect x="${x}" y="${y}" width="8" height="8" fill="#15201A"/>`).join("")}<rect x="96" y="122" width="48" height="10" rx="5" fill="var(--blaze)"/></svg>`,
+ d:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="70" y="10" width="100" height="140" rx="16" fill="var(--ink)"/><rect x="80" y="26" width="80" height="104" rx="8" fill="var(--surface)"/><rect x="88" y="36" width="52" height="18" rx="9" fill="var(--line)"/><rect x="100" y="62" width="52" height="26" rx="10" fill="var(--pine2)"/><rect x="88" y="96" width="44" height="18" rx="9" fill="var(--line)"/><circle cx="176" cy="40" r="18" fill="var(--blaze)"/><path d="M168 40l6 6 10-12" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
  e:`<svg viewBox="0 0 240 160" aria-hidden="true"><path d="M30 140c40-10 50-50 90-60s60-40 90-60" fill="none" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>${[[30,140,"var(--green)"],[92,92,"var(--green)"],[150,62,"var(--blaze)"],[210,20,"var(--line)"]].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="12" fill="${c}" stroke="var(--surface)" stroke-width="4"/>`).join("")}<path d="M150 30c-10 0-17 7-17 16 0 12 17 26 17 26s17-14 17-26c0-9-7-16-17-16z" fill="var(--blaze)"/><circle cx="150" cy="46" r="6" fill="#fff"/></svg>`};
 const SLIDES=[
  ["a","Persiapkan pendakianmu","Siap Nanjak menuntun persiapanmu langkah demi langkah, dari rencana sampai turun dengan selamat."],
  ["b","Daftar barang langsung siap","Pilih gunung tujuan, dan daftar barang wajib langsung muncul beserta alasannya. Kamu tinggal mencentang saat mengemas."],
  ["c","Satu tim, satu daftar","Ketua membuat tim dan membagikan kode. Daftar semua anggota tergabung, termasuk berat bawaan tiap orang, jadi pembagian beban lebih adil."],
- ["d","Registrasi cukup sekali scan","Satu QR Code berisi rencana, data diri, kontak darurat, dan perlengkapan seluruh tim. Petugas di pos registrasi bisa memeriksanya dengan cepat."],
- ["e","Lebih aman di jalur","Keluarga tahu rencana dan batas waktumu. Saat darurat, satu tombol untuk menelepon bantuan dan mengirim lokasi GPS, bahkan tanpa internet."]];
+ ["d","Keluarga tahu rencanamu","Kirim rencana dan batas waktu ke keluarga dengan sekali ketuk. Kalau kamu belum memberi kabar, mereka tahu harus menghubungi siapa."],
+ ["e","Lebih aman di jalur","Tekan Mulai mendaki saat berangkat. Saat darurat, satu tombol untuk menelepon bantuan dan mengirim lokasi GPS, bahkan tanpa internet. Registrasi tetap dilakukan di basecamp seperti biasa."]];
 let introIdx=0,introBack=null;
 function renderIntro(back){
   introBack=back||null;show("intro");
@@ -1360,9 +1374,46 @@ function renderGuide(back){
 }
 $("#guide").addEventListener("click",e=>{if(!e.target.closest('[data-g="back"]'))return;if(guideBack==="app"&&S)renderApp();else renderHome()});
 
+/* ---------- cara pakai ---------- */
+const HOWTO=[
+ ["1","Sebelum berangkat","Di rumah, beberapa hari sebelumnya",[
+   "Isi data diri dan kontak darurat, yaitu orang di rumah yang dihubungi bila terjadi sesuatu.",
+   "Buat pendakian: pilih gunung, tipe pendakian, dan tanggal. Daftar barang wajib langsung disiapkan.",
+   "Centang setiap barang saat dimasukkan ke tas.",
+   "Mendaki bersama teman? Buat tim, lalu bagikan kode tim supaya daftar barang tergabung."]],
+ ["2","Sebelum naik","Malam sebelumnya atau di perjalanan",[
+   "Buka menu Berangkat dan periksa daftar ceknya.",
+   "Kirim pesan rencana ke keluarga lewat WhatsApp atau SMS. Pesan ini berisi batas waktu: kalau kamu belum memberi kabar, keluarga tahu harus menghubungi siapa."]],
+ ["3","Di basecamp","Saat tiba di lokasi",[
+   "Daftar seperti biasa ke petugas basecamp atau lewat booking online resmi pengelola. Siap Nanjak tidak menggantikan registrasi resmi.",
+   "Siapkan KTP dan dokumen lain yang diminta, misalnya surat keterangan sehat.",
+   "Kalau petugas ingin melihat data timmu, tunjukkan Data tim untuk basecamp di menu Berangkat."]],
+ ["4","Saat mendaki","Dari basecamp sampai kembali",[
+   "Buka menu Mendaki dan tekan Mulai mendaki.",
+   "Kirim kabar ke keluarga setiap kali ada sinyal.",
+   "Dalam keadaan darurat, tekan tombol merah Darurat untuk menelepon bantuan dan mengirim lokasi GPS lewat SMS.",
+   "Setelah kembali di basecamp, tekan Saya sudah turun dengan selamat, lalu kabari keluarga."]]];
+const FAQ=[
+ ["Apakah Siap Nanjak dipakai untuk registrasi pendakian?","Tidak. Registrasi tetap dilakukan di basecamp atau lewat sistem booking resmi pengelola gunung. Siap Nanjak membantu kamu menyiapkan barang, mengabari keluarga, dan menghadapi keadaan darurat."],
+ ["Apa itu Data tim untuk basecamp?","QR berisi data diri, kontak darurat, dan daftar barang seluruh tim. Fitur ini opsional: tunjukkan hanya kalau petugas meminta melihat data timmu."],
+ ["Apakah perlu internet?","Hanya saat pertama membuka aplikasi dan saat mengirim pesan lewat WhatsApp. Daftar barang, panduan keselamatan, dan lokasi GPS tetap bisa dipakai tanpa internet. SMS bisa terkirim walau sinyal lemah."],
+ ["Siapa yang bisa melihat dataku?","Hanya kamu. Semua data tersimpan di HP ini, dan baru keluar kalau kamu sendiri yang mengirimnya."]];
+let howtoBack=null;
+function renderHowto(back){
+  howtoBack=back||howtoBack||"home";show("howto");
+  $("#howto").innerHTML=`<header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><button class="backbtn" data-h="back">${BACK_SVG} Kembali</button><p class="hdr-sub">Siap Nanjak</p><h1>Cara pakai</h1></div></header>
+  <div class="wrap">
+  <p class="tip" style="margin:0 0 16px">Siap Nanjak membantu persiapan dan keselamatanmu. Registrasi pendakian tetap dilakukan di basecamp seperti biasa.</p>
+  <div class="howto">${HOWTO.map(([n,t,w,list])=>`<div class="ht"><div class="ht-n">${n}</div><div class="ht-b"><h3>${esc(t)}</h3><p class="small muted" style="margin:0 0 8px">${esc(w)}</p><ul>${list.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>`).join("")}</div>
+  <h3 style="margin-top:24px">Pertanyaan yang sering muncul</h3>
+  <div class="guide">${FAQ.map(([q,a])=>`<details><summary>${esc(q)}</summary><p style="margin:10px 0 2px">${esc(a)}</p></details>`).join("")}</div>
+  <button class="btn pri full" data-h="back" style="margin-top:20px">Mengerti</button></div>`;
+}
+$("#howto").addEventListener("click",e=>{if(!e.target.closest('[data-h="back"]'))return;if(howtoBack==="app"&&S)renderApp();else if(howtoBack==="onboard")renderOnboard();else renderHome()});
+
 /* ---------- kebijakan privasi ---------- */
 const PRIVACY_VER="1.1";
-const PRIVACY_HTML="<p class=\"pv-meta\">Berlaku sejak 2 Oktober 2026. Versi 1.1.</p>\n\n<p>Kebijakan ini menjelaskan data apa yang dikumpulkan aplikasi Siap Nanjak, di mana data itu disimpan, kapan data itu dibagikan, dan bagaimana kamu bisa menghapusnya. Siap Nanjak dibuat dan dikelola oleh <b>PT Mirai Internasional Indonesia</b>.</p>\n\n<div class=\"pv-box\"><b>Ringkasnya</b>\n<ul>\n<li>Semua data kamu disimpan <b>hanya di HP kamu sendiri</b>. Kami tidak punya server yang menyimpan data pribadi pengguna.</li>\n<li>Data baru keluar dari HP kamu kalau <b>kamu sendiri</b> yang membagikannya, misalnya lewat QR Code, link, SMS, atau gambar kartu pengenal.</li>\n<li>Lokasi GPS hanya diambil saat kamu menekan tombol darurat, dan tidak disimpan.</li>\n<li>Tidak ada iklan, tidak ada pelacakan, dan data kamu tidak pernah dijual.</li>\n<li>Kamu bisa menghapus semua data kapan saja dari dalam aplikasi.</li>\n</ul></div>\n\n<h2>1. Data yang dikumpulkan</h2>\n<p>Aplikasi hanya menyimpan data yang kamu isi sendiri:</p>\n<ul>\n<li><b>Data diri:</b> nama lengkap, jenis dan nomor identitas (KTP, paspor, atau SIM), pekerjaan, nomor HP, alamat sesuai KTP, dan alamat domisili.</li>\n<li><b>Kontak darurat:</b> nama, hubungan dengan kamu, dan nomor HP orang yang kamu tunjuk.</li>\n<li><b>Data kesehatan:</b> golongan darah, riwayat penyakit, dan alergi obat. Semuanya opsional.</li>\n<li><b>Data kendaraan:</b> plat nomor kendaraan yang kamu parkir di basecamp. Opsional.</li>\n<li><b>Rencana pendakian:</b> gunung tujuan, tanggal, nama tim, kode tim, anggota tim, dan nomor basecamp.</li>\n<li><b>Daftar barang:</b> nama barang, jumlah, berat, warna, catatan, dan isi barang.</li>\n<li><b>Foto:</b> foto barang dan foto diri dengan pakaian mendaki yang kamu ambil untuk kartu pengenal. Opsional.</li>\n<li><b>Catatan pendakian:</b> waktu kamu menekan tombol Mulai mendaki dan Sudah turun dengan selamat, serta apakah pesan rencana sudah dikirim ke keluarga.</li>\n</ul>\n<p><b>Lokasi GPS</b> hanya diambil ketika kamu sendiri menekan tombol <b>Ambil lokasi GPS</b> di menu darurat, setelah kamu memberi izin lokasi. Lokasi itu hanya dimasukkan ke pesan SMS yang kamu kirim sendiri, dan tidak disimpan oleh aplikasi. Aplikasi tidak mengambil daftar kontak atau data lain dari HP kamu.</p>\n\n<h2>2. Data tentang orang lain</h2>\n<p>Ketua tim dapat mengisi data anggota, dan setiap pengguna mengisi data kontak daruratnya. Sebelum mengisi data orang lain, pastikan orang tersebut <b>sudah tahu dan setuju</b> datanya dicatat dan dibagikan kepada petugas pendakian.</p>\n\n<h2>3. Tempat data disimpan</h2>\n<p>Semua data di atas disimpan di penyimpanan browser atau aplikasi di HP kamu. Data tidak dikirim ke server kami, karena kami tidak mengoperasikan server untuk menyimpan data pengguna.</p>\n<p>Ada beberapa layanan pihak ketiga yang digunakan untuk menjalankan aplikasi. Layanan ini tidak menerima data pribadi yang kamu isi, tetapi seperti situs web pada umumnya, mereka dapat menerima informasi teknis seperti alamat IP dan jenis perangkat saat aplikasi dimuat:</p>\n<ul>\n<li><b>Netlify:</b> layanan hosting yang menayangkan file aplikasi.</li>\n<li><b>Google Fonts:</b> penyedia huruf tampilan aplikasi.</li>\n<li><b>cdnjs (Cloudflare):</b> penyedia pustaka untuk membuat QR Code.</li>\n</ul>\n\n<h2>4. Kapan data dibagikan</h2>\n<p>Data hanya keluar dari HP kamu ketika kamu melakukan salah satu tindakan berikut:</p>\n<ul>\n<li><b>Menunjukkan atau membagikan QR Code registrasi.</b> QR berisi rencana pendakian, data diri, kontak darurat, data kesehatan, dan daftar barang seluruh anggota tim. Isi QR <b>tidak dienkripsi</b>, sehingga siapa pun yang memindainya dapat membacanya.</li>\n<li><b>Mengirim link daftar ke ketua tim</b> melalui WhatsApp atau aplikasi lain.</li>\n<li><b>Mengirim pesan WhatsApp atau SMS</b> berisi rencana pendakian, kabar, atau lokasi GPS saat darurat, ke kontak darurat, basecamp, atau nomor lain yang kamu pilih.</li>\n<li><b>Mengunduh atau mengirim kartu pengenal</b> sebagai gambar.</li>\n</ul>\n<p>Setelah dibagikan, data tersebut berada di luar kendali aplikasi dan tunduk pada kebijakan aplikasi yang kamu pakai untuk mengirimnya, seperti WhatsApp atau aplikasi SMS.</p>\n\n<h2>5. Penggunaan kamera dan lokasi</h2>\n<p>Kamera hanya digunakan saat kamu menekan tombol untuk mengambil foto barang atau foto diri. Gambar diproses langsung di HP kamu dan tidak diunggah ke mana pun. Kamu bisa mencabut izin kamera dan lokasi kapan saja di pengaturan HP.</p>\n\n<h2>6. Menjaga keamanan data</h2>\n<ul>\n<li>Kunci HP kamu dengan PIN, pola, atau sidik jari, karena data tersimpan di HP.</li>\n<li>Tunjukkan QR Code hanya kepada petugas registrasi atau pos resmi.</li>\n<li>Jangan mengunggah QR Code atau kartu pengenal ke media sosial.</li>\n<li>Kirim kartu pengenal hanya kepada keluarga atau petugas yang kamu percaya.</li>\n</ul>\n\n<h2>7. Berapa lama data disimpan dan cara menghapusnya</h2>\n<p>Data tersimpan di HP kamu sampai kamu menghapusnya. Kamu bisa:</p>\n<ul>\n<li>menghapus satu pendakian lewat tombol <b>Hapus pendakian ini</b>;</li>\n<li>menghapus seluruh data lewat tombol <b>Hapus semua data di HP ini</b> di menu utama;</li>\n<li>menghapus data aplikasi atau browser di pengaturan HP, atau menghapus aplikasinya.</li>\n</ul>\n<p>Karena tidak ada salinan di server, data yang sudah dihapus <b>tidak bisa dipulihkan</b>. Data yang sudah kamu bagikan kepada orang lain juga tidak ikut terhapus.</p>\n\n<h2>8. Hak kamu</h2>\n<p>Sesuai Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, kamu berhak mengetahui, melihat, memperbarui, dan menghapus data pribadimu, serta menarik persetujuan yang sudah diberikan. Karena seluruh data ada di HP kamu, semua hak ini bisa kamu jalankan langsung dari dalam aplikasi: lihat dan ubah lewat menu <b>Data diri</b>, dan hapus lewat tombol hapus yang dijelaskan di atas.</p>\n\n<h2>9. Pengguna di bawah 18 tahun</h2>\n<p>Siap Nanjak ditujukan untuk pengguna berusia 18 tahun ke atas. Pengguna di bawah 18 tahun hanya boleh menggunakan aplikasi ini dengan persetujuan dan pendampingan orang tua atau wali.</p>\n\n<h2>10. Batasan informasi di aplikasi</h2>\n<p>Standar perlengkapan, daftar gunung, dan panduan keselamatan di aplikasi ini adalah informasi umum. Aturan resmi dapat berbeda dan berubah sewaktu-waktu. Selalu ikuti aturan pengelola gunung dan arahan petugas basecamp atau tim SAR.</p>\n\n<h2>11. Perubahan kebijakan</h2>\n<p>Kebijakan ini dapat diperbarui, misalnya jika nanti aplikasi menambahkan fitur penyimpanan cadangan di server. Jika ada perubahan penting, kami akan memberi tahu di dalam aplikasi dan meminta persetujuanmu kembali sebelum perubahan berlaku.</p>\n\n<h2>12. Hubungi kami</h2>\n<p>Untuk pertanyaan tentang kebijakan ini atau data pribadimu, hubungi <b>PT Mirai Internasional Indonesia</b> melalui email <a href=\"mailto:contact@mirai.co.id\">contact@mirai.co.id</a>.</p>\n";
+const PRIVACY_HTML="<p class=\"pv-meta\">Berlaku sejak 2 Oktober 2026. Versi 1.1.</p>\n\n<p>Kebijakan ini menjelaskan data apa yang dikumpulkan aplikasi Siap Nanjak, di mana data itu disimpan, kapan data itu dibagikan, dan bagaimana kamu bisa menghapusnya. Siap Nanjak dibuat dan dikelola oleh <b>PT Mirai Internasional Indonesia</b>.</p>\n\n<div class=\"pv-box\"><b>Ringkasnya</b>\n<ul>\n<li>Semua data kamu disimpan <b>hanya di HP kamu sendiri</b>. Kami tidak punya server yang menyimpan data pribadi pengguna.</li>\n<li>Data baru keluar dari HP kamu kalau <b>kamu sendiri</b> yang membagikannya, misalnya lewat QR Code, link, SMS, atau gambar kartu pengenal.</li>\n<li>Lokasi GPS hanya diambil saat kamu menekan tombol darurat, dan tidak disimpan.</li>\n<li>Tidak ada iklan, tidak ada pelacakan, dan data kamu tidak pernah dijual.</li>\n<li>Kamu bisa menghapus semua data kapan saja dari dalam aplikasi.</li>\n</ul></div>\n\n<h2>1. Data yang dikumpulkan</h2>\n<p>Aplikasi hanya menyimpan data yang kamu isi sendiri:</p>\n<ul>\n<li><b>Data diri:</b> nama lengkap, jenis dan nomor identitas (KTP, paspor, atau SIM), pekerjaan, nomor HP, alamat sesuai KTP, dan alamat domisili.</li>\n<li><b>Kontak darurat:</b> nama, hubungan dengan kamu, dan nomor HP orang yang kamu tunjuk.</li>\n<li><b>Data kesehatan:</b> golongan darah, riwayat penyakit, dan alergi obat. Semuanya opsional.</li>\n<li><b>Data kendaraan:</b> plat nomor kendaraan yang kamu parkir di basecamp. Opsional.</li>\n<li><b>Rencana pendakian:</b> gunung tujuan, tanggal, nama tim, kode tim, anggota tim, dan nomor basecamp.</li>\n<li><b>Daftar barang:</b> nama barang, jumlah, berat, warna, catatan, dan isi barang.</li>\n<li><b>Foto:</b> foto barang dan foto diri dengan pakaian mendaki yang kamu ambil untuk kartu pengenal. Opsional.</li>\n<li><b>Catatan pendakian:</b> waktu kamu menekan tombol Mulai mendaki dan Sudah turun dengan selamat, serta apakah pesan rencana sudah dikirim ke keluarga.</li>\n</ul>\n<p><b>Lokasi GPS</b> hanya diambil ketika kamu sendiri menekan tombol <b>Ambil lokasi GPS</b> di menu darurat, setelah kamu memberi izin lokasi. Lokasi itu hanya dimasukkan ke pesan SMS yang kamu kirim sendiri, dan tidak disimpan oleh aplikasi. Aplikasi tidak mengambil daftar kontak atau data lain dari HP kamu.</p>\n\n<h2>2. Data tentang orang lain</h2>\n<p>Ketua tim dapat mengisi data anggota, dan setiap pengguna mengisi data kontak daruratnya. Sebelum mengisi data orang lain, pastikan orang tersebut <b>sudah tahu dan setuju</b> datanya dicatat dan dibagikan kepada petugas pendakian.</p>\n\n<h2>3. Tempat data disimpan</h2>\n<p>Semua data di atas disimpan di penyimpanan browser atau aplikasi di HP kamu. Data tidak dikirim ke server kami, karena kami tidak mengoperasikan server untuk menyimpan data pengguna.</p>\n<p>Ada beberapa layanan pihak ketiga yang digunakan untuk menjalankan aplikasi. Layanan ini tidak menerima data pribadi yang kamu isi, tetapi seperti situs web pada umumnya, mereka dapat menerima informasi teknis seperti alamat IP dan jenis perangkat saat aplikasi dimuat:</p>\n<ul>\n<li><b>Netlify:</b> layanan hosting yang menayangkan file aplikasi.</li>\n<li><b>Google Fonts:</b> penyedia huruf tampilan aplikasi.</li>\n<li><b>cdnjs (Cloudflare):</b> penyedia pustaka untuk membuat QR Code.</li>\n</ul>\n\n<h2>4. Kapan data dibagikan</h2>\n<p>Data hanya keluar dari HP kamu ketika kamu melakukan salah satu tindakan berikut:</p>\n<ul>\n<li><b>Menunjukkan atau membagikan Data tim untuk basecamp (QR Code).</b> QR berisi rencana pendakian, data diri, kontak darurat, data kesehatan, dan daftar barang seluruh anggota tim. Isi QR <b>tidak dienkripsi</b>, sehingga siapa pun yang memindainya dapat membacanya.</li>\n<li><b>Mengirim link daftar ke ketua tim</b> melalui WhatsApp atau aplikasi lain.</li>\n<li><b>Mengirim pesan WhatsApp atau SMS</b> berisi rencana pendakian, kabar, atau lokasi GPS saat darurat, ke kontak darurat, basecamp, atau nomor lain yang kamu pilih.</li>\n<li><b>Mengunduh atau mengirim kartu pengenal</b> sebagai gambar.</li>\n</ul>\n<p>Setelah dibagikan, data tersebut berada di luar kendali aplikasi dan tunduk pada kebijakan aplikasi yang kamu pakai untuk mengirimnya, seperti WhatsApp atau aplikasi SMS.</p>\n\n<h2>5. Penggunaan kamera dan lokasi</h2>\n<p>Kamera hanya digunakan saat kamu menekan tombol untuk mengambil foto barang atau foto diri. Gambar diproses langsung di HP kamu dan tidak diunggah ke mana pun. Kamu bisa mencabut izin kamera dan lokasi kapan saja di pengaturan HP.</p>\n\n<h2>6. Menjaga keamanan data</h2>\n<ul>\n<li>Kunci HP kamu dengan PIN, pola, atau sidik jari, karena data tersimpan di HP.</li>\n<li>Tunjukkan QR Code hanya kepada petugas registrasi atau pos resmi.</li>\n<li>Jangan mengunggah QR Code atau kartu pengenal ke media sosial.</li>\n<li>Kirim kartu pengenal hanya kepada keluarga atau petugas yang kamu percaya.</li>\n</ul>\n\n<h2>7. Berapa lama data disimpan dan cara menghapusnya</h2>\n<p>Data tersimpan di HP kamu sampai kamu menghapusnya. Kamu bisa:</p>\n<ul>\n<li>menghapus satu pendakian lewat tombol <b>Hapus pendakian ini</b>;</li>\n<li>menghapus seluruh data lewat tombol <b>Hapus semua data di HP ini</b> di menu utama;</li>\n<li>menghapus data aplikasi atau browser di pengaturan HP, atau menghapus aplikasinya.</li>\n</ul>\n<p>Karena tidak ada salinan di server, data yang sudah dihapus <b>tidak bisa dipulihkan</b>. Data yang sudah kamu bagikan kepada orang lain juga tidak ikut terhapus.</p>\n\n<h2>8. Hak kamu</h2>\n<p>Sesuai Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, kamu berhak mengetahui, melihat, memperbarui, dan menghapus data pribadimu, serta menarik persetujuan yang sudah diberikan. Karena seluruh data ada di HP kamu, semua hak ini bisa kamu jalankan langsung dari dalam aplikasi: lihat dan ubah lewat menu <b>Data diri</b>, dan hapus lewat tombol hapus yang dijelaskan di atas.</p>\n\n<h2>9. Pengguna di bawah 18 tahun</h2>\n<p>Siap Nanjak ditujukan untuk pengguna berusia 18 tahun ke atas. Pengguna di bawah 18 tahun hanya boleh menggunakan aplikasi ini dengan persetujuan dan pendampingan orang tua atau wali.</p>\n\n<h2>10. Batasan informasi di aplikasi</h2>\n<p>Standar perlengkapan, daftar gunung, dan panduan keselamatan di aplikasi ini adalah informasi umum. Aturan resmi dapat berbeda dan berubah sewaktu-waktu. Selalu ikuti aturan pengelola gunung dan arahan petugas basecamp atau tim SAR.</p>\n\n<h2>11. Perubahan kebijakan</h2>\n<p>Kebijakan ini dapat diperbarui, misalnya jika nanti aplikasi menambahkan fitur penyimpanan cadangan di server. Jika ada perubahan penting, kami akan memberi tahu di dalam aplikasi dan meminta persetujuanmu kembali sebelum perubahan berlaku.</p>\n\n<h2>12. Hubungi kami</h2>\n<p>Untuk pertanyaan tentang kebijakan ini atau data pribadimu, hubungi <b>PT Mirai Internasional Indonesia</b> melalui email <a href=\"mailto:contact@mirai.co.id\">contact@mirai.co.id</a>.</p>\n";
 const hasConsent=()=>!!(DB&&DB.consent&&DB.consent.v===PRIVACY_VER);
 let privBack=null;
 function renderPrivacy(back){
@@ -1505,6 +1556,7 @@ $("#app").addEventListener("click",async e=>{
   if(act==="unfinish"){delete S.finished;save();renderMendaki();renderHeader();renderNav();return}
   if(act==="pickmt"){openMtPicker();return}
   if(act==="guide"){renderGuide("app");return}
+  if(act==="howto"){renderHowto("app");return}
   if(act==="gostd"){bview="standar";setTab("barang");window.scrollTo(0,0);return}
   if(act==="gotim"){setTab("tim");window.scrollTo(0,0);return}
   if(act==="add")openForm();
@@ -1533,7 +1585,7 @@ $("#app").addEventListener("click",async e=>{
     x.font="500 26px Barlow, Arial";x.fillText(`Kode tim ${S.team.code}, ${S.members.length} pendaki, ${mtName(S.team.mountain)}`,W/2,W+50);
     x.fillText(planTxt(S.team),W/2,W+90);
     c.toBlob(b=>saveFile(`QR-${S.team.code}.png`,b),"image/png")}
-  if(act==="shareqr")shareLink(`Data registrasi tim "${S.team.name}" (${S.team.code})`,qrLink);
+  if(act==="shareqr")shareLink(`Data tim pendaki "${S.team.name}" (${S.team.code})`,qrLink);
   if(act==="print")window.print();
   if(act==="preview")renderOfficer(packTeam(),true);
   if(act==="rmoutfit"){const m=S.members.find(x=>x.id===kartuWho);delete m.outfit;save();renderBerangkat();$("#kartuSec").scrollIntoView({block:"start"});return}
@@ -1552,7 +1604,7 @@ $("#app").addEventListener("click",async e=>{
 function renderOfficer(p,fromApp){
   const d=unpackTeam(p),m=MT[d.team.mountain],c=checkStd(d.items,d.members.length,d.team.mountain,d.team.type),o=$("#officer");
   const packed=d.items.filter(isPacked).length;
-  o.innerHTML=`<div class="off-banner">Tampilan petugas registrasi</div><header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><p class="hdr-sub">Tim pendakian, kode ${esc(d.team.code)}</p><h1>${esc(d.team.name)}</h1><p class="hdr-meta">${esc(m?m.n+", "+m.loc:"Gunung belum dipilih")}<br>${esc(planTxt(d.team))}${d.team.back?`<br>Rencana kembali di basecamp jam ${esc(d.team.back.replace(":","."))}${d.team.turn?`, mulai turun paling lambat jam ${esc(d.team.turn.replace(":","."))}`:""}`:""}</p>${d.team.desc?`<p class="hdr-meta">${esc(d.team.desc)}</p>`:""}</div></header>
+  o.innerHTML=`<div class="off-banner">Data tim pendaki dari aplikasi Siap Nanjak</div><header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><p class="hdr-sub">Tim pendakian, kode ${esc(d.team.code)}</p><h1>${esc(d.team.name)}</h1><p class="hdr-meta">${esc(m?m.n+", "+m.loc:"Gunung belum dipilih")}<br>${esc(planTxt(d.team))}${d.team.back?`<br>Rencana kembali di basecamp jam ${esc(d.team.back.replace(":","."))}${d.team.turn?`, mulai turun paling lambat jam ${esc(d.team.turn.replace(":","."))}`:""}`:""}</p>${d.team.desc?`<p class="hdr-meta">${esc(d.team.desc)}</p>`:""}</div></header>
   <div class="wrap"><div class="card"><h3 style="margin-top:0">Anggota (${d.members.length})</h3>${d.members.map(x=>{const l=idLine(x);return `<div class="mem" style="align-items:flex-start"><span class="av">${initial(x.name)}</span><span style="flex:1;min-width:0"><b>${esc(x.name)}</b><span class="small muted" style="display:block">${l.length?l.join("<br>"):"Data diri belum diisi"}</span></span><span class="muted small">${d.items.filter(i=>i.owner===x.id).length} barang</span></div>`}).join("")}
   <p class="muted small" style="margin:10px 0 0">${packed} dari ${d.items.length} barang sudah ditandai dikemas.</p></div>
   ${c?`<h3>Kesesuaian standar ${esc(m.n)}</h3>`+stdHTML(c,false):""}
