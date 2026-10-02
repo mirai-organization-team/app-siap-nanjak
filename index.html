@@ -1237,7 +1237,7 @@ function stepHead(k,title,tip){
 }
 
 /* ---------- halaman pengenalan ---------- */
-const INTRO_KEY="siap-nanjak-intro";
+const INTRO_KEY="siap-nanjak-intro-v2"; // versi 2: tampil sekali lagi untuk pengguna lama setelah versi 1 dirilis
 const ILL={
  a:`<svg viewBox="0 0 240 160" aria-hidden="true"><path d="M10 140 L80 50 L115 95 L145 62 L230 140Z" fill="var(--pine2)"/><path d="M80 50 L95 70 L86 66 L80 74 L73 66 L66 70Z" fill="#fff"/><circle cx="190" cy="38" r="16" fill="var(--blaze)"/><path d="M40 140c30-18 60-6 80-24s50-10 70 6" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/></svg>`,
  b:`<svg viewBox="0 0 240 160" aria-hidden="true"><rect x="60" y="16" width="120" height="132" rx="14" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>${[0,1,2,3].map(k=>`<rect x="78" y="${38+k*26}" width="18" height="18" rx="5" fill="${k<3?"var(--green)":"none"}" stroke="${k<3?"var(--green)":"var(--muted)"}" stroke-width="3"/>${k<3?`<path d="M82 ${47+k*26}l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`:""}<rect x="106" y="${43+k*26}" width="${[56,44,52,36][k]}" height="8" rx="4" fill="var(--line)"/>`).join("")}<circle cx="182" cy="128" r="22" fill="var(--blaze)"/><path d="M172 128l7 7 13-14" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -1260,7 +1260,7 @@ function renderIntro(back){
   <div class="intro-dots">${SLIDES.map((_,k)=>`<button data-in="go" data-k="${k}" class="${k===introIdx?"on":""}" aria-label="Halaman ${k+1}"></button>`).join("")}</div>
   <div class="intro-nav">${introIdx?`<button class="btn sec" data-in="prev">Kembali</button>`:"<span></span>"}<button class="btn ${last?"blaze":"pri"}" data-in="next">${last?(introBack?"Selesai":"Mulai sekarang"):"Lanjut"}</button></div></div>`;
 }
-function endIntro(){try{localStorage.setItem(INTRO_KEY,"1")}catch(e){}introIdx=0;if(introBack==="home")renderHome();else renderOnboard()}
+function endIntro(){try{localStorage.setItem(INTRO_KEY,"1")}catch(e){}introIdx=0;if(introBack==="resume"){S?renderApp():renderHome()}else if(introBack==="home")renderHome();else renderOnboard()}
 $("#intro").addEventListener("click",e=>{const b=e.target.closest("[data-in]");if(!b)return;const k=b.dataset.in;
   if(k==="skip")return endIntro();
   if(k==="next"){if(introIdx===SLIDES.length-1)return endIntro();introIdx++}
@@ -1573,6 +1573,7 @@ function init(){
   if(!DB){introSeen()?renderOnboard():renderIntro();return}
   S=DB.trips.find(t=>t.id===DB.cur)||null;
   if(S)tab=stepDone().rencana||S.role==="member"?"barang":"rencana";
+  if(!introSeen()){introIdx=0;renderIntro("resume");return}
   S?renderApp():renderHome();
 }
 init();
