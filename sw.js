@@ -1,11 +1,10 @@
 // Service worker Siap Nanjak: membuat aplikasi tetap bisa dibuka tanpa internet.
 // Naikkan nomor versi ini setiap kali index.html diubah.
-const CACHE = "siap-nanjak-v7";
+const CACHE = "siap-nanjak-v11";
 const LOCAL = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./privacy.html"];
 const REMOTE = [
   "https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js",
-  "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
 ];
 
 self.addEventListener("install", e => {

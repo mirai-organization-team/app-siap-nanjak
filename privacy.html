@@ -368,20 +368,102 @@ a.btn.pri{color:#fff}
   .card,.rows{border-color:#bbb}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== v9: tampilan bersih & keselamatan ===== */
+:root{--bg:#F3F5F1;--surface:#FFFFFF;--line:#E2E8E1;--shadow:0 1px 2px rgba(21,32,26,.05),0 6px 20px rgba(21,32,26,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1512;--surface:#18211C;--line:#26332B;--shadow:0 1px 2px rgba(0,0,0,.3)}}
+:root[data-theme="dark"]{--bg:#0F1512;--surface:#18211C;--line:#26332B;--shadow:0 1px 2px rgba(0,0,0,.3)}
+body{font-size:16.5px}
+.wrap{padding:20px 18px}
+.card{border:0;box-shadow:var(--shadow);border-radius:20px;padding:18px}
+.rows{border:0;box-shadow:var(--shadow);border-radius:18px}
+.btn{border-radius:14px;min-height:52px}
+.btn.sec{border:1.5px solid var(--line);box-shadow:none}
+.btn.sm{min-height:40px;border-radius:12px}
+.btn.ok{background:var(--green);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.ok{color:#0F1512}}
+h2{font-size:1.85rem;margin-bottom:6px}
+.top .wrap{padding-top:14px;padding-bottom:18px}
+.top .topo{opacity:.14}
+.top h1{font-size:1.9rem;margin-top:10px}
+.hdr-bar{display:flex;align-items:center;gap:10px}
+.hdr-bar .hdr-sub{flex:1;margin:0}
+.iconbtn{width:40px;height:40px;border-radius:12px;border:0;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center;flex:none}
+.codechip{font-size:1.05rem;padding:6px 10px}
+.hdr-meta{font-size:.95rem;opacity:.88}
+.od-banner{margin-top:14px;width:100%;text-align:left;border:0;border-radius:14px;padding:12px 14px;background:#FCE3DF;color:#7A1F16;font-weight:600}
+.od-card{display:grid;gap:4px;width:100%;text-align:left;border:0;border-radius:18px;padding:16px;margin-bottom:14px;background:#FCE3DF;color:#7A1F16}
+.od-card span{font-size:.92rem}
+.sh{margin:4px 0 16px}
+.sh-dots{display:flex;gap:6px;margin-bottom:12px}
+.sh-dots i{height:6px;flex:1;border-radius:999px;background:var(--line)}
+.sh-dots i.done{background:var(--green)}
+.sh-dots i.on{background:var(--blaze)}
+.step-lbl{color:var(--muted);letter-spacing:.04em}
+.tip{background:var(--greenbg);color:var(--ink);border-radius:14px;padding:11px 14px;font-size:.93rem;margin:10px 0 0;line-height:1.45}
+.rw{display:block;font-size:.84rem;color:var(--muted);margin-top:3px;line-height:1.35;white-space:normal}
+.rowmain{align-items:flex-start;padding-top:12px;padding-bottom:12px}
+.rowmain .tag{margin-top:2px}
+.chk{align-items:flex-start;padding-top:12px}
+.grp-h{font-size:1.05rem;margin-top:6px}
+.seg{border:0;box-shadow:var(--shadow);border-radius:14px}
+.seg button{border-radius:10px}
+nav.bottom{border-top:0;box-shadow:0 -4px 18px rgba(21,32,26,.07)}
+nav.bottom button{font-size:.72rem;gap:3px}
+nav.bottom button[aria-current="true"] .nav-ic{background:var(--greenbg);border-radius:999px}
+.nav-ic{padding:3px 14px}
+.nav-ok{right:4px;top:0}
+.chip{border:0;background:var(--surface);box-shadow:var(--shadow)}
+.empty{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:26px 18px}
+.empty .btn{margin-top:6px}
+.mt-btn{border:1.5px solid var(--line)}
+.fld input,.fld select,.fld textarea{border-color:var(--line);border-radius:12px}
+.dates{border-color:var(--line)}
+.ck .dot{width:28px;height:28px}
+.cklist{background:var(--surface)}
+/* kartu status mendaki */
+.hk{border-radius:22px;padding:20px;margin-bottom:12px;background:var(--surface);box-shadow:var(--shadow)}
+.hk-l{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.hk h3{font-size:1.6rem;margin:0 0 8px}
+.hk p{margin:4px 0 0;color:var(--muted)}
+.hk.live{background:var(--pine);color:#fff}.hk.live .hk-l,.hk.live p{color:#D6E4DA}
+.hk.ok{background:var(--greenbg)}.hk.ok h3{color:var(--green)}
+.hk.warn{background:#FCE3DF}.hk.warn h3,.hk.warn .hk-l{color:#7A1F16}.hk.warn p{color:#5A1A13}
+.big-btn{min-height:62px;font-size:1.1rem;margin:4px 0 12px}
+.sos-btn{width:100%;border:0;border-radius:22px;background:#C62D1F;color:#fff;padding:18px;display:grid;gap:2px;margin-bottom:14px;box-shadow:0 8px 22px rgba(198,45,31,.28)}
+.sos-btn span{font-family:"Barlow Condensed",sans-serif;font-size:1.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.sos-btn small{font-size:.92rem;opacity:.92}
+.sos-calm{font-size:1.05rem;margin:0}
+.sos-dlg .btn{flex-direction:column;gap:0;min-height:70px;font-size:1.6rem;font-family:"Barlow Condensed",sans-serif}
+.sos-dlg .btn small{font-family:Barlow,sans-serif;font-size:.8rem;font-weight:500}
+.sos-dlg .btn.sec,.sos-dlg .btn.blaze,.sos-dlg .loc .btn{font-family:Barlow,sans-serif;font-size:1rem;min-height:52px}
+.sosb{background:#C62D1F;color:#fff}
+.loc{box-shadow:none;border:1.5px solid var(--line)}
+.loc-val{margin:12px 0 0;font-size:1.05rem}
+pre.msg{white-space:pre-wrap;font-family:Barlow,sans-serif;font-size:.92rem;line-height:1.5;background:var(--bg);border-radius:14px;padding:12px 14px;margin:10px 0 12px;max-height:220px;overflow:auto}
+details.more{background:var(--bg);border:0;border-radius:14px;padding:12px 14px;margin:0}
+details.more summary{font-weight:600}
+details.more summary span{font-weight:400;color:var(--muted);font-size:.9rem}
+.tips ul{margin:0;padding-left:20px}.tips li{margin-bottom:6px}
+details{border:0;box-shadow:var(--shadow);border-radius:18px}
+.intro-ill{border:0;box-shadow:var(--shadow)}
+.opt{border:0;box-shadow:var(--shadow);border-radius:18px}
+.trip{border:0;box-shadow:var(--shadow);border-radius:20px}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute"><symbol id="topo" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#fff" stroke-width="1.4"><path d="M-20 230C60 180 110 200 170 150S290 60 420 90"/><path d="M-20 250C70 205 120 222 180 175S300 90 420 115"/><path d="M-20 205C50 160 100 175 160 128S280 35 420 62"/><path d="M-20 180C45 140 95 150 150 105S270 10 420 35"/></g></symbol></svg>
 <header class="top"><svg class="topo"><use href="#topo"/></svg><div class="wrap"><a class="backbtn" href="./" style="text-decoration:none">&#8249; Buka aplikasi</a><p class="hdr-sub">Siap Nanjak</p><h1>Kebijakan privasi</h1></div></header>
 <main class="wrap pv" style="padding-bottom:48px">
-<p class="pv-meta">Berlaku sejak 1 Oktober 2026. Versi 1.0.</p>
+<p class="pv-meta">Berlaku sejak 2 Oktober 2026. Versi 1.1.</p>
 
-<p>Kebijakan ini menjelaskan data apa yang dikumpulkan aplikasi Siap Nanjak, di mana data itu disimpan, kapan data itu dibagikan, dan bagaimana kamu bisa menghapusnya. Siap Nanjak dibuat dan dikelola oleh <b class="ph">[NAMA PENGEMBANG]</b>.</p>
+<p>Kebijakan ini menjelaskan data apa yang dikumpulkan aplikasi Siap Nanjak, di mana data itu disimpan, kapan data itu dibagikan, dan bagaimana kamu bisa menghapusnya. Siap Nanjak dibuat dan dikelola oleh <b>PT Mirai Internasional Indonesia</b>.</p>
 
 <div class="pv-box"><b>Ringkasnya</b>
 <ul>
 <li>Semua data kamu disimpan <b>hanya di HP kamu sendiri</b>. Kami tidak punya server yang menyimpan data pribadi pengguna.</li>
 <li>Data baru keluar dari HP kamu kalau <b>kamu sendiri</b> yang membagikannya, misalnya lewat QR Code, link, SMS, atau gambar kartu pengenal.</li>
+<li>Lokasi GPS hanya diambil saat kamu menekan tombol darurat, dan tidak disimpan.</li>
 <li>Tidak ada iklan, tidak ada pelacakan, dan data kamu tidak pernah dijual.</li>
 <li>Kamu bisa menghapus semua data kapan saja dari dalam aplikasi.</li>
 </ul></div>
@@ -396,10 +478,9 @@ a.btn.pri{color:#fff}
 <li><b>Rencana pendakian:</b> gunung tujuan, tanggal, nama tim, kode tim, anggota tim, dan nomor basecamp.</li>
 <li><b>Daftar barang:</b> nama barang, jumlah, berat, warna, catatan, dan isi barang.</li>
 <li><b>Foto:</b> foto barang dan foto diri dengan pakaian mendaki yang kamu ambil untuk kartu pengenal. Opsional.</li>
-<li><b>Catatan check point:</b> nama pos, arah (naik atau turun), dan waktu saat kamu men-scan QR pos.</li>
-<li><b>Khusus alat petugas pos:</b> nama tim, kode tim, jumlah orang, arah, dan waktu tim yang lewat, serta data pos yang dibuat petugas.</li>
+<li><b>Catatan pendakian:</b> waktu kamu menekan tombol Mulai mendaki dan Sudah turun dengan selamat, serta apakah pesan rencana sudah dikirim ke keluarga.</li>
 </ul>
-<p>Aplikasi tidak mengambil lokasi GPS, daftar kontak, atau data lain dari HP kamu.</p>
+<p><b>Lokasi GPS</b> hanya diambil ketika kamu sendiri menekan tombol <b>Ambil lokasi GPS</b> di menu darurat, setelah kamu memberi izin lokasi. Lokasi itu hanya dimasukkan ke pesan SMS yang kamu kirim sendiri, dan tidak disimpan oleh aplikasi. Aplikasi tidak mengambil daftar kontak atau data lain dari HP kamu.</p>
 
 <h2>2. Data tentang orang lain</h2>
 <p>Ketua tim dapat mengisi data anggota, dan setiap pengguna mengisi data kontak daruratnya. Sebelum mengisi data orang lain, pastikan orang tersebut <b>sudah tahu dan setuju</b> datanya dicatat dan dibagikan kepada petugas pendakian.</p>
@@ -410,7 +491,7 @@ a.btn.pri{color:#fff}
 <ul>
 <li><b>Netlify:</b> layanan hosting yang menayangkan file aplikasi.</li>
 <li><b>Google Fonts:</b> penyedia huruf tampilan aplikasi.</li>
-<li><b>cdnjs (Cloudflare) dan jsDelivr:</b> penyedia pustaka untuk membuat dan membaca QR Code.</li>
+<li><b>cdnjs (Cloudflare):</b> penyedia pustaka untuk membuat QR Code.</li>
 </ul>
 
 <h2>4. Kapan data dibagikan</h2>
@@ -418,13 +499,13 @@ a.btn.pri{color:#fff}
 <ul>
 <li><b>Menunjukkan atau membagikan QR Code registrasi.</b> QR berisi rencana pendakian, data diri, kontak darurat, data kesehatan, dan daftar barang seluruh anggota tim. Isi QR <b>tidak dienkripsi</b>, sehingga siapa pun yang memindainya dapat membacanya.</li>
 <li><b>Mengirim link daftar ke ketua tim</b> melalui WhatsApp atau aplikasi lain.</li>
-<li><b>Mengirim SMS laporan check point</b> ke nomor basecamp atau kontak darurat.</li>
-<li><b>Mengunduh atau mengirim kartu pengenal,</b> poster QR pos, atau rekap catatan pos (CSV).</li>
+<li><b>Mengirim pesan WhatsApp atau SMS</b> berisi rencana pendakian, kabar, atau lokasi GPS saat darurat, ke kontak darurat, basecamp, atau nomor lain yang kamu pilih.</li>
+<li><b>Mengunduh atau mengirim kartu pengenal</b> sebagai gambar.</li>
 </ul>
 <p>Setelah dibagikan, data tersebut berada di luar kendali aplikasi dan tunduk pada kebijakan aplikasi yang kamu pakai untuk mengirimnya, seperti WhatsApp atau aplikasi SMS.</p>
 
-<h2>5. Penggunaan kamera</h2>
-<p>Kamera hanya digunakan saat kamu menekan tombol untuk memindai QR Code atau mengambil foto. Gambar diproses langsung di HP kamu dan tidak diunggah ke mana pun. Kamu bisa mencabut izin kamera kapan saja di pengaturan HP.</p>
+<h2>5. Penggunaan kamera dan lokasi</h2>
+<p>Kamera hanya digunakan saat kamu menekan tombol untuk mengambil foto barang atau foto diri. Gambar diproses langsung di HP kamu dan tidak diunggah ke mana pun. Kamu bisa mencabut izin kamera dan lokasi kapan saja di pengaturan HP.</p>
 
 <h2>6. Menjaga keamanan data</h2>
 <ul>
@@ -456,7 +537,7 @@ a.btn.pri{color:#fff}
 <p>Kebijakan ini dapat diperbarui, misalnya jika nanti aplikasi menambahkan fitur penyimpanan cadangan di server. Jika ada perubahan penting, kami akan memberi tahu di dalam aplikasi dan meminta persetujuanmu kembali sebelum perubahan berlaku.</p>
 
 <h2>12. Hubungi kami</h2>
-<p>Untuk pertanyaan tentang kebijakan ini atau data pribadimu, hubungi <b class="ph">[NAMA PENGEMBANG]</b> melalui email <b class="ph">[EMAIL KONTAK]</b>.</p>
+<p>Untuk pertanyaan tentang kebijakan ini atau data pribadimu, hubungi <b>PT Mirai Internasional Indonesia</b> melalui email <a href="mailto:contact@mirai.co.id">contact@mirai.co.id</a>.</p>
 
 </main>
 </body>
